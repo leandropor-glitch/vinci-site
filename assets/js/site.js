@@ -309,7 +309,7 @@
       jazz: { arquivo: "jantar-jazz.mp3", volume: 0.5, loop: true, rotulo: "Jazz" },
       fanfarra: { arquivo: "cinema-fanfarra.mp3", volume: 0.72, loop: false, rotulo: "Trilha de cinema" }
     };
-    var MUSICA = { inicio: null, cheguei: "bossa", cinema: "fanfarra", jantar: "jazz", saindo: null };
+    var MUSICA = { inicio: null, cheguei: "jazz", cinema: "fanfarra", jantar: "bossa", saindo: null };
     function pararMusica(seg) {
       var m = som.musica;
       som.musica = null;
@@ -484,9 +484,9 @@
 
     /* pergunta do som na primeira cena com música */
     var TEXTOS = {
-      cheguei: "A casa recebe você com uma bossa nova. Você desliga quando quiser.",
+      cheguei: "A casa recebe você com um jazz. Você desliga quando quiser.",
       cinema: "O cinema começa com uma trilha de filme. Você desliga quando quiser.",
-      jantar: "O jantar tem um jazz suave ao fundo. Você desliga quando quiser."
+      jantar: "O jantar tem uma bossa nova ao fundo. Você desliga quando quiser."
     };
     var pendente = null;
     function perguntar(nome) {
@@ -521,7 +521,7 @@
         desligarTv();
         velas.classList.remove("is-on");
         sfx.fechadura(0);
-        tocar("bossa", 900);
+        tocar("jazz", 900);
         if (estado.persiana === "fechada") {
           sfx.motor(500, 5000);
           status("cortinas", "Abrindo…", 500, true);
@@ -551,7 +551,7 @@
       },
       jantar: function () {
         desligarTv();
-        tocar("jazz", 700);
+        tocar("bossa", 700);
         if (estado.persiana === "fechada") {
           sfx.motor(300, 5000);
           status("cortinas", "Abrindo…", 300, true);
