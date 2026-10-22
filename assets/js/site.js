@@ -231,10 +231,11 @@
     function ligarTv(atraso) {
       depois(atraso, function () {
         if (!tv.getAttribute("src")) {
-          var webm = tv.canPlayType && tv.canPlayType('video/webm; codecs="vp9"');
-          tv.poster = baseMedia + "cinema-terra.jpg";
-          tv.src = baseMedia + (webm ? "cinema-terra.webm" : "cinema-terra.mp4");
+          tv.poster = baseMedia + "filme.jpg";
+          tv.src = baseMedia + "filme.mp4";
         }
+        tv.muted = !som.ligado;
+        tv.volume = 0.85;
         try { tv.currentTime = 0; } catch (e) { /* ainda carregando */ }
         var p = tv.play();
         if (p && p.catch) p.catch(function () {});
@@ -244,7 +245,6 @@
           mostrar(luzTv, 0, 900);
           depois(950, acompanharBrilho);
         }
-        sfx.tv();
       });
     }
     function desligarTv() {
@@ -307,9 +307,9 @@
     var FAIXAS = {
       bossa: { arquivo: "cheguei-bossa.mp3", volume: 0.62, loop: true, rotulo: "Bossa nova" },
       jazz: { arquivo: "jantar-jazz.mp3", volume: 0.5, loop: true, rotulo: "Jazz" },
-      fanfarra: { arquivo: "cinema-fanfarra.mp3", volume: 0.72, loop: false, rotulo: "Trilha de cinema" }
+      filme: { arquivo: null, volume: 0, loop: false, rotulo: "Áudio do filme" }
     };
-    var MUSICA = { inicio: null, cheguei: "jazz", cinema: "fanfarra", jantar: "bossa", saindo: null };
+    var MUSICA = { inicio: null, cheguei: "jazz", cinema: "filme", jantar: "bossa", saindo: null };
     function pararMusica(seg) {
       var m = som.musica;
       som.musica = null;
@@ -330,7 +330,7 @@
     /* chamado dentro do clique: o navegador libera o áudio e a música entra no tempo da cena */
     function tocar(nome, atraso) {
       pararMusica(1.2);
-      if (!nome || !som.ligado) return;
+      if (!nome || !som.ligado || !FAIXAS[nome].arquivo) return;
       var ctx = audio();
       var f = FAIXAS[nome];
       var el = new Audio();
@@ -479,13 +479,14 @@
       atualizarBotaoSom();
       if (som.ligado && MUSICA[estado.cena] && !som.musica) tocar(MUSICA[estado.cena], 0);
       if (!som.ligado) pararMusica(0.5);
+      tv.muted = !som.ligado;
       atualizarSomStatus(0);
     });
 
     /* pergunta do som na primeira cena com música */
     var TEXTOS = {
       cheguei: "A casa recebe você com um jazz. Você desliga quando quiser.",
-      cinema: "O cinema começa com uma trilha de filme. Você desliga quando quiser.",
+      cinema: "O filme começa com som. Você desliga quando quiser.",
       jantar: "O jantar tem uma bossa nova ao fundo. Você desliga quando quiser."
     };
     var pendente = null;
@@ -536,16 +537,14 @@
       },
       cinema: function () {
         velas.classList.remove("is-on");
-        tocar("fanfarra", 2900);
+        pararMusica(1.2);
         if (estado.persiana === "aberta") {
-          sfx.motor(300, 5200);
           status("cortinas", "Fechando…", 300, true);
           status("cortinas", "Fechadas", 5500);
         } else status("cortinas", "Fechadas");
         visual("cinema", { cheia: { atraso: 150, duracao: 2600 }, persiana: "fechada", cortina: { atraso: 300, duracao: 5200 } });
         contarLuzes(5, 150, 2600);
         ligarTv(2700);
-        sfx.bipe(1200);
         status("clima", "22 °C", 1200);
         atualizarSomStatus(2900);
       },
