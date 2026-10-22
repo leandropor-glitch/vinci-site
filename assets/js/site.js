@@ -229,13 +229,17 @@
 
     var luzTv = null, brilho = null;
     function ligarTv(atraso) {
+      /* liberado dentro do clique: o filme pode tocar com som no tempo da cena (iPhone inclusive) */
+      if (!tv.getAttribute("src")) {
+        tv.poster = baseMedia + "filme.jpg";
+        tv.src = baseMedia + "filme.mp4";
+      }
+      tv.muted = !som.ligado;
+      tv.volume = 0.85;
+      var pre = tv.play();
+      if (pre && pre.then) pre.then(function () { if (!tv.classList.contains("is-on")) tv.pause(); }, function () {});
       depois(atraso, function () {
-        if (!tv.getAttribute("src")) {
-          tv.poster = baseMedia + "filme.jpg";
-          tv.src = baseMedia + "filme.mp4";
-        }
         tv.muted = !som.ligado;
-        tv.volume = 0.85;
         try { tv.currentTime = 0; } catch (e) { /* ainda carregando */ }
         var p = tv.play();
         if (p && p.catch) p.catch(function () {});
@@ -596,10 +600,9 @@
       if (b.getAttribute("data-scene") === "cinema") {
         b.addEventListener("pointerenter", function () {
           if (!tv.getAttribute("src")) {
-            var webm = tv.canPlayType && tv.canPlayType('video/webm; codecs="vp9"');
             tv.preload = "auto";
-            tv.poster = baseMedia + "cinema-terra.jpg";
-            tv.src = baseMedia + (webm ? "cinema-terra.webm" : "cinema-terra.mp4");
+            tv.poster = baseMedia + "filme.jpg";
+            tv.src = baseMedia + "filme.mp4";
           }
         }, { once: true });
       }
