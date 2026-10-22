@@ -154,7 +154,7 @@
 
     /* persiana: desce (ou sobe) só no vão da janela, com a barra de baixo acompanhando */
     function moverPersiana(nome, destino, atraso, duracao) {
-      var TOPO = 29.3, BASE = 65.1;
+      var TOPO = 23.5, BASE = 66.3;
       var el = camada(nome, "persiana");
       mascarar(el, MASCARA, false);
       var ini = destino === "fechada" ? "inset(" + TOPO + "% 0 " + (100 - TOPO) + "% 0)" : "inset(" + BASE + "% 0 " + (100 - BASE) + "% 0)";
@@ -208,8 +208,8 @@
       });
     }
 
-    /* TV com o vídeo da NASA encaixado na tela */
-    var QUAD = [[100, 331], [449, 388], [449, 583], [100, 622]];
+    /* TV com o filme encaixado na tela */
+    var QUAD = [[395, 401], [553, 423], [553, 627], [395, 652]];
     function matrizQuad(p) {
       var x0 = p[0][0], y0 = p[0][1], x1 = p[1][0], y1 = p[1][1], x2 = p[2][0], y2 = p[2][1], x3 = p[3][0], y3 = p[3][1];
       var dx1 = x1 - x2, dx2 = x3 - x2, dx3 = x0 - x1 + x2 - x3, dy1 = y1 - y2, dy2 = y3 - y2, dy3 = y0 - y1 + y2 - y3;
@@ -232,7 +232,7 @@
       /* liberado dentro do clique: o filme pode tocar com som no tempo da cena (iPhone inclusive) */
       if (!tv.getAttribute("src")) {
         tv.poster = baseMedia + "filme.jpg";
-        tv.src = baseMedia + "filme.mp4";
+        tv.src = baseMedia + (tv.canPlayType && tv.canPlayType('video/webm; codecs="vp9"') ? "filme.webm" : "filme.mp4");
       }
       tv.muted = !som.ligado;
       tv.volume = 0.85;
@@ -602,7 +602,7 @@
           if (!tv.getAttribute("src")) {
             tv.preload = "auto";
             tv.poster = baseMedia + "filme.jpg";
-            tv.src = baseMedia + "filme.mp4";
+            tv.src = baseMedia + (tv.canPlayType && tv.canPlayType('video/webm; codecs="vp9"') ? "filme.webm" : "filme.mp4");
           }
         }, { once: true });
       }

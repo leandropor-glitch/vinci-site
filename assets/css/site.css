@@ -199,14 +199,14 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* circuitos de luz: cada camada revela a foto da cena só na área daquele circuito */
 .stage .layer.g { -webkit-mask-image: var(--m); mask-image: var(--m); -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
 .g-sanca { --m: linear-gradient(180deg, #000 0%, #000 20%, transparent 29%); }
-.g-spots { --m: radial-gradient(ellipse 11% 34% at 80.5% 42%, #000 30%, transparent 100%); }
-.g-adega { --m: linear-gradient(90deg, transparent 80%, #000 89%); }
-.g-estar { --m: radial-gradient(ellipse 33% 58% at 14% 68%, #000 42%, transparent 100%); }
-.g-mesa { --m: radial-gradient(ellipse 17% 44% at 71% 50%, #000 45%, transparent 100%); }
+.g-spots { --m: radial-gradient(ellipse 13% 42% at 18% 56%, #000 35%, transparent 100%); }
+.g-adega { --m: linear-gradient(90deg, transparent 72%, #000 80%); }
+.g-estar { --m: radial-gradient(ellipse 30% 50% at 36% 72%, #000 42%, transparent 100%); }
+.g-mesa { --m: radial-gradient(ellipse 16% 36% at 69% 60%, #000 45%, transparent 100%); }
 .stage .layer.persiana { opacity: 1; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
 .trilho { position: absolute; inset: 0; pointer-events: none; opacity: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; transition: opacity .4s ease; }
 .trilho.is-on { opacity: 1; }
-.trilho i { position: absolute; left: 0; right: 0; top: 29.3%; height: .7%; background: linear-gradient(180deg, #4a423a, #1d1a17 70%); box-shadow: 0 2px 7px rgb(0 0 0 / .5); }
+.trilho i { position: absolute; left: 0; right: 0; top: 23.5%; height: .7%; background: linear-gradient(180deg, #3a3d40, #141617 70%); box-shadow: 0 2px 7px rgb(0 0 0 / .5); }
 /* TV: o vídeo é encaixado na tela em perspectiva (transform calculado no JS) */
 .stage .tv {
   position: absolute; left: 0; top: 0; width: 854px; height: 480px; transform-origin: 0 0;
@@ -237,8 +237,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* foco da "câmera" por cena */
 @media (min-width: 900px) and (prefers-reduced-motion: no-preference) {
   .stage-frame[data-focus="cheguei"] .stage { --zoom: 1.025; --ox: 50%; --oy: 46%; }
-  .stage-frame[data-focus="cinema"] .stage { --zoom: 1.08; --ox: 14%; --oy: 52%; }
-  .stage-frame[data-focus="jantar"] .stage { --zoom: 1.07; --ox: 74%; --oy: 56%; }
+  .stage-frame[data-focus="cinema"] .stage { --zoom: 1.08; --ox: 20%; --oy: 52%; }
+  .stage-frame[data-focus="jantar"] .stage { --zoom: 1.07; --ox: 70%; --oy: 60%; }
 }
 
 /* pergunta do som */
