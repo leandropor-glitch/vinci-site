@@ -306,7 +306,7 @@
     }
     var FAIXAS = {
       bossa: { arquivo: "cheguei-bossa.mp3", volume: 0.62, loop: true, rotulo: "Bossa nova" },
-      jazz: { arquivo: "jantar-jazz.mp3", volume: 0.5, loop: true, rotulo: "Jazz" },
+      jazz: { arquivo: "cheguei.mp3", volume: 0.6, loop: true, rotulo: "Música de chegada" },
       filme: { arquivo: null, volume: 0, loop: false, rotulo: "Áudio do filme" }
     };
     var MUSICA = { inicio: null, cheguei: "jazz", cinema: "filme", jantar: "bossa", saindo: null };
@@ -485,7 +485,7 @@
 
     /* pergunta do som na primeira cena com música */
     var TEXTOS = {
-      cheguei: "A casa recebe você com um jazz. Você desliga quando quiser.",
+      cheguei: "A casa recebe você com música. Você desliga quando quiser.",
       cinema: "O filme começa com som. Você desliga quando quiser.",
       jantar: "O jantar tem uma bossa nova ao fundo. Você desliga quando quiser."
     };
