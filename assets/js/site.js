@@ -305,7 +305,7 @@
       return som.ctx;
     }
     var FAIXAS = {
-      bossa: { arquivo: "cheguei-bossa.mp3", volume: 0.62, loop: true, rotulo: "Bossa nova" },
+      bossa: { arquivo: "jantar.mp3", volume: 0.55, loop: true, rotulo: "Música do jantar" },
       jazz: { arquivo: "cheguei.mp3", volume: 0.6, loop: true, rotulo: "Música de chegada" },
       filme: { arquivo: null, volume: 0, loop: false, rotulo: "Áudio do filme" }
     };
@@ -487,7 +487,7 @@
     var TEXTOS = {
       cheguei: "A casa recebe você com música. Você desliga quando quiser.",
       cinema: "O filme começa com som. Você desliga quando quiser.",
-      jantar: "O jantar tem uma bossa nova ao fundo. Você desliga quando quiser."
+      jantar: "O jantar tem música ao fundo. Você desliga quando quiser."
     };
     var pendente = null;
     function perguntar(nome) {
