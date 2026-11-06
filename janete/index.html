@@ -6,32 +6,37 @@
   <meta name="theme-color" content="#0E1519">
   <meta name="robots" content="noindex,nofollow">
   <meta name="referrer" content="no-referrer">
-  <title>Janete 2 · Vinci</title>
-  <meta name="description" content="Janete 2: a IA debochada da Vinci, rodando no próprio aparelho, sem internet.">
+  <title>Janete · Vinci</title>
+  <meta name="description" content="Janete: a IA debochada da Vinci, rodando no próprio aparelho, sem internet.">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=j2-1">
-  <script type="module" src="app.js?v=j2-1"></script>
+  <link rel="stylesheet" href="style.css?v=j-3">
+  <script type="module" src="app.js?v=j-3"></script>
 </head>
 <body>
   <section id="gate" class="gate-screen" aria-label="Acordar a Janete">
     <img class="gate-avatar" src="janete-avatar.jpg" alt="Avatar da Janete, olhando com expressão brava">
     <div class="gate-form">
-      <div class="gate-title"><b>JANETE 2</b><small>OFFLINE · SEM FILTRO · VINCI</small></div>
+      <div class="gate-title"><b>JANETE</b><small>OFFLINE · SEM FILTRO · VINCI</small></div>
+      <form id="pw-form" class="pw-form" autocomplete="on">
+        <input id="password" type="password" inputmode="numeric" autocomplete="current-password" required placeholder="Senha" aria-label="Senha" enterkeyhint="go">
+      </form>
+      <div id="unlocked" hidden>
       <div class="model-pick" role="radiogroup" aria-label="Cérebro da Janete">
         <button type="button" data-model="big" role="radio" aria-checked="false"><b>Completa</b><small>Mac e PC · 8B · baixa ~4,5 GB uma vez</small></button>
         <button type="button" data-model="small" role="radio" aria-checked="false"><b>Leve</b><small>Celular · 3B · baixa ~1,8 GB uma vez</small></button>
       </div>
       <button id="wake" class="wake-button" type="button">Acordar a Janete</button>
       <div class="progress" id="progress" hidden><i id="progress-bar"></i></div>
+      </div>
       <p id="gate-status" class="gate-status" role="status" aria-live="polite"></p>
     </div>
   </section>
 
   <div id="site-app" class="shell" hidden>
     <header class="topbar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">J</span><span><b>JANETE 2</b><small>OFFLINE · VINCI</small></span></div>
+      <div class="brand"><span class="brand-mark" aria-hidden="true">J</span><span><b>JANETE</b><small>OFFLINE · VINCI</small></span></div>
       <div class="top-actions"><span id="connection" class="connection" role="status"><i></i> Carregando</span><button id="clear" class="text-button" type="button">Limpar conversa</button></div>
     </header>
     <main class="layout">
@@ -57,7 +62,7 @@
         </div>
       </section>
     </main>
-    <footer>VINCI AUTOMAÇÃO <span>·</span> JANETE 2 · OFFLINE</footer>
+    <footer>VINCI AUTOMAÇÃO <span>·</span> JANETE · OFFLINE</footer>
   </div>
 </body>
 </html>

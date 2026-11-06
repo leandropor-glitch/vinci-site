@@ -1,8 +1,8 @@
-// Janete 2: guarda a página e a biblioteca para abrir sem internet.
+// Janete: guarda a página e a biblioteca para abrir sem internet.
 // O modelo em si fica no cache próprio do WebLLM (baixado uma vez, do Hugging Face).
-const CACHE = "janete2-v1";
+const CACHE = "janete-v3";
 const SHELL = [
-  "./", "index.html", "style.css?v=j2-1", "app.js?v=j2-1", "worker.js",
+  "./", "index.html", "style.css?v=j-3", "app.js?v=j-3", "worker.js",
   "vendor/web-llm-0.2.86.js", "janete-avatar.jpg", "icon-192.png", "icon-512.png", "manifest.webmanifest",
 ];
 
@@ -10,11 +10,11 @@ self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
 });
 self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => k.startsWith("janete2-") && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
+  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => (k.startsWith("janete-") || k.startsWith("janete2-")) && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
 });
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.origin !== location.origin || !url.pathname.includes("/janete2/")) return;
+  if (e.request.method !== "GET" || url.origin !== location.origin || !url.pathname.includes("/janete/")) return;
   // Rede primeiro (pega versão nova quando há internet); sem internet, usa o guardado.
   e.respondWith(
     fetch(e.request).then((r) => {

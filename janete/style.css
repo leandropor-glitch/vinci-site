@@ -34,3 +34,7 @@ body:has(.gate-screen:not([hidden])){overflow:hidden}
 .gate-avatar{top:0;bottom:auto;height:calc(100dvh - 270px);max-height:900px}
 @media(max-width:560px){.gate-avatar{height:min(calc(100dvh - 270px),640px)}}
 .body.typing::after{content:"▍";color:var(--acc);animation:blink 1s steps(2) infinite}@keyframes blink{to{opacity:0}}
+#unlocked{display:grid;gap:10px}#unlocked[hidden]{display:none!important}
+.pw-form input{height:54px;width:100%;border:1px solid #e1fe06a0;border-radius:14px;background:#0b1012e8;color:var(--ink);padding:0 18px;font-size:16px;letter-spacing:.2em;outline:0;box-shadow:0 0 28px #e1fe061c;backdrop-filter:blur(12px);text-align:center}
+.pw-form input:focus{border-color:var(--acc);box-shadow:0 0 0 3px #e1fe0629}
+.pw-form input:disabled{opacity:.55}

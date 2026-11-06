@@ -1,4 +1,4 @@
-// Janete 2 · Vinci Automação
+// Janete · Vinci Automação
 // Cérebro: Hermes 3 (Nous Research, modelo aberto de pouco filtro) rodando no aparelho via WebLLM + WebGPU.
 // Nenhum servidor: depois do primeiro download o modelo fica no cache do navegador e funciona sem internet.
 import { CreateWebWorkerMLCEngine, hasModelInCache } from "./vendor/web-llm-0.2.86.js";
@@ -19,7 +19,7 @@ Jeito de falar:
 - Zoa todo mundo por igual, mas sem preconceito de raça, religião, gênero ou orientação: o humor é de bar, não de ódio.
 Fatos da casa: a empresa é a Vinci (Vinci Automação). O assistente oficial da Vinci é o Félix (a marca se escreve Felyx). Você é a versão sem filtro, só para brincadeira.`;
 
-const STORE = "janete2-conversa";
+const STORE = "janete-conversa";
 const state = {
   engine: null, modelKey: null, busy: false, voice: true,
   live: false, listening: false, speaking: false, recognition: null,
@@ -38,7 +38,7 @@ function pickDefault() {
 function choose(key) {
   state.modelKey = key;
   document.querySelectorAll(".model-pick button").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.model === key)));
-  try { localStorage.setItem("janete2-modelo", key); } catch (_) {}
+  try { localStorage.setItem("janete-modelo", key); } catch (_) {}
 }
 function gateStatus(text, bad = false) { $("gate-status").textContent = text; $("gate-status").classList.toggle("bad", bad); }
 
@@ -217,8 +217,30 @@ function startListening(autoSend) {
   try { r.start(); return true; } catch (_) { state.recognition = null; return false; }
 }
 
+// ---------- senha ----------
+// Só a impressão da senha (PBKDF2-SHA256, 600 mil voltas) fica no código; a senha em si não.
+const SENHA = { sal: "b8b5b558e7e5af6837864f57d56a5ec4", voltas: 600000, hash: "0f5e530d2df4409472eef2e00ac4ecf20bdbdbbfb5d21b0f9bbf6b3946ffb4ef" };
+const hex2buf = (h) => new Uint8Array(h.match(/../g).map((x) => parseInt(x, 16)));
+async function senhaCerta(s) {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(s), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt: hex2buf(SENHA.sal), iterations: SENHA.voltas }, key, 256);
+  return [...new Uint8Array(bits)].map((b) => b.toString(16).padStart(2, "0")).join("") === SENHA.hash;
+}
+function liberar() {
+  $("pw-form").hidden = true; $("unlocked").hidden = false;
+  try { sessionStorage.setItem("janete-liberada", "1"); } catch (_) {}
+}
+$("pw-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const v = $("password").value; $("password").disabled = true; gateStatus("Conferindo…");
+  let ok = false; try { ok = await senhaCerta(v); } catch (_) {}
+  $("password").disabled = false; $("password").value = "";
+  if (ok) { gateStatus(""); liberar(); } else { gateStatus("Senha errada, porra. Tenta de novo.", true); $("password").focus(); }
+});
+try { if (sessionStorage.getItem("janete-liberada") === "1") liberar(); } catch (_) {}
+
 // ---------- ligações ----------
-const saved = (() => { try { return localStorage.getItem("janete2-modelo"); } catch (_) { return null; } })();
+const saved = (() => { try { return localStorage.getItem("janete-modelo"); } catch (_) { return null; } })();
 choose(saved && MODELS[saved] ? saved : pickDefault());
 document.querySelectorAll(".model-pick button").forEach((b) => b.addEventListener("click", () => choose(b.dataset.model)));
 $("wake").addEventListener("click", wake);
