@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050607">
+<meta name="robots" content="noindex,nofollow">
+<title>Felyx GEM · Vinci</title>
+<meta name="description" content="Felyx GEM: o Félix da Vinci só com o Gemini, o V da Vinci e o anel de partículas.">
+<style>
+:root{--bg:#050607;--ink:#eef3f4;--soft:#9aa7ad;--mute:#5f6b71;--acc:#D6FF1A;--err:#ff7a6b;--line:#1f272c;--font:Montserrat,Inter,system-ui,-apple-system,sans-serif}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font);overflow:hidden;-webkit-font-smoothing:antialiased}
+button,input{font:inherit}button{cursor:pointer}[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+canvas{position:fixed;inset:0;width:100%;height:100%;display:block}
+.top{position:fixed;top:0;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:max(16px,env(safe-area-inset-top)) 20px 0;z-index:2}
+.brand{letter-spacing:.24em;font-size:11px;font-weight:800}.brand small{display:block;color:var(--mute);font-size:9px;letter-spacing:.3em;margin-top:5px;font-weight:600}
+.gear{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:#0b0f11cc;color:var(--soft);font-size:18px}
+.bottom{position:fixed;left:0;right:0;bottom:0;padding:0 20px max(22px,env(safe-area-inset-bottom));display:grid;justify-items:center;gap:12px;z-index:2}
+.status{min-height:20px;font-size:12px;letter-spacing:.08em;color:var(--soft);text-align:center;max-width:520px}
+.status.err{color:var(--err)}
+.said{min-height:18px;font-size:13px;color:var(--ink);opacity:.82;text-align:center;max-width:560px;line-height:1.45}
+.talk{width:76px;height:76px;border-radius:50%;border:1px solid var(--acc);background:#0b0f11;color:var(--acc);font-size:28px;display:grid;place-items:center;box-shadow:0 0 0 6px #d6ff1a10,0 0 40px #d6ff1a22;transition:transform .2s,background .2s}
+.talk.on{background:var(--acc);color:#0b0f11;transform:scale(1.04)}
+.talk:disabled{opacity:.5;cursor:wait}
+.hint{font-size:10px;color:var(--mute);letter-spacing:.12em}
+dialog{border:1px solid var(--line);border-radius:18px;background:#0b0f11;color:var(--ink);padding:24px;width:min(420px,calc(100vw - 32px))}
+dialog::backdrop{background:#000a;backdrop-filter:blur(6px)}
+dialog h2{margin:0 0 6px;font-size:18px}dialog p{color:var(--soft);font-size:12px;line-height:1.5;margin:0 0 14px}
+dialog label{display:block;font-size:11px;font-weight:700;color:var(--soft);margin:12px 0 6px}
+dialog input{width:100%;padding:12px;border-radius:10px;border:1px solid #33424a;background:#050607;color:var(--ink)}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.btn{border:0;border-radius:10px;padding:11px 16px;font-weight:800;background:var(--acc);color:#0b0f11}.btn.ghost{background:transparent;color:var(--soft);border:1px solid #33424a}
+@media(prefers-reduced-motion:reduce){.talk{transition:none}}
+</style>
+</head>
+<body>
+<canvas id="cv" aria-hidden="true"></canvas>
+<header class="top">
+  <div class="brand">FELYX GEM<small>VINCI · GEMINI</small></div>
+  <button class="gear" id="gear" type="button" aria-label="Ajustes">⚙</button>
+</header>
+<section class="bottom">
+  <div class="said" id="said" aria-live="polite"></div>
+  <div class="status" id="status" role="status" aria-live="polite">Toque no V para falar com o Félix</div>
+  <button class="talk" id="talk" type="button" aria-label="Falar com o Félix">🎙</button>
+  <div class="hint">“FÉLIX, PARE” ENCERRA</div>
+</section>
+
+<dialog id="cfg">
+  <form method="dialog">
+    <h2>Ajustes do Felyx GEM</h2>
+    <p>O GEM fala direto com o Gemini, sem passar pelo n8n. Escolha uma das duas formas de conexão. Fica guardado só neste aparelho.</p>
+    <label for="tokenUrl">Endereço que entrega o token temporário do Gemini (recomendado)</label>
+    <input id="tokenUrl" type="url" placeholder="https://… devolve { token }" autocomplete="off">
+    <label for="apiKey">Ou a chave do Gemini (só para teste no aparelho do Leandro)</label>
+    <input id="apiKey" type="password" placeholder="AIza…" autocomplete="off">
+    <div class="row"><button class="btn ghost" value="cancel" type="submit">Fechar</button><button class="btn" id="saveCfg" value="ok" type="submit">Salvar</button></div>
+  </form>
+</dialog>
+
+<script>
+"use strict";
+const MODEL = 'gemini-3.8-live';
+const VOICE = 'Algieba';
+const PERSONA = [
+  'Você é o Félix, o assistente da Vinci Automação, na versão GEM: só voz, simples e direta.',
+  'Fale sempre em português do Brasil, frases curtas, tom confiante e simpático. Chame a pessoa de Chefe.',
+  'Pronúncia obrigatória: seu nome se escreve Felyx e se fala Félix, como o nome em português; nunca soletre.',
+  'A empresa Vinci se fala em italiano: Víntchi. Nunca diga Vince, Vínsi nem Vinssi.',
+  'A palavra Alexa não existe para você: o sistema da casa se chama Vinci.',
+  'Se não souber algo, diga que vai verificar; nunca invente.'
+].join('\n');
+const $ = (id) => document.getElementById(id);
+const store = { get(k){ try{ return localStorage.getItem(k) || ''; }catch(_){ return ''; } }, set(k,v){ try{ v ? localStorage.setItem(k,v) : localStorage.removeItem(k); }catch(_){} } };
+
+// ---------------- visual: V da Vinci + anel de partículas ----------------
+const cv = $('cv'), g = cv.getContext('2d');
+let W = 0, H = 0, DPR = 1;
+const vis = { state: 'idle', level: 0, target: 0 };
+const ring = [], bubbles = [];
+function resize(){ DPR = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * DPR; cv.height = H * DPR; g.setTransform(DPR,0,0,DPR,0,0); }
+addEventListener('resize', resize); resize();
+for (let i = 0; i < 420; i++) ring.push({ a: Math.random() * Math.PI * 2, r: 0.92 + Math.random() * 0.22, s: 0.0016 + Math.random() * 0.0024, z: Math.random() });
+function center(){ return { x: W / 2, y: H * 0.44, R: Math.min(W, H) * 0.30 }; }
+function drawV(c, glow){
+  const h = c.R * 0.95, w = c.R * 0.78, top = c.y - h * 0.55, bot = c.y + h * 0.45, th = c.R * 0.17;
+  g.save();
+  g.shadowColor = '#D6FF1A'; g.shadowBlur = 18 + glow * 60;
+  g.fillStyle = '#D6FF1A';
+  g.beginPath();                     // V em duas hastes, a da direita mais longa (marca da Vinci)
+  g.moveTo(c.x - w / 2, top); g.lineTo(c.x - w / 2 + th, top); g.lineTo(c.x + th * 0.25, bot - th * 1.1); g.lineTo(c.x - th * 0.15, bot); g.closePath(); g.fill();
+  g.beginPath();
+  g.moveTo(c.x + w / 2 + th * 0.2, top - th * 0.6); g.lineTo(c.x + w / 2 + th * 1.2, top - th * 0.6); g.lineTo(c.x + th * 0.85, bot); g.lineTo(c.x - th * 0.15, bot); g.closePath(); g.fill();
+  g.restore();
+}
+function frame(){
+  vis.level += (vis.target - vis.level) * 0.18;
+  const L = vis.level, c = center(), tilt = 0.28, speed = vis.state === 'speaking' ? 3.2 : vis.state === 'listening' ? 1.8 : 1;
+  g.fillStyle = 'rgba(5,6,7,0.32)'; g.fillRect(0, 0, W, H);
+  const bg = g.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.R * 2.2);
+  bg.addColorStop(0, 'rgba(214,255,26,' + (0.05 + L * 0.12) + ')'); bg.addColorStop(1, 'rgba(5,6,7,0)');
+  g.fillStyle = bg; g.fillRect(0, 0, W, H);
+  // metade de trás do anel
+  for (const p of ring){ p.a += p.s * speed * (1 + L * 2); const y = Math.sin(p.a); if (y >= 0) continue; dot(c, p, tilt, L, 0.35); }
+  drawV(c, L);
+  for (const p of ring){ const y = Math.sin(p.a); if (y < 0) continue; dot(c, p, tilt, L, 1); }
+  // bolinhas que o anel solta (mais quando há voz)
+  const emit = vis.state === 'idle' ? 0.25 : 1 + L * 9;
+  for (let k = 0; k < emit; k++) if (Math.random() < emit - k){
+    const p = ring[(Math.random() * ring.length) | 0], R = c.R * 1.55 * p.r;
+    bubbles.push({ x: c.x + Math.cos(p.a) * R, y: c.y + Math.sin(p.a) * R * tilt, vx: (Math.random() - .5) * .6, vy: -0.4 - Math.random() * (0.8 + L * 2.5), r: 1 + Math.random() * (2 + L * 4), life: 1 });
+  }
+  for (let i = bubbles.length - 1; i >= 0; i--){
+    const b = bubbles[i]; b.x += b.vx; b.y += b.vy; b.life -= 0.012;
+    if (b.life <= 0){ bubbles.splice(i, 1); continue; }
+    g.beginPath(); g.arc(b.x, b.y, b.r, 0, Math.PI * 2); g.strokeStyle = 'rgba(214,255,26,' + (b.life * 0.7) + ')'; g.lineWidth = 1; g.stroke();
+  }
+  if (bubbles.length > 900) bubbles.splice(0, bubbles.length - 900);
+  requestAnimationFrame(frame);
+}
+function dot(c, p, tilt, L, alpha){
+  const R = c.R * 1.55 * p.r * (1 + L * 0.06);
+  const x = c.x + Math.cos(p.a) * R, y = c.y + Math.sin(p.a) * R * tilt;
+  const s = (0.7 + p.z * 1.6) * (Math.sin(p.a) > 0 ? 1.25 : 0.8);
+  g.fillStyle = 'rgba(214,255,26,' + (alpha * (0.35 + p.z * 0.65)) + ')';
+  g.fillRect(x - s / 2, y - s / 2, s, s);
+}
+requestAnimationFrame(frame);
+
+// ---------------- voz: Gemini Live direto ----------------
+const live = { ws: null, inCtx: null, outCtx: null, mic: null, node: null, analyser: null, playhead: 0, sources: [], heard: '', on: false };
+function status(t, err){ $('status').textContent = t; $('status').classList.toggle('err', !!err); }
+async function credential(){
+  const tokenUrl = store.get('gem-token-url'), key = store.get('gem-key');
+  if (tokenUrl){
+    const r = await fetch(tokenUrl, { cache: 'no-store' });
+    if (!r.ok) throw new Error('o endereço do token respondeu ' + r.status);
+    const j = await r.json(); if (!j.token) throw new Error('token vazio');
+    return 'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=' + encodeURIComponent(j.token);
+  }
+  if (key) return 'wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=' + encodeURIComponent(key);
+  return null;
+}
+async function start(){
+  const url = await credential();
+  if (!url){ $('cfg').showModal(); status('Falta configurar a conexão com o Gemini (⚙).', true); return; }
+  $('talk').disabled = true; status('Conectando…');
+  live.mic = await navigator.mediaDevices.getUserMedia({ audio: { channelCount: 1, echoCancellation: true, noiseSuppression: true, autoGainControl: true } });
+  await new Promise((ok, fail) => {
+    let ready = false;
+    live.ws = new WebSocket(url);
+    live.ws.onopen = () => live.ws.send(JSON.stringify({ setup: {
+      model: 'models/' + MODEL,
+      generationConfig: { responseModalities: ['AUDIO'], speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: VOICE } } } },
+      systemInstruction: { parts: [{ text: PERSONA }] },
+      realtimeInputConfig: { activityHandling: 'NO_INTERRUPTION', automaticActivityDetection: { silenceDurationMs: 500, prefixPaddingMs: 200, startOfSpeechSensitivity: 'START_SENSITIVITY_LOW' } },
+      inputAudioTranscription: {}, outputAudioTranscription: {}
+    } }));
+    live.ws.onmessage = async (ev) => {
+      const data = typeof ev.data === 'string' ? ev.data : await ev.data.text();
+      let m; try{ m = JSON.parse(data); }catch(_){ return; }
+      if (m.setupComplete && !ready){ ready = true; await audio(); ok(); return; }
+      const sc = m.serverContent; if (!sc) return;
+      if (sc.inputTranscription && sc.inputTranscription.text){ live.heard += sc.inputTranscription.text; $('said').textContent = live.heard.trim(); if (/f[ée]li[xs]\W*,?\s*pare/i.test(live.heard)){ stop('Até já, Chefe.'); return; } }
+      if (sc.interrupted) stopPlayback();
+      if (sc.modelTurn && sc.modelTurn.parts) for (const p of sc.modelTurn.parts) if (p.inlineData && p.inlineData.data) play(p.inlineData.data);
+      if (sc.turnComplete) live.heard = '';
+    };
+    live.ws.onerror = () => { if (!ready) fail(new Error('a conexão com o Gemini falhou')); };
+    live.ws.onclose = (e) => { if (!ready) fail(new Error('o Gemini fechou a conexão: ' + (e.reason || e.code))); else stop(e.reason ? 'Conexão encerrada: ' + e.reason : ''); };
+  });
+  live.on = true; $('talk').classList.add('on'); $('talk').disabled = false; $('talk').setAttribute('aria-label', 'Encerrar conversa');
+  setState('listening');
+}
+async function audio(){
+  const AC = window.AudioContext || window.webkitAudioContext;
+  live.outCtx = new AC({ sampleRate: 24000 }); try{ await live.outCtx.resume(); }catch(_){}
+  live.analyser = live.outCtx.createAnalyser(); live.analyser.fftSize = 512; live.analyser.connect(live.outCtx.destination);
+  live.playhead = live.outCtx.currentTime;
+  live.inCtx = new AC(); try{ await live.inCtx.resume(); }catch(_){}
+  const src = live.inCtx.createMediaStreamSource(live.mic);
+  const code = 'class Cap extends AudioWorkletProcessor{constructor(){super();this.b=[];this.n=0}process(i){const c=i[0]&&i[0][0];if(!c)return true;this.b.push(c.slice(0));this.n+=c.length;if(this.n>=2048){const a=new Float32Array(this.n);let o=0;for(const x of this.b){a.set(x,o);o+=x.length}this.b=[];this.n=0;this.port.postMessage(a,[a.buffer])}return true}}registerProcessor("cap",Cap)';
+  await live.inCtx.audioWorklet.addModule(URL.createObjectURL(new Blob([code], { type: 'application/javascript' })));
+  live.node = new AudioWorkletNode(live.inCtx, 'cap');
+  const ratio = live.inCtx.sampleRate / 16000;
+  live.node.port.onmessage = (ev) => {
+    const f = ev.data; let s2 = 0; for (let i = 0; i < f.length; i += 4) s2 += f[i] * f[i];
+    if (vis.state === 'listening') vis.target = Math.min(1, Math.sqrt(s2 / (f.length / 4)) * 6);
+    if (!live.ws || live.ws.readyState !== 1 || live.sources.length) return;   // meia-via: enquanto o Félix fala, o microfone não manda nada
+    const n = Math.floor(f.length / ratio), pcm = new Int16Array(n);
+    for (let i = 0; i < n; i++){ const s = Math.max(-1, Math.min(1, f[Math.floor(i * ratio)])); pcm[i] = s < 0 ? s * 0x8000 : s * 0x7FFF; }
+    let bin = ''; const by = new Uint8Array(pcm.buffer); for (let i = 0; i < by.length; i += 0x8000) bin += String.fromCharCode.apply(null, by.subarray(i, i + 0x8000));
+    live.ws.send(JSON.stringify({ realtimeInput: { audio: { data: btoa(bin), mimeType: 'audio/pcm;rate=16000' } } }));
+  };
+  src.connect(live.node);
+  meter();
+}
+function meter(){
+  if (!live.analyser) return;
+  if (vis.state === 'speaking'){ const a = new Uint8Array(live.analyser.fftSize); live.analyser.getByteTimeDomainData(a); let s = 0; for (const v of a){ const d = (v - 128) / 128; s += d * d; } vis.target = Math.min(1, Math.sqrt(s / a.length) * 5); }
+  requestAnimationFrame(meter);
+}
+function play(b64){
+  const bin = atob(b64), n = bin.length >> 1, f = new Float32Array(n);
+  for (let i = 0; i < n; i++){ let v = bin.charCodeAt(2 * i) | (bin.charCodeAt(2 * i + 1) << 8); if (v >= 0x8000) v -= 0x10000; f[i] = v / 0x8000; }
+  const buf = live.outCtx.createBuffer(1, n, 24000); buf.copyToChannel(f, 0);
+  const s = live.outCtx.createBufferSource(); s.buffer = buf; s.connect(live.analyser);
+  const t = Math.max(live.outCtx.currentTime + (live.sources.length ? 0.02 : 0.1), live.playhead); s.start(t); live.playhead = t + buf.duration;
+  live.sources.push(s); setState('speaking');
+  s.onended = () => { live.sources = live.sources.filter((x) => x !== s); if (!live.sources.length && live.on) setState('listening'); };
+}
+function stopPlayback(){ for (const s of live.sources){ try{ s.stop(); }catch(_){} } live.sources = []; if (live.outCtx) live.playhead = live.outCtx.currentTime; }
+function setState(s){
+  vis.state = s; if (s === 'idle') vis.target = 0;
+  status(s === 'speaking' ? 'Félix falando' : s === 'listening' ? 'Pode falar, Chefe' : 'Toque no V para falar com o Félix');
+}
+function stop(msg){
+  live.on = false; stopPlayback();
+  try{ live.ws && live.ws.close(); }catch(_){}
+  try{ live.mic && live.mic.getTracks().forEach((t) => t.stop()); }catch(_){}
+  try{ live.inCtx && live.inCtx.close(); }catch(_){} try{ live.outCtx && live.outCtx.close(); }catch(_){}
+  Object.assign(live, { ws: null, inCtx: null, outCtx: null, mic: null, node: null, analyser: null, heard: '' });
+  $('talk').classList.remove('on'); $('talk').disabled = false; $('talk').setAttribute('aria-label', 'Falar com o Félix');
+  setState('idle'); if (msg) status(msg);
+}
+async function toggle(){
+  if (live.on){ stop(); return; }
+  try{ await start(); }
+  catch(e){ stop(); status(e && e.name === 'NotAllowedError' ? 'Libere o microfone no navegador.' : 'Não deu para falar agora: ' + (e.message || e), true); }
+}
+$('talk').addEventListener('click', toggle);
+cv.addEventListener('click', (e) => { const c = center(); if (Math.hypot(e.clientX - c.x, e.clientY - c.y) < c.R * 1.1) toggle(); });
+$('gear').addEventListener('click', () => { $('tokenUrl').value = store.get('gem-token-url'); $('apiKey').value = store.get('gem-key'); $('cfg').showModal(); });
+$('saveCfg').addEventListener('click', () => { store.set('gem-token-url', $('tokenUrl').value.trim()); store.set('gem-key', $('apiKey').value.trim()); status('Conexão salva neste aparelho. Toque no V.'); });
+</script>
+</body>
+</html>
