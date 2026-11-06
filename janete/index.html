@@ -1,1 +1,63 @@
-<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Janete · Vinci</title><style>body{margin:0;background:#0b1115;color:#eef4f1;font:16px system-ui;padding:24px}main{max-width:760px;margin:auto}h1{letter-spacing:.08em}.card{background:#111b20;border:1px solid #2a3a42;border-radius:16px;padding:18px;margin-top:18px}input,textarea,button{font:inherit}input,textarea{width:100%;box-sizing:border-box;padding:12px;border-radius:9px;border:1px solid #3b555e;background:#0b1115;color:#fff}button{cursor:pointer;border:0;border-radius:9px;padding:12px 16px;background:#1fd1a5;color:#04110d;font-weight:700;margin-top:10px}.hidden{display:none!important}.err{color:#ff928e;min-height:24px}.messages{min-height:280px;max-height:55vh;overflow:auto;display:flex;flex-direction:column;gap:8px;margin:16px 0}.msg{padding:10px 12px;border-radius:10px;white-space:pre-wrap}.a{background:#17392f;align-self:flex-start}.u{background:#27313a;align-self:flex-end}form{display:flex;gap:8px;align-items:end}form textarea{flex:1}.muted{color:#8ea3aa;font-size:13px}</style><main><section id="gate" class="card"><h1>JANETE</h1><p class="muted">VINCI · ESPELHO LOCAL DO SKYNET</p><input id="pw" type="password" placeholder="Senha"><button id="enter">Entrar</button><div id="err" class="err"></div></section><section id="app" class="hidden"><h1>JANETE</h1><p class="muted">VINCI · SKYNET CHAT · <span id="status">offline</span></p><div class="card"><div id="msgs" class="messages"></div><form id="form"><textarea id="draft" rows="2" placeholder="Fale com a Janete…"></textarea><button>Enviar</button></form></div></section></main><script>const API='https://complex-signature-accessed-loan.trycloudflare.com';let t=sessionStorage.getItem('jtoken')||'',timer;const $=x=>document.getElementById(x);async function q(p,o={}){let h={Accept:'application/json','X-Janete-Extension':'vinciautomacao'};if(o.body)h['Content-Type']='application/json';if(t)h.Authorization='Bearer '+t;let r=await fetch(API+p,{...o,headers:h,cache:'no-store'});if(!r.ok)throw Error(r.status===401?'Senha incorreta.':'Ponte offline.');return r.json()}function draw(a){let b=$('msgs');b.replaceChildren();(a||[]).forEach(m=>{let d=document.createElement('div');d.className='msg '+((m.speaker==='assistant'||m.speaker==='janete')?'a':'u');d.textContent=m.text||'';b.append(d)});b.scrollTop=b.scrollHeight}async function sync(){try{let d=await q('/api/messages');draw(d.messages);$('status').textContent='online'}catch(e){$('status').textContent='offline'}}async function login(){try{let d=await q('/api/login',{method:'POST',body:JSON.stringify({password:$('pw').value})});t=d.token;sessionStorage.setItem('jtoken',t);$('gate').classList.add('hidden');$('app').classList.remove('hidden');await sync();timer=setInterval(sync,3000)}catch(e){$('err').textContent=e.message}}$('enter').onclick=login;$('pw').onkeydown=e=>e.key==='Enter'&&login();$('form').onsubmit=async e=>{e.preventDefault();let v=$('draft').value.trim();if(!v)return;await q('/api/send',{method:'POST',body:JSON.stringify({text:v})});$('draft').value='';sync()};if(t){$('gate').classList.add('hidden');$('app').classList.remove('hidden');sync();timer=setInterval(sync,3000)}</script></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0E1519">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Janete 2 · Vinci</title>
+  <meta name="description" content="Janete 2: a IA debochada da Vinci, rodando no próprio aparelho, sem internet.">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css?v=j2-1">
+  <script type="module" src="app.js?v=j2-1"></script>
+</head>
+<body>
+  <section id="gate" class="gate-screen" aria-label="Acordar a Janete">
+    <img class="gate-avatar" src="janete-avatar.jpg" alt="Avatar da Janete, olhando com expressão brava">
+    <div class="gate-form">
+      <div class="gate-title"><b>JANETE 2</b><small>OFFLINE · SEM FILTRO · VINCI</small></div>
+      <div class="model-pick" role="radiogroup" aria-label="Cérebro da Janete">
+        <button type="button" data-model="big" role="radio" aria-checked="false"><b>Completa</b><small>Mac e PC · 8B · baixa ~4,5 GB uma vez</small></button>
+        <button type="button" data-model="small" role="radio" aria-checked="false"><b>Leve</b><small>Celular · 3B · baixa ~1,8 GB uma vez</small></button>
+      </div>
+      <button id="wake" class="wake-button" type="button">Acordar a Janete</button>
+      <div class="progress" id="progress" hidden><i id="progress-bar"></i></div>
+      <p id="gate-status" class="gate-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <div id="site-app" class="shell" hidden>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">J</span><span><b>JANETE 2</b><small>OFFLINE · VINCI</small></span></div>
+      <div class="top-actions"><span id="connection" class="connection" role="status"><i></i> Carregando</span><button id="clear" class="text-button" type="button">Limpar conversa</button></div>
+    </header>
+    <main class="layout">
+      <section class="stage" aria-labelledby="janete-title">
+        <div class="stage-heading"><span class="kicker">JANETE</span><span class="stage-tag">02 / SEM FILTRO</span></div>
+        <div class="portrait-wrap">
+          <div class="halo"></div><img class="portrait" src="janete-avatar.jpg" alt="Avatar da Janete">
+          <div class="portrait-glow"></div>
+        </div>
+        <div class="stage-bottom">
+          <div class="identity"><span class="kicker">CÉREBRO NO APARELHO</span><h1 id="janete-title">Janete<span class="period">.</span></h1><p>Boca suja, zero paciência e nenhum servidor. Roda aqui mesmo, até sem internet.</p></div>
+          <div class="live-control"><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span id="live-state">Live desligada</span><button id="live-toggle" class="live-button" type="button">▶ Iniciar live</button></div>
+        </div>
+      </section>
+      <section class="chat" aria-label="Conversa com a Janete">
+        <div class="chat-header"><div><span class="kicker">CÉREBRO LOCAL · <span id="model-name">—</span></span><h2>Conversa</h2></div><div class="view-switch" role="group" aria-label="Voz"><button id="voice-on" class="active" type="button">Com voz</button><button id="voice-off" type="button">Mudo</button></div></div>
+        <div id="notice" class="notice" role="alert" hidden></div>
+        <div id="messages" class="messages" aria-live="polite"><div class="empty">Fala alguma coisa, porra. Tô esperando.</div></div>
+        <div class="composer">
+          <div id="dictation-status" class="dictation-status" aria-live="polite">Escreva ou use o microfone.</div>
+          <form id="send-form"><button id="mic" type="button" class="icon-button" title="Falar" aria-label="Falar">🎙</button><textarea id="draft" rows="2" placeholder="Fala com a Janete…" aria-label="Mensagem para a Janete" maxlength="4000"></textarea><button id="send" type="submit" class="send-button">Enviar <span aria-hidden="true">↗</span></button></form>
+          <div class="composer-foot"><span>Enter envia · Shift+Enter quebra linha</span><span id="speed"></span></div>
+        </div>
+      </section>
+    </main>
+    <footer>VINCI AUTOMAÇÃO <span>·</span> JANETE 2 · OFFLINE</footer>
+  </div>
+</body>
+</html>
