@@ -268,6 +268,8 @@ $("pw-form").addEventListener("submit", async (e) => {
   if (ok) { gateStatus(""); liberar(); } else { gateStatus("Senha errada, porra. Tenta de novo.", true); $("password").focus(); }
 });
 try { if (sessionStorage.getItem("janete-liberada") === "1") liberar(); } catch (_) {}
+// 6 dígitos digitados: confere sozinho (no iPhone o teclado numérico não tem tecla "Ir")
+$("password").addEventListener("input", () => { if (/^\d{6}$/.test($("password").value)) $("pw-form").requestSubmit(); });
 
 // ---------- ligações ----------
 choose("small"); // Janete Lite: cérebro leve (3B), para iPhone e aparelhos com pouca memória

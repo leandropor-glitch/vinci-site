@@ -39,3 +39,4 @@ body:has(.gate-screen:not([hidden])){overflow:hidden}
 .pw-form input:focus{border-color:var(--acc);box-shadow:0 0 0 3px #e1fe0629}
 .pw-form input:disabled{opacity:.55}
 .brain-note{margin:0;text-align:center;font-size:11px;color:var(--soft);letter-spacing:.06em}
+.pw-form{display:grid;gap:10px}
