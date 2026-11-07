@@ -26,8 +26,37 @@ const state = {
   history: load(),
 };
 
-function load() { try { const v = JSON.parse(localStorage.getItem(STORE) || "[]"); return Array.isArray(v) ? v.slice(-40) : []; } catch (_) { return []; } }
-function save() { try { localStorage.setItem(STORE, JSON.stringify(state.history.slice(-40))); } catch (_) {} }
+// Conversa única: não existe "nova conversa" nem "limpar". A tela guarda as últimas 300 mensagens;
+// o que fica para trás vira memória (resumo) que vai junto com a personalidade em toda resposta.
+const MEMORIA = STORE + "-memoria", CONSOLIDADO = STORE + "-consolidado";
+function load() { try { const v = JSON.parse(localStorage.getItem(STORE) || "[]"); return Array.isArray(v) ? v.slice(-300) : []; } catch (_) { return []; } }
+function save() { try { localStorage.setItem(STORE, JSON.stringify(state.history.slice(-300))); } catch (_) {} }
+function memoria() { try { return localStorage.getItem(MEMORIA) || ""; } catch (_) { return ""; } }
+function sistema() {
+  const m = memoria();
+  return m ? PERSONA + "\n\nMemória das conversas anteriores com o Leandro (use quando fizer sentido, sem citar que é um resumo):\n" + m : PERSONA;
+}
+// Uma vez por dia (a partir das 5h), junta ao cérebro o contexto antigo: resume tudo menos as 12 últimas
+// mensagens e soma à memória. Roda sozinho na primeira vez que a Janete acorda depois das 5h.
+async function consolidarContexto() {
+  try {
+    const agora = new Date(), corte = new Date(agora); corte.setHours(5, 0, 0, 0);
+    if (agora < corte) corte.setDate(corte.getDate() - 1);
+    const ultimo = Number(localStorage.getItem(CONSOLIDADO) || 0);
+    if (ultimo >= corte.getTime()) return;
+    const desde = Number(localStorage.getItem(CONSOLIDADO + "-ate") || 0);
+    const antigas = state.history.slice(desde, Math.max(desde, state.history.length - 12));
+    if (antigas.length >= 6 && state.engine) {
+      const texto = antigas.map((m) => (m.role === "user" ? "Leandro: " : "Janete: ") + m.content).join("\n").slice(-12000);
+      const r = await state.engine.chat.completions.create({ messages: [
+        { role: "system", content: "Resuma em português, em tópicos curtos, o que importa lembrar desta conversa: fatos sobre o Leandro, pedidos, combinados, assuntos e piadas internas. Máximo 15 tópicos. Junte com a memória anterior sem repetir." },
+        { role: "user", content: "Memória anterior:\n" + (memoria() || "(vazia)") + "\n\nConversa nova:\n" + texto } ], temperature: 0.3, max_tokens: 500 });
+      const resumo = (r.choices && r.choices[0] && r.choices[0].message && r.choices[0].message.content || "").trim();
+      if (resumo) { localStorage.setItem(MEMORIA, resumo.slice(0, 6000)); localStorage.setItem(CONSOLIDADO + "-ate", String(Math.max(desde, state.history.length - 12))); }
+    }
+    localStorage.setItem(CONSOLIDADO, String(agora.getTime()));
+  } catch (e) { console.warn("consolidação do contexto ficou para depois", e); }
+}
 
 // ---------- tela de acordar ----------
 function pickDefault() {
@@ -71,6 +100,7 @@ async function wake() {
     });
     $("model-name").textContent = m.label.toUpperCase();
     openApp();
+    consolidarContexto();
   } catch (e) {
     console.error(e);
     const msg = String(e && e.message || e);
@@ -134,7 +164,7 @@ async function send(text) {
   const t0 = performance.now();
   let reply = "";
   try {
-    const messages = [{ role: "system", content: PERSONA }, ...state.history.slice(-12)];
+    const messages = [{ role: "system", content: sistema() }, ...state.history.slice(-12)];
     const stream = await state.engine.chat.completions.create({ messages, stream: true, temperature: 0.9, top_p: 0.95, max_tokens: 320 });
     for await (const chunk of stream) {
       const d = chunk.choices && chunk.choices[0] && chunk.choices[0].delta && chunk.choices[0].delta.content;
@@ -252,7 +282,6 @@ $("live-toggle").addEventListener("click", () => {
 });
 $("voice-on").addEventListener("click", () => { state.voice = true; $("voice-on").classList.add("active"); $("voice-off").classList.remove("active"); });
 $("voice-off").addEventListener("click", () => { state.voice = false; speechSynthesis.cancel(); $("voice-off").classList.add("active"); $("voice-on").classList.remove("active"); });
-$("clear").addEventListener("click", () => { state.history = []; save(); render(); });
 if ("speechSynthesis" in window) speechSynthesis.getVoices();
 updateLive();
 

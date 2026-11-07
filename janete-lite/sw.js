@@ -1,8 +1,8 @@
 // Janete: guarda a página e a biblioteca para abrir sem internet.
 // O modelo em si fica no cache próprio do WebLLM (baixado uma vez, do Hugging Face).
-const CACHE = "janete-lite-v1";
+const CACHE = "janete-lite-v2";
 const SHELL = [
-  "./", "index.html", "style.css?v=j-4", "app.js?v=j-4", "worker.js",
+  "./", "index.html", "style.css?v=j-5", "app.js?v=j-5", "worker.js",
   "vendor/web-llm-0.2.86.js", "janete-avatar.jpg", "icon-192.png", "icon-512.png", "manifest.webmanifest",
 ];
 
