@@ -76,6 +76,10 @@ async function gpuSupportsF16() {
 }
 
 async function wake() {
+  if (/iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) {
+    gateStatus("No iPhone e no iPad o cérebro completo não cabe na memória do Safari. Use a Janete Lite: vinciautomacao.com/janete-lite", true);
+    return;
+  }
   if (!("gpu" in navigator)) {
     gateStatus("Este navegador não tem WebGPU. Use o Chrome ou o Edge atualizados no Mac/PC, ou o Safari 26 no iPhone.", true);
     return;

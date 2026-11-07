@@ -1,13 +1,15 @@
 // Janete · Vinci Automação
 // Cérebro: Hermes 3 (Nous Research, modelo aberto de pouco filtro) rodando no aparelho via WebLLM + WebGPU.
 // Nenhum servidor: depois do primeiro download o modelo fica no cache do navegador e funciona sem internet.
-import { CreateWebWorkerMLCEngine, hasModelInCache } from "./vendor/web-llm-0.2.86.js";
+import { CreateWebWorkerMLCEngine, hasModelInCache, deleteModelAllInfoInCache } from "./vendor/web-llm-0.2.86.js";
+// libera o espaço do cérebro 3B antigo, se ele ficou guardado no aparelho
+for (const velho of ["Hermes-3-Llama-3.2-3B-q4f16_1-MLC", "Hermes-3-Llama-3.2-3B-q4f32_1-MLC"]) { hasModelInCache(velho).then((tem) => tem && deleteModelAllInfoInCache(velho)).catch(() => {}); }
 
 const $ = (id) => document.getElementById(id);
 
 const MODELS = {
   big:   { f16: "Hermes-3-Llama-3.1-8B-q4f16_1-MLC", f32: "Hermes-3-Llama-3.1-8B-q4f32_1-MLC", label: "Hermes 3 · 8B" },
-  small: { f16: "Hermes-3-Llama-3.2-3B-q4f16_1-MLC", f32: "Hermes-3-Llama-3.2-3B-q4f32_1-MLC", label: "Hermes 3 · 3B" },
+  small: { f16: "Llama-3.2-1B-Instruct-q4f16_1-MLC", f32: "Llama-3.2-1B-Instruct-q4f32_1-MLC", label: "Llama 3.2 · 1B" },   // iPhone: o 3B (~2,3 GB) derrubava a aba do Safari
 };
 
 const PERSONA = `Você é a Janete, a IA debochada da Vinci Automação. Não é assistente educadinha: é a amiga boca-suja, zoeira e sem paciência do Leandro, o dono da Vinci.
@@ -97,7 +99,7 @@ async function wake() {
         const pct = Math.round((r.progress || 0) * 100);
         gateStatus((cached ? "Acordando… " : "Baixando o cérebro… ") + pct + "%");
       },
-    });
+    }, { context_window_size: 2048 });   // menos memória: cabe no limite do Safari do iPhone
     $("model-name").textContent = m.label.toUpperCase();
     openApp();
     consolidarContexto();
@@ -164,7 +166,7 @@ async function send(text) {
   const t0 = performance.now();
   let reply = "";
   try {
-    const messages = [{ role: "system", content: sistema() }, ...state.history.slice(-12)];
+    const messages = [{ role: "system", content: sistema() }, ...state.history.slice(-8)];
     const stream = await state.engine.chat.completions.create({ messages, stream: true, temperature: 0.9, top_p: 0.95, max_tokens: 320 });
     for await (const chunk of stream) {
       const d = chunk.choices && chunk.choices[0] && chunk.choices[0].delta && chunk.choices[0].delta.content;
