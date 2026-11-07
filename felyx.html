@@ -30,6 +30,32 @@
 <link rel="preload" href="assets/fonts/barlow-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/barlow-semi-condensed-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/site.css?v=60351a50">
+<style>
+.planos-felyx{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;max-width:1040px}
+@media (max-width:820px){.planos-felyx{grid-template-columns:1fr}}
+.plano{display:grid;gap:18px;align-content:start;padding:30px;border-radius:var(--radius);background:var(--ink-800);border:1px solid var(--line)}
+.plano--gem{border-color:rgba(225,254,6,.35);box-shadow:0 0 40px rgba(225,254,6,.06)}
+.plano--pro{border-color:rgba(79,168,255,.45);box-shadow:0 0 40px rgba(79,168,255,.08)}
+.plano-topo{display:flex;align-items:center;gap:16px}
+.plano-selo{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:16px;background:var(--ink-950);border:1px solid var(--line)}
+.plano-selo svg{width:40px;height:32px;fill:var(--volt);filter:drop-shadow(0 0 8px rgba(225,254,6,.6))}
+.plano-selo--rosto{overflow:hidden;border-color:rgba(79,168,255,.5)}
+.plano-selo--rosto img{width:100%;height:100%;object-fit:cover;display:block}
+.plano h3{font-size:1.6rem;margin:0}
+.plano-sub{margin:4px 0 0;color:var(--mist)}
+.plano-preco{margin:0;font-family:var(--mono);font-size:.82rem;letter-spacing:.08em;text-transform:uppercase;color:var(--mist)}
+.plano-btn{justify-self:start}
+.plano-btn--pro{--btn-bg:#4fa8ff;--btn-fg:var(--ink-900);--btn-bd:#4fa8ff}
+.plano-lista{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.plano-lista li{position:relative;padding-left:28px;line-height:1.45}
+.plano-lista li::before{content:"✓";position:absolute;left:0;top:0;font-weight:700;color:var(--volt)}
+.plano--pro .plano-lista li::before{color:#4fa8ff}
+.plano-lista li.plano-tudo{padding-left:0;font-weight:600;color:var(--text)}
+.plano-lista li.plano-tudo::before{content:none}
+.aderir-passos{display:grid;gap:14px;max-width:760px;margin:0 0 28px;padding-left:22px}
+.aderir-passos li{line-height:1.5;color:var(--mist)}
+.aderir-passos strong{color:var(--text)}
+</style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs><symbol id="i-air-vent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 17.5a2.5 2.5 0 1 1-4 2.03V12" /> <path d="M6 12H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /> <path d="M6 8h12" /> <path d="M6.6 15.572A2 2 0 1 0 10 17v-5" /></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /> <path d="m12 5 7 7-7 7" /></symbol><symbol id="i-arrow-up-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h10v10" /> <path d="M7 17 17 7" /></symbol><symbol id="i-blinds" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18" /> <path d="M20 7H8" /> <path d="M20 11H8" /> <path d="M10 19h10" /> <path d="M8 15h12" /> <path d="M4 3v14" /> <circle cx="4" cy="19" r="2" /></symbol><symbol id="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8" /> <rect width="16" height="12" x="4" y="8" rx="2" /> <path d="M2 14h2" /> <path d="M20 14h2" /> <path d="M15 13v2" /> <path d="M9 13v2" /></symbol><symbol id="i-cable" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z" /> <path d="M17 21v-2" /> <path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10" /> <path d="M21 21v-2" /> <path d="M3 5V3" /> <path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z" /> <path d="M7 5V3" /></symbol><symbol id="i-cctv" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16.75 12h3.632a1 1 0 0 1 .894 1.447l-2.034 4.069a1 1 0 0 1-1.708.134l-2.124-2.97" /> <path d="M17.106 9.053a1 1 0 0 1 .447 1.341l-3.106 6.211a1 1 0 0 1-1.342.447L3.61 12.3a2.92 2.92 0 0 1-1.3-3.91L3.69 5.6a2.92 2.92 0 0 1 3.92-1.3z" /> <path d="M2 19h3.76a2 2 0 0 0 1.8-1.1L9 15" /> <path d="M2 21v-4" /> <path d="M7 9h.01" /></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></symbol><symbol id="i-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6" /></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6" /></symbol><symbol id="i-clapperboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12.296 3.464 3.02 3.956" /> <path d="M20.2 6 3 11l-.9-2.4c-.3-1.1.3-2.2 1.3-2.5l13.5-4c1.1-.3 2.2.3 2.5 1.3z" /> <path d="M3 11h18v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /> <path d="m6.18 5.276 3.1 3.899" /></symbol><symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" /></symbol><symbol id="i-drafting-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12.99 6.74 1.93 3.44" /> <path d="M19.136 12a10 10 0 0 1-14.271 0" /> <path d="m21 21-2.16-3.84" /> <path d="m3 21 8.02-14.26" /> <circle cx="12" cy="5" r="2" /></symbol><symbol id="i-fingerprint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10a2 2 0 0 0-2 2c0 1.02-.1 2.51-.26 4" /> <path d="M14 13.12c0 2.38 0 6.38-1 8.88" /> <path d="M17.29 21.02c.12-.6.43-2.3.5-3.02" /> <path d="M2 12a10 10 0 0 1 18-6" /> <path d="M2 16h.01" /> <path d="M21.8 16c.2-2 .131-5.354 0-6" /> <path d="M5 19.5C5.5 18 6 15 6 12a6 6 0 0 1 .34-2" /> <path d="M8.65 22c.21-.66.45-1.32.57-2" /> <path d="M9 6.8a6 6 0 0 1 9 5.2v2" /></symbol><symbol id="i-house" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol><symbol id="i-images" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m22 11-1.296-1.296a2.4 2.4 0 0 0-3.408 0L11 16" /> <path d="M4 8a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2" /> <circle cx="13" cy="7" r="1" fill="currentColor" /> <rect x="8" y="2" width="14" height="14" rx="2" /></symbol><symbol id="i-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol><symbol id="i-lightbulb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /> <path d="M9 18h6" /> <path d="M10 22h4" /></symbol><symbol id="i-log-out" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 17 5-5-5-5" /> <path d="M21 12H9" /> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></symbol><symbol id="i-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol><symbol id="i-message-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" /></symbol><symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></symbol><symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14" /> <path d="M12 5v14" /></symbol><symbol id="i-scan-face" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2" /> <path d="M17 3h2a2 2 0 0 1 2 2v2" /> <path d="M21 17v2a2 2 0 0 1-2 2h-2" /> <path d="M7 21H5a2 2 0 0 1-2-2v-2" /> <path d="M8 14s1.5 2 4 2 4-2 4-2" /> <path d="M9 9h.01" /> <path d="M15 9h.01" /></symbol><symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /> <path d="m9 12 2 2 4-4" /></symbol><symbol id="i-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2" /> <path d="M12 18h.01" /></symbol><symbol id="i-speaker" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" /> <path d="M12 6h.01" /> <circle cx="12" cy="14" r="4" /> <path d="M12 14h.01" /></symbol><symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol><symbol id="i-star-fill" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z" /></symbol><symbol id="i-utensils" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /> <path d="M7 2v20" /> <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></symbol><symbol id="i-video" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m16 13 5.223 3.482a.5.5 0 0 0 .777-.416V7.87a.5.5 0 0 0-.752-.432L16 10.5" /> <rect x="2" y="6" width="14" height="12" rx="2" /></symbol><symbol id="i-volume-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z" /> <path d="M16 9a5 5 0 0 1 0 6" /> <path d="M19.364 18.364a9 9 0 0 0 0-12.728" /></symbol><symbol id="i-volume-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4.702a.7.7 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.7.7 0 0 0 11 19.298z" /> <path d="m16.5 14.5 5-5" /> <path d="m16.5 9.5 5 5" /></symbol><symbol id="i-wifi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h.01" /> <path d="M2 8.82a15 15 0 0 1 20 0" /> <path d="M5 12.859a10 10 0 0 1 14 0" /> <path d="M8.5 16.429a5 5 0 0 1 7 0" /></symbol><symbol id="i-wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.106-3.105c.32-.322.863-.22.983.218a6 6 0 0 1-8.259 7.057l-7.91 7.91a1 1 0 0 1-2.999-3l7.91-7.91a6 6 0 0 1 7.057-8.259c.438.12.54.662.219.984z" /></symbol><symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol></defs></svg>
@@ -99,27 +125,66 @@
     </div>
   </div>
 </section>
-<section class="section section--ink" aria-labelledby="versoes-title">
-  <div class="wrap">
-    <div class="section-head">
-      <p class="eyebrow">Duas versões</p>
-      <h2 id="versoes-title" class="h2">Felyx GEM e Felyx PRO.</h2>
-    </div>
-    <div class="pillars">
-      <article class="pillar"><svg aria-hidden="true"><use href="#i-bot"/></svg><h3>Felyx GEM</h3><p>Conversa por voz com o Gemini, do Google, e integração com o Google Home. Direto no celular, sem complicação.</p></article>
-      <article class="pillar"><svg aria-hidden="true"><use href="#i-layers"/></svg><h3>Felyx PRO</h3><p>O assistente completo: atende também pelo WhatsApp e se integra com a casa Vinci.</p></article>
-    </div>
-  </div>
-</section>
-<section class="section" id="planos" aria-labelledby="planos-title">
+<section class="section section--ink" id="planos" aria-labelledby="planos-title">
   <div class="wrap">
     <div class="section-head">
       <p class="eyebrow">Planos</p>
-      <h2 id="planos-title" class="h2">Planos e valores.</h2>
-      <p class="lead">Os planos do Felyx GEM e do Felyx PRO vão aparecer aqui em breve.</p>
+      <h2 id="planos-title" class="h2">Felyx GEM e Felyx PRO.</h2>
+      <p class="lead">Duas versões do mesmo Felyx. As duas são instaladas e configuradas pela equipe Vinci.</p>
     </div>
-    <!-- PLANOS: preencher com os planos que o Gemini passar, depois da aprovação do Leandro. Não publicar preço antes disso. -->
-    <p><a class="btn btn--primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20saber%20dos%20planos%20do%20Felyx." target="_blank" rel="noopener">Quero saber dos planos</a></p>
+    <div class="planos-felyx">
+      <article class="plano plano--gem" aria-labelledby="plano-gem">
+        <div class="plano-topo">
+          <span class="plano-selo" aria-hidden="true"><svg viewBox="0 0 100 80.3"><polygon points="0,0 50,50.2 100,0 100,29.9 50,80.3 0,29.9"/></svg></span>
+          <div><h3 id="plano-gem">Felyx GEM</h3><p class="plano-sub">O Felyx de voz, direto no celular.</p></div>
+        </div>
+        <p class="plano-preco">Valor sob consulta</p>
+        <a class="btn btn--primary plano-btn" href="mailto:felyx@vinciautomacao.com?subject=Quero%20o%20Felyx%20GEM&body=Ol%C3%A1%2C%20equipe%20Vinci%21%20Quero%20o%20Felyx%20GEM.%0A%0ANome%3A%0ATelefone%20com%20WhatsApp%3A%0ACidade%20e%20bairro%3A%0AJ%C3%A1%20sou%20cliente%20Vinci%3F%20%28sim%20ou%20n%C3%A3o%29%3A%0AO%20que%20eu%20quero%20que%20o%20Felyx%20fa%C3%A7a%3A%0A">Solicitar o Felyx GEM</a>
+        <ul class="plano-lista">
+          <li>Conversa por voz natural, com a voz do Felyx</li>
+          <li>Responde na hora a qualquer pergunta</li>
+          <li>Notícias, clima e cotações do dia, buscados no Google na hora</li>
+          <li>Comanda a casa pelo Google Home</li>
+          <li>App Felyx AI Vinci no iPhone e no Android</li>
+          <li>Instalação e configuração pela equipe Vinci</li>
+        </ul>
+      </article>
+      <article class="plano plano--pro" aria-labelledby="plano-pro">
+        <div class="plano-topo">
+          <span class="plano-selo plano-selo--rosto" aria-hidden="true"><img src="assets/img/felyx-rosto.jpg" alt="" width="64" height="64" loading="lazy"></span>
+          <div><h3 id="plano-pro">Felyx PRO</h3><p class="plano-sub">O Felyx completo, feito sob medida para a sua casa.</p></div>
+        </div>
+        <p class="plano-preco">Valor sob consulta</p>
+        <a class="btn plano-btn plano-btn--pro" href="mailto:felyx@vinciautomacao.com?subject=Quero%20o%20Felyx%20PRO&body=Ol%C3%A1%2C%20equipe%20Vinci%21%20Quero%20o%20Felyx%20PRO.%0A%0ANome%3A%0ATelefone%20com%20WhatsApp%3A%0ACidade%20e%20bairro%3A%0AJ%C3%A1%20sou%20cliente%20Vinci%3F%20%28sim%20ou%20n%C3%A3o%29%3A%0AO%20que%20eu%20quero%20que%20o%20Felyx%20fa%C3%A7a%3A%0A">Solicitar o Felyx PRO</a>
+        <ul class="plano-lista">
+          <li class="plano-tudo">Tudo do Felyx GEM, e mais:</li>
+          <li>Atende também pelo WhatsApp, você e as pessoas da casa</li>
+          <li>Cérebro e memória exclusivos: o que você ensina fica só com a sua casa</li>
+          <li>Comanda todos os aparelhos e cenas da central Vinci</li>
+          <li>Rotinas por horário, configuradas pela equipe Vinci</li>
+          <li>Resumo do dia com clima, notícias, dólar, euro e Bitcoin</li>
+          <li>Rosto do Felyx ao vivo, em vídeo</li>
+          <li>Personalizado ao seu gosto: assuntos, avisos e jeito de falar</li>
+          <li>Suporte direto da equipe Vinci</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+<section class="section" id="aderir" aria-labelledby="aderir-title">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">Como aderir</p>
+      <h2 id="aderir-title" class="h2">Peça o seu Felyx por e-mail.</h2>
+      <p class="lead">O Felyx é um serviço de customização exclusivo para clientes Vinci, pelo canal Vinci. Ele pode e deve ser solicitado pelo e-mail <a href="mailto:felyx@vinciautomacao.com">felyx@vinciautomacao.com</a>.</p>
+    </div>
+    <ol class="aderir-passos">
+      <li><strong>Escolha</strong> o Felyx GEM ou o Felyx PRO.</li>
+      <li><strong>Mande um e-mail</strong> para felyx@vinciautomacao.com. O botão do plano já prepara a mensagem.</li>
+      <li><strong>Receba a proposta</strong> da equipe Vinci, com o termo de adesão para o seu aceite.</li>
+      <li><strong>Pronto:</strong> com o aceite, a Vinci configura o Felyx e libera o seu acesso no app.</li>
+    </ol>
+    <p><a class="btn btn--primary" href="mailto:felyx@vinciautomacao.com?subject=Quero%20o%20Felyx&body=Ol%C3%A1%2C%20equipe%20Vinci%21%20Quero%20o%20Felyx.%0A%0ANome%3A%0ATelefone%20com%20WhatsApp%3A%0ACidade%20e%20bairro%3A%0AJ%C3%A1%20sou%20cliente%20Vinci%3F%20%28sim%20ou%20n%C3%A3o%29%3A%0AO%20que%20eu%20quero%20que%20o%20Felyx%20fa%C3%A7a%3A%0A">Escrever para felyx@vinciautomacao.com</a></p>
   </div>
 </section>
 <section class="section section--ink" id="ajuda" aria-labelledby="ajuda-title">
@@ -131,6 +196,8 @@
     <div class="faq">
       <details open><summary>Como eu entro no app?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Com o seu número de telefone autorizado pela Vinci. O app manda um código pelo WhatsApp e, no primeiro acesso, você cria a sua senha pessoal.</p></details>
       <details><summary>Quem pode usar o Felyx?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Clientes Vinci e as pessoas que o cliente autorizar.</p></details>
+      <details><summary>Como eu contrato o Felyx?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Pelo e-mail <a href="mailto:felyx@vinciautomacao.com">felyx@vinciautomacao.com</a>. A equipe Vinci responde com a proposta e o termo de adesão; com o seu aceite, configura o Felyx e libera o seu acesso no app.</p></details>
+      <details><summary>Quanto custa?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>O valor depende da sua casa e do plano escolhido. Peça a proposta pelo e-mail <a href="mailto:felyx@vinciautomacao.com">felyx@vinciautomacao.com</a>.</p></details>
       <details><summary>O Felyx não fez o que eu pedi. E agora?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Peça de novo com outras palavras, usando o nome do aparelho ou da cena como aparece no app. Se continuar, fale com a Vinci pelo WhatsApp.</p></details>
       <details><summary>Como excluo a minha conta?<svg aria-hidden="true"><use href="#i-plus"/></svg></summary><p>Siga o passo a passo da página <a href="https://leandropor-glitch.github.io/jarvis-leandro/app/excluir-conta.html" target="_blank" rel="noopener">Excluir conta</a>. A <a href="https://leandropor-glitch.github.io/jarvis-leandro/app/privacidade.html" target="_blank" rel="noopener">política de privacidade do app</a> explica como cuidamos dos seus dados.</p></details>
     </div>
