@@ -240,9 +240,7 @@ $("pw-form").addEventListener("submit", async (e) => {
 try { if (sessionStorage.getItem("janete-liberada") === "1") liberar(); } catch (_) {}
 
 // ---------- ligações ----------
-const saved = (() => { try { return localStorage.getItem("janete-modelo"); } catch (_) { return null; } })();
-choose(saved && MODELS[saved] ? saved : pickDefault());
-document.querySelectorAll(".model-pick button").forEach((b) => b.addEventListener("click", () => choose(b.dataset.model)));
+choose("big"); // sempre o cérebro maior (decisão do Leandro, 06/11)
 $("wake").addEventListener("click", wake);
 $("send-form").addEventListener("submit", (e) => { e.preventDefault(); send($("draft").value); });
 $("draft").addEventListener("keydown", (e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send($("draft").value); } });

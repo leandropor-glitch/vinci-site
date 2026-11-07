@@ -38,3 +38,4 @@ body:has(.gate-screen:not([hidden])){overflow:hidden}
 .pw-form input{height:54px;width:100%;border:1px solid #e1fe06a0;border-radius:14px;background:#0b1012e8;color:var(--ink);padding:0 18px;font-size:16px;letter-spacing:.2em;outline:0;box-shadow:0 0 28px #e1fe061c;backdrop-filter:blur(12px);text-align:center}
 .pw-form input:focus{border-color:var(--acc);box-shadow:0 0 0 3px #e1fe0629}
 .pw-form input:disabled{opacity:.55}
+.brain-note{margin:0;text-align:center;font-size:11px;color:var(--soft);letter-spacing:.06em}
