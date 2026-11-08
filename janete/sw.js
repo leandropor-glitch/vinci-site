@@ -1,25 +1,14 @@
-// Janete: guarda a página e a biblioteca para abrir sem internet.
-// O modelo em si fica no cache próprio do WebLLM (baixado uma vez, do Hugging Face).
-const CACHE = "janete-v7";
-const SHELL = [
-  "./", "index.html", "style.css?v=j-7", "app.js?v=j-7", "worker.js",
-  "vendor/web-llm-0.2.86.js", "janete-avatar.jpg", "icon-192.png", "icon-512.png", "manifest.webmanifest",
-];
-
-self.addEventListener("install", (e) => {
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
-});
+// Janete excluída do site em 08/11/2026 (pedido do Leandro).
+// Este arquivo fica só para limpar os aparelhos que já tinham a Janete instalada:
+// apaga a página guardada e o cérebro baixado (cache do WebLLM), desliga o service worker
+// e recarrega a aba, que passa a mostrar a página de "não encontrado" do site.
+self.addEventListener("install", () => self.skipWaiting());
 self.addEventListener("activate", (e) => {
-  e.waitUntil(caches.keys().then((ks) => Promise.all(ks.filter((k) => (k.startsWith("janete-") || k.startsWith("janete2-")) && k !== CACHE).map((k) => caches.delete(k)))).then(() => self.clients.claim()));
-});
-self.addEventListener("fetch", (e) => {
-  const url = new URL(e.request.url);
-  if (e.request.method !== "GET" || url.origin !== location.origin || !url.pathname.includes("/janete/")) return;
-  // Rede primeiro (pega versão nova quando há internet); sem internet, usa o guardado.
-  e.respondWith(
-    fetch(e.request).then((r) => {
-      if (r.ok) { const copy = r.clone(); caches.open(CACHE).then((c) => c.put(e.request, copy)); }
-      return r;
-    }).catch(() => caches.match(e.request, { ignoreSearch: false }).then((m) => m || caches.match(e.request, { ignoreSearch: true })))
-  );
+  e.waitUntil((async () => {
+    const ks = await caches.keys();
+    await Promise.all(ks.filter((k) => k.startsWith("janete") || k.startsWith("webllm/")).map((k) => caches.delete(k)));
+    await self.registration.unregister();
+    const abas = await self.clients.matchAll({ type: "window" });
+    abas.forEach((c) => c.navigate(c.url).catch(() => {}));
+  })());
 });
