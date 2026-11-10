@@ -3,181 +3,281 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Janete da Vinci</title>
 <meta name="description" content="Janete, a assistente de casa inteligente da Vinci Automação. Comande luzes, ar, portão e cenas pelo WhatsApp, Alexa e Google Home.">
+<meta name="theme-color" content="#080b0d">
 <link rel="canonical" href="https://www.vinciautomacao.com/janete/">
 <link rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta property="og:title" content="Janete da Vinci">
 <meta property="og:description" content="Sua casa entende o que você fala.">
 <meta property="og:url" content="https://www.vinciautomacao.com/janete/">
-<title>Janete da Vinci</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-/* Layout: split hero with a live "set up your Janete" console on the right; quiet sections below. */
+/* Layout: dark Vinci stage; hero = headline left + "set up your Janete" device right with her avatar in a volt halo; then integrations, a day timeline, features grid, plans with monthly/annual switch, FAQ. */
 :root {
-  --bg: #F3F5F2;
-  --surface: #FFFFFF;
-  --ink: #16241F;
-  --muted: #5B6B65;
-  --line: #DCE3DF;
-  --accent: #0F7B5F;      /* verde-folha da Janete */
-  --accent-ink: #FFFFFF;
-  --glow: #F4B942;        /* âmbar: luz acesa */
-  --soft: #E4EFEA;
-  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
-  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
-  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #0F1714; --surface: #17221E; --ink: #E8EFEB; --muted: #9AABA4; --line: #2A3833;
-    --accent: #3BC79C; --accent-ink: #0B1310; --glow: #F6C35A; --soft: #1C2B26; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #0F1714; --surface: #17221E; --ink: #E8EFEB; --muted: #9AABA4; --line: #2A3833;
-  --accent: #3BC79C; --accent-ink: #0B1310; --glow: #F6C35A; --soft: #1C2B26; color-scheme: dark;
+  --bg: #080b0d;
+  --surface: #0e1317;
+  --raise: #141b21;
+  --line: #24303a;
+  --muted: #93a3af;
+  --text: #e8edf0;
+  --volt: #e1fe06;
+  --volt-press: #c9e400;
+  --on-volt: #0e1317;
+  --paper: #e9ecec;
+  --gold: #e0a526;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
 }
 * { box-sizing: border-box; }
-body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); margin: 0; }
-.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-h1, h2, h3 { font-family: var(--display); line-height: 1.08; text-wrap: balance; margin: 0; }
-h1 { font-size: clamp(2.4rem, 5.4vw, 4.1rem); font-weight: 800; letter-spacing: -0.02em; }
-h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); font-weight: 700; letter-spacing: -0.01em; }
-h3 { font-size: 1.15rem; font-weight: 700; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body { background: var(--bg); color: var(--text); font: 17px/1.6 var(--body); margin: 0; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 5.2vw, 4.3rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.6rem, 3.1vw, 2.6rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }
+h3 { font-size: 1.02rem; font-weight: 600; line-height: 1.25; }
 p { margin: 0; }
-a { color: var(--accent); }
-button, input, select { font: inherit; color: inherit; }
-:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-.eyebrow { font: 500 .78rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+a { color: var(--volt); }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--volt); outline-offset: 3px; }
+.eyebrow { font: 500 .76rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--volt); }
 .muted { color: var(--muted); }
+.hl { color: var(--volt); }
 
-/* top bar */
-header.top { padding-block: 18px; }
-header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1.1rem; }
-.brand small { font: 500 .75rem var(--body); color: var(--muted); }
-nav.links { display: flex; gap: 22px; font-size: .95rem; }
-nav.links a { color: var(--ink); text-decoration: none; }
-nav.links a:hover { color: var(--accent); }
-@media (max-width: 720px) { nav.links { display: none; } }
+/* header */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: rgba(8, 11, 13, .82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--bg); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 66px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; }
+.brand svg { width: 36px; height: 36px; }
+.brand b { font: 700 1.05rem var(--display); letter-spacing: -.01em; }
+.brand small { display: block; font: 500 .68rem var(--mono); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+nav.links { display: flex; gap: 26px; font-size: .93rem; font-weight: 600; }
+nav.links a { color: var(--muted); text-decoration: none; }
+nav.links a:hover { color: var(--text); }
+@media (max-width: 860px) { nav.links { display: none; } }
 
-.btn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 22px; font-weight: 600; cursor: pointer; text-decoration: none; }
-.btn.primary { background: var(--accent); color: var(--accent-ink); }
-.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
-.btn:hover { filter: brightness(1.06); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid transparent; border-radius: 999px; padding: 12px 22px; font-weight: 700; font-size: .95rem; cursor: pointer; text-decoration: none; transition: transform .15s ease, background .15s ease; }
+.btn.primary { background: var(--volt); color: var(--on-volt); }
+.btn.primary:hover { background: var(--volt-press); transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--muted); }
+.btn.sm { padding: 9px 16px; font-size: .88rem; }
 
 /* hero */
-.hero { padding-block: 28px 64px; }
-.hero .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: start; }
-.hero-copy { display: flex; flex-direction: column; gap: 22px; padding-top: 36px; min-width: 0; }
-.hero-copy .lead { font-size: 1.15rem; color: var(--muted); max-width: 34ch; }
+.hero { position: relative; overflow: hidden; padding-block: 56px 80px; }
+.hero::before { content: ""; position: absolute; width: 720px; height: 720px; right: -160px; top: -200px; border-radius: 50%; background: radial-gradient(closest-side, rgba(225, 254, 6, .13), transparent); pointer-events: none; }
+.hero .wrap { position: relative; display: grid; grid-template-columns: 1fr minmax(0, 480px); gap: 56px; align-items: center; }
+.hero-copy { display: flex; flex-direction: column; gap: 26px; min-width: 0; }
+.hero-copy .lead { font-size: 1.16rem; color: var(--muted); max-width: 40ch; }
 .hero-copy .cta { display: flex; gap: 12px; flex-wrap: wrap; }
-.say { font-family: var(--mono); font-size: .9rem; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
-.say span::before { content: "“"; color: var(--accent); }
-.say span::after { content: "”"; color: var(--accent); }
-@media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .hero-copy { padding-top: 8px; } }
+.channels { display: flex; flex-wrap: wrap; gap: 8px; }
+.channels span { font: 500 .78rem var(--mono); padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); background: var(--surface); }
+.channels span::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--volt); margin-right: 8px; vertical-align: 1px; }
+@media (max-width: 940px) { .hero .wrap { grid-template-columns: 1fr; } }
 
-/* console */
-.console { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 24px 60px -30px rgba(15, 60, 45, .35); overflow: hidden; min-width: 0; }
-.console-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); gap: 12px; }
-.steps { display: flex; gap: 6px; font: 500 .72rem var(--mono); color: var(--muted); }
-.steps b { padding: 4px 9px; border-radius: 999px; background: var(--soft); font-weight: 500; }
-.steps b.on { background: var(--accent); color: var(--accent-ink); }
-.console-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+/* device */
+.device { background: linear-gradient(180deg, var(--raise), var(--surface)); border: 1px solid var(--line); border-radius: 30px; padding: 22px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .8), 0 0 0 6px rgba(225, 254, 6, .04); min-width: 0; }
+.dev-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.steps { display: flex; gap: 6px; font: 500 .7rem var(--mono); }
+.steps b { font-weight: 500; padding: 5px 10px; border-radius: 999px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.steps b.on { background: var(--volt); color: var(--on-volt); border-color: var(--volt); }
+.live { font: 500 .7rem var(--mono); color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--volt); box-shadow: 0 0 10px var(--volt); }
 
-.orb { width: 64px; height: 64px; border-radius: 50%; flex: none; position: relative;
-  background: radial-gradient(circle at 35% 30%, var(--glow), var(--accent) 70%); }
-.orb::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--accent); opacity: .35; }
-.orb.talking::after { animation: pulse 1s ease-in-out infinite; }
-@keyframes pulse { 50% { inset: -12px; opacity: .1; } }
-@media (prefers-reduced-motion: reduce) { .orb.talking::after { animation: none; } }
+.who { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding-top: 4px; }
+.halo { position: relative; width: 148px; height: 148px; }
+.halo svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 22px rgba(225, 254, 6, .25)); }
+.halo .wave { position: absolute; inset: -10px; border-radius: 50%; border: 2px solid var(--volt); opacity: 0; }
+.halo.talking .wave { animation: wave 1.4s ease-out infinite; }
+.halo.talking .wave:nth-child(2) { animation-delay: .45s; }
+@keyframes wave { from { inset: -4px; opacity: .55; } to { inset: -30px; opacity: 0; } }
+.who .hello { font-size: .9rem; color: var(--muted); }
+.who .name { font: 700 1.9rem/1 var(--display); letter-spacing: -.02em; }
 
-.who { display: flex; gap: 16px; align-items: center; }
-.who .name { font-family: var(--display); font-size: 1.7rem; font-weight: 800; }
-label.f { display: flex; flex-direction: column; gap: 6px; font-size: .85rem; font-weight: 600; }
-.f input[type=text] { border: 1.5px solid var(--line); background: var(--bg); border-radius: 12px; padding: 11px 14px; font-size: 1rem; }
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field > span, .field > label { font: 500 .72rem var(--mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.field input[type=text] { border: 1.5px solid var(--line); background: var(--bg); border-radius: 14px; padding: 12px 14px; font-size: 1.02rem; font-weight: 600; }
+.field input[type=text]:focus { border-color: var(--volt); outline: none; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip { border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: .9rem; }
-.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--soft); color: var(--ink); font-weight: 600; }
-.voices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.voice { text-align: left; border: 1.5px solid var(--line); background: transparent; border-radius: 14px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
-.voice strong { font-size: .95rem; }
-.voice small { color: var(--muted); font-size: .8rem; }
-.voice[aria-pressed="true"] { border-color: var(--accent); background: var(--soft); }
-.row-end { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-.note { font-size: .78rem; color: var(--muted); }
+.chip { border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--text); }
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { border-color: var(--volt); background: rgba(225, 254, 6, .1); color: var(--volt); }
+.voices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.voice { border: 1.5px solid var(--line); background: var(--bg); border-radius: 14px; padding: 10px 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.voice .bars { display: flex; gap: 2px; align-items: flex-end; height: 18px; }
+.voice .bars i { width: 3px; background: var(--muted); border-radius: 2px; }
+.voice strong { font-size: .82rem; }
+.voice[aria-pressed="true"] { border-color: var(--volt); }
+.voice[aria-pressed="true"] .bars i { background: var(--volt); }
+@media (max-width: 440px) { .voices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.row-end { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.note { font-size: .76rem; color: var(--muted); }
 
 /* demo */
-.demo { display: grid; grid-template-columns: 1fr; gap: 14px; }
 .house { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-.room { border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); min-width: 0; }
-.room h4 { margin: 0; font: 600 .8rem var(--body); }
-.dev { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; gap: 6px; }
-.dev .st { font-family: var(--mono); font-size: .72rem; padding: 2px 7px; border-radius: 999px; background: var(--line); color: var(--muted); white-space: nowrap; }
-.dev .st.on { background: var(--glow); color: #2B1E00; }
-.dev.flash { animation: flash .9s ease; }
-@keyframes flash { 30% { background: var(--soft); } }
-@media (max-width: 480px) { .house { grid-template-columns: repeat(2, minmax(0, 1fr)); } .voices { grid-template-columns: 1fr; } }
-
-.chat { border: 1px solid var(--line); border-radius: 14px; height: 220px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
-.msg { max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: .92rem; }
-.msg.me { align-self: flex-end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
-.msg.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
-.msg.her b { font-family: var(--display); }
+.room { border: 1px solid var(--line); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); min-width: 0; }
+.room h4 { margin: 0; font: 500 .68rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dev { display: flex; justify-content: space-between; align-items: center; font-size: .8rem; gap: 6px; border-radius: 8px; }
+.dev .st { font: 500 .7rem var(--mono); padding: 2px 7px; border-radius: 999px; background: var(--raise); color: var(--muted); white-space: nowrap; }
+.dev .st.on { background: var(--volt); color: var(--on-volt); }
+.dev.flash { animation: flash 1s ease; }
+@keyframes flash { 30% { background: rgba(225, 254, 6, .16); } }
+@media (max-width: 440px) { .house { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.chat-top { display: flex; align-items: center; gap: 10px; }
+.chat-top svg { width: 34px; height: 34px; flex: none; }
+.chat-top b { font-family: var(--display); font-size: .95rem; }
+.chat { border: 1px solid var(--line); border-radius: 16px; height: 210px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
+.msg { max-width: 86%; padding: 8px 12px; border-radius: 16px; font-size: .9rem; line-height: 1.45; }
+.msg.me { align-self: flex-end; background: var(--volt); color: var(--on-volt); font-weight: 600; border-bottom-right-radius: 4px; }
+.msg.her { align-self: flex-start; background: var(--raise); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
 form.ask { display: flex; gap: 8px; }
 form.ask input { flex: 1; min-width: 0; border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 11px 16px; }
+form.ask input:focus { border-color: var(--volt); outline: none; }
 .suggest { display: flex; gap: 6px; flex-wrap: wrap; }
-.suggest button { font-size: .78rem; padding: 5px 11px; }
+.suggest .chip { font-size: .76rem; padding: 5px 11px; }
 
 /* sections */
-section.band { padding-block: 72px; border-top: 1px solid var(--line); }
-.sec-head { display: flex; flex-direction: column; gap: 10px; max-width: 640px; margin-bottom: 36px; }
-.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-.how li { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.how .n { font: 500 .8rem var(--mono); color: var(--accent); }
-.how ol { margin: 0; padding: 0; display: contents; }
-.feat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
-.feat div { background: var(--surface); padding: 22px; display: flex; flex-direction: column; gap: 8px; }
-.feat code { font: .82rem var(--mono); color: var(--accent); }
-@media (max-width: 820px) { .how, .feat { grid-template-columns: 1fr; } }
+section.band { padding-block: clamp(72px, 9vw, 120px); border-top: 1px solid var(--line); }
+.sec-head { display: flex; flex-direction: column; gap: 14px; max-width: 660px; margin-bottom: 44px; }
+.sec-head p { color: var(--muted); font-size: 1.05rem; }
 
-.vinci { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
-.vinci ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
-.vinci li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
-.vinci li::before { content: ""; width: 10px; height: 10px; margin-top: 8px; border-radius: 50%; background: var(--accent); }
-@media (max-width: 820px) { .vinci { grid-template-columns: 1fr; } }
+.integr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.int { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.int .tag { font: 500 .72rem var(--mono); color: var(--volt); letter-spacing: .08em; text-transform: uppercase; }
+.int q { font: 500 .88rem var(--mono); color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; quotes: "“" "”"; }
+@media (max-width: 860px) { .integr { grid-template-columns: 1fr; } }
 
-.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.plan { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
-.plan.main { border: 2px solid var(--accent); }
-.plan .price { font: 700 1.6rem var(--display); }
-.plan .price small { font: 500 .8rem var(--mono); color: var(--muted); display: block; }
-.plan ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: .93rem; }
-.tbd { display: inline-block; font: 500 .7rem var(--mono); background: var(--glow); color: #2B1E00; padding: 2px 8px; border-radius: 6px; vertical-align: middle; }
-@media (max-width: 820px) { .plans { grid-template-columns: 1fr; } }
+.day { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--line); position: relative; }
+.day li { list-style: none; padding: 24px 22px 0 0; display: flex; flex-direction: column; gap: 10px; position: relative; }
+.day li::before { content: ""; position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--volt); }
+.day time { font: 500 1.5rem var(--mono); color: var(--volt); font-variant-numeric: tabular-nums; }
+.day ol { display: contents; }
+@media (max-width: 860px) { .day { grid-template-columns: 1fr; border-top: 0; border-left: 2px solid var(--line); padding-left: 22px; } .day li { padding: 0 0 28px; } .day li::before { left: -31px; top: 8px; } }
 
-details { border-bottom: 1px solid var(--line); padding-block: 16px; }
-summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
-details p { margin-top: 10px; color: var(--muted); max-width: 70ch; }
+.feat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; }
+.feat div { background: var(--surface); padding: 26px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.feat code { font: .8rem var(--mono); color: var(--volt); margin-top: 4px; }
+@media (max-width: 860px) { .feat { grid-template-columns: 1fr; } }
+
+.vinci { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.vinci ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+.vinci li { padding-block: 18px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 860px) { .vinci { grid-template-columns: 1fr; } }
+
+.billing { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; background: var(--surface); align-self: flex-start; }
+.billing button { border: 0; background: transparent; border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: .88rem; cursor: pointer; color: var(--muted); }
+.billing button[aria-pressed="true"] { background: var(--volt); color: var(--on-volt); }
+.billing small { font: 500 .7rem var(--mono); }
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 18px; position: relative; min-width: 0; }
+.plan.main { border: 2px solid var(--volt); background: linear-gradient(180deg, rgba(225, 254, 6, .07), var(--surface) 40%); }
+.plan .badge { position: absolute; top: -13px; left: 24px; background: var(--volt); color: var(--on-volt); font: 600 .7rem var(--mono); padding: 5px 10px; border-radius: 999px; letter-spacing: .06em; text-transform: uppercase; }
+.price { display: flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
+.price .cur { font: 600 1rem var(--display); color: var(--muted); }
+.price .val { font: 700 2.4rem/1 var(--display); letter-spacing: -.03em; }
+.price .per { font: 500 .8rem var(--mono); color: var(--muted); }
+.plan .sub { font: 500 .78rem var(--mono); color: var(--muted); min-height: 1.3em; }
+.plan ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: .94rem; flex: 1; }
+.plan li { display: grid; grid-template-columns: 18px 1fr; gap: 8px; }
+.plan li::before { content: ""; width: 10px; height: 6px; border-left: 2px solid var(--volt); border-bottom: 2px solid var(--volt); transform: rotate(-45deg); margin-top: 8px; }
+.plan-foot { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; padding: 22px 26px; border: 1px dashed var(--line); border-radius: 20px; }
+@media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+
+details { border-bottom: 1px solid var(--line); padding-block: 20px; }
+summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 500 1.3rem/1 var(--mono); color: var(--volt); }
+details[open] summary::after { content: "–"; }
+details p { margin-top: 12px; color: var(--muted); max-width: 70ch; }
+
+.final { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.final svg { width: 110px; height: 110px; }
 
 footer { padding-block: 40px 56px; border-top: 1px solid var(--line); font-size: .88rem; color: var(--muted); }
 footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
-.proto { background: var(--soft); border-bottom: 1px solid var(--line); font-size: .82rem; padding-block: 8px; }
+footer a { color: var(--muted); }
+[hidden] { display: none !important; }
 </style>
 </head>
 <body>
 
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="janete-av" viewBox="0 0 200 200">
+  <defs>
+    <radialGradient id="jbg" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#1c252c"/><stop offset="1" stop-color="#080b0d"/></radialGradient>
+    <clipPath id="jclip"><circle cx="100" cy="100" r="96"/></clipPath>
+  </defs>
+  <circle cx="100" cy="100" r="96" fill="url(#jbg)"/>
+  <g clip-path="url(#jclip)">
+    <!-- ombros e camisa -->
+    <path d="M28 205 C30 165 55 150 100 148 C145 150 170 165 172 205 Z" fill="#14181c"/>
+    <path d="M82 150 L100 172 L118 150 L112 146 L100 160 L88 146 Z" fill="#232a31"/>
+    <!-- avental -->
+    <path d="M68 178 L132 178 L136 205 L64 205 Z" fill="#e9ecec"/>
+    <path d="M68 178 L132 178" stroke="#e1fe06" stroke-width="4"/>
+    <path d="M70 178 L60 152 M130 178 L140 152" stroke="#e1fe06" stroke-width="7" stroke-linecap="round"/>
+    <!-- pescoço -->
+    <path d="M88 128 L88 150 Q100 158 112 150 L112 128 Z" fill="#7a4628"/>
+    <!-- coques laterais -->
+    <g fill="#24150e">
+      <circle cx="40" cy="78" r="22"/><circle cx="30" cy="92" r="14"/><circle cx="50" cy="96" r="14"/><circle cx="34" cy="64" r="12"/>
+      <circle cx="160" cy="78" r="22"/><circle cx="170" cy="92" r="14"/><circle cx="150" cy="96" r="14"/><circle cx="166" cy="64" r="12"/>
+    </g>
+    <g fill="none" stroke="#4a2d1c" stroke-width="2.2" stroke-linecap="round">
+      <path d="M30 76 q5 -6 10 0 M40 90 q5 -6 10 0 M28 96 q4 -5 8 0 M36 64 q4 -5 8 0"/>
+      <path d="M160 76 q5 -6 10 0 M150 90 q5 -6 10 0 M164 96 q4 -5 8 0 M156 64 q4 -5 8 0"/>
+    </g>
+    <!-- prendedores volt -->
+    <ellipse cx="60" cy="84" rx="6" ry="10" fill="#e1fe06"/>
+    <ellipse cx="140" cy="84" rx="6" ry="10" fill="#e1fe06"/>
+    <!-- orelhas e argolas -->
+    <ellipse cx="64" cy="100" rx="7" ry="10" fill="#7a4628"/>
+    <ellipse cx="136" cy="100" rx="7" ry="10" fill="#7a4628"/>
+    <circle cx="63" cy="116" r="7" fill="none" stroke="#e0a526" stroke-width="3"/>
+    <circle cx="137" cy="116" r="7" fill="none" stroke="#e0a526" stroke-width="3"/>
+    <!-- rosto -->
+    <ellipse cx="100" cy="98" rx="37" ry="41" fill="#8a5232"/>
+    <!-- cabelo do topo -->
+    <path d="M62 92 C58 55 80 44 100 44 C120 44 142 55 138 92 C132 72 118 64 100 64 C82 64 68 72 62 92 Z" fill="#24150e"/>
+    <g fill="#24150e"><circle cx="72" cy="56" r="9"/><circle cx="86" cy="47" r="10"/><circle cx="100" cy="44" r="10"/><circle cx="114" cy="47" r="10"/><circle cx="128" cy="56" r="9"/></g>
+    <g fill="none" stroke="#4a2d1c" stroke-width="2" stroke-linecap="round"><path d="M80 52 q4 -5 8 0 M96 46 q4 -5 8 0 M112 50 q4 -5 8 0"/></g>
+    <!-- sobrancelhas relaxadas -->
+    <path d="M76 82 Q85 75 94 80" fill="none" stroke="#24150e" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M106 80 Q115 75 124 82" fill="none" stroke="#24150e" stroke-width="3.5" stroke-linecap="round"/>
+    <!-- olhos sorrindo -->
+    <path d="M78 95 Q85 88 92 95" fill="none" stroke="#1a0f0a" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M108 95 Q115 88 122 95" fill="none" stroke="#1a0f0a" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M77 93 l-3 -2 M123 93 l3 -2" stroke="#1a0f0a" stroke-width="2" stroke-linecap="round"/>
+    <!-- bochechas -->
+    <ellipse cx="78" cy="109" rx="7" ry="4" fill="#b8623f" opacity=".55"/>
+    <ellipse cx="122" cy="109" rx="7" ry="4" fill="#b8623f" opacity=".55"/>
+    <!-- pinta -->
+    <circle cx="74" cy="102" r="1.6" fill="#3a2016"/>
+    <!-- nariz -->
+    <path d="M95 106 Q100 111 105 106" fill="none" stroke="#5e3420" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- sorriso -->
+    <path d="M84 117 Q100 134 116 117 Q100 122 84 117 Z" fill="#5a1f1a"/>
+    <path d="M87 118 Q100 123 113 118 L111 121 Q100 125 89 121 Z" fill="#ffffff"/>
+    <path d="M84 117 Q100 134 116 117" fill="none" stroke="#6b2a22" stroke-width="2.5" stroke-linecap="round"/>
+  </g>
+  <circle cx="100" cy="100" r="96" fill="none" stroke="#e1fe06" stroke-width="5"/>
+</symbol></svg>
+
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="/" style="color:var(--ink);text-decoration:none"><span class="orb" style="width:28px;height:28px" aria-hidden="true"></span>Janete <small>por Vinci Automação</small></a>
+    <a class="brand" href="/" aria-label="Janete, da Vinci Automação"><svg aria-hidden="true"><use href="#janete-av"/></svg><span><b>Janete</b><small>Vinci Automação</small></span></a>
     <nav class="links" aria-label="Seções">
-      <a href="#como">Como funciona</a><a href="#faz">O que ela faz</a><a href="#planos">Planos</a><a href="#duvidas">Dúvidas</a>
+      <a href="#canais">Onde ela está</a><a href="#dia">Um dia</a><a href="#planos">Planos</a><a href="#duvidas">Dúvidas</a>
     </nav>
-    <a class="btn primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Quero a Janete</a>
+    <a class="btn primary sm" href="#criar">Criar minha Janete</a>
   </div>
 </header>
 
@@ -186,88 +286,95 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <div class="wrap">
     <div class="hero-copy">
       <span class="eyebrow">Assistente de casa inteligente</span>
-      <h1>Sua casa entende o que você fala.</h1>
-      <p class="lead">A Janete acende luzes, ajusta o ar, abre o portão e responde suas dúvidas pelo WhatsApp, pela Alexa ou pelo Google Home. Você escolhe o nome e a voz em um minuto.</p>
-      <div class="say" aria-label="Exemplos de pedidos">
-        <span>Janete, liga o ar do quarto em 23 graus</span>
-        <span>Ativa o modo cinema</span>
-        <span>Eu deixei alguma luz acesa?</span>
-      </div>
+      <h1>Sua casa entende o que você <span class="hl">fala</span>.</h1>
+      <p class="lead">A Janete acende luzes, ajusta o ar, abre o portão e lembra seus compromissos. Você fala com ela pelo WhatsApp, pela Alexa ou pelo Google Home.</p>
+      <div class="channels" aria-label="Canais"><span>WhatsApp</span><span>Alexa</span><span>Google Home</span></div>
       <div class="cta">
-        <a class="btn primary" href="#criar" onclick="document.getElementById('nm').focus()">Experimentar agora</a>
-        <a class="btn ghost" href="#como">Ver como funciona</a>
+        <a class="btn primary" href="#planos">Ver planos</a>
+        <a class="btn ghost" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Falar com a Vinci</a>
       </div>
     </div>
 
-    <div class="console" aria-live="polite">
-      <div class="console-head">
-        <strong>Monte sua assistente</strong>
-        <div class="steps"><b id="s1" class="on">1 Nome e voz</b><b id="s2">2 Teste</b></div>
+    <div class="device" aria-live="polite">
+      <div class="dev-head">
+        <div class="steps"><b id="s1" class="on">1 · Nome e voz</b><b id="s2">2 · Teste</b></div>
+        <span class="live">ao vivo</span>
       </div>
 
-      <div class="console-body" id="step1">
+      <div id="step1" style="display:flex;flex-direction:column;gap:18px">
         <div class="who">
-          <div class="orb" id="orb1" aria-hidden="true"></div>
-          <div><div class="muted" style="font-size:.85rem">Prazer, eu sou a</div><div class="name" id="preview-name">Janete</div></div>
+          <div class="halo" id="halo"><span class="wave"></span><span class="wave"></span><svg role="img" aria-label="Avatar da Janete"><use href="#janete-av"/></svg></div>
+          <div class="hello" id="hello">Oi! Eu sou a</div>
+          <div class="name" id="preview-name">Janete</div>
         </div>
-        <label class="f" for="nm">Como você quer me chamar?
+        <div class="field"><label for="nm">Como você quer me chamar?</label>
           <input id="nm" type="text" value="Janete" maxlength="20" autocomplete="off">
-        </label>
-        <div class="chips" role="group" aria-label="Sugestões de nome">
-          <button class="chip" type="button" aria-pressed="true" data-name="Janete">Janete</button>
-          <button class="chip" type="button" aria-pressed="false" data-name="Dona Jane">Dona Jane</button>
-          <button class="chip" type="button" aria-pressed="false" data-name="Vina">Vina</button>
-          <button class="chip" type="button" aria-pressed="false" data-name="Casa">Casa</button>
-        </div>
-        <div class="f" style="gap:8px"><span>Escolha a voz</span>
-          <div class="voices" role="group" aria-label="Vozes">
-            <button class="voice" type="button" aria-pressed="true" data-v="calma"><strong>Serena</strong><small>calma, ritmo tranquilo</small></button>
-            <button class="voice" type="button" aria-pressed="false" data-v="viva"><strong>Animada</strong><small>alegre e rápida</small></button>
-            <button class="voice" type="button" aria-pressed="false" data-v="grave"><strong>Grave</strong><small>tom mais baixo</small></button>
-            <button class="voice" type="button" aria-pressed="false" data-v="clara"><strong>Clara</strong><small>bem articulada</small></button>
+          <div class="chips" role="group" aria-label="Sugestões de nome">
+            <button class="chip" type="button" aria-pressed="true" data-name="Janete">Janete</button>
+            <button class="chip" type="button" aria-pressed="false" data-name="Jane">Jane</button>
+            <button class="chip" type="button" aria-pressed="false" data-name="Dona Janete">Dona Janete</button>
+            <button class="chip" type="button" aria-pressed="false" data-name="Vina">Vina</button>
           </div>
         </div>
-        <div class="f" style="gap:8px"><span>Jeito de conversar</span>
-          <div class="chips" role="group" aria-label="Personalidade">
-            <button class="chip" type="button" aria-pressed="true" data-p="direta">Direta</button>
-            <button class="chip" type="button" aria-pressed="false" data-p="simpatica">Simpática</button>
+        <div class="field"><span>Voz · toque para ouvir</span>
+          <div class="voices" role="group" aria-label="Vozes">
+            <button class="voice" type="button" aria-pressed="true" data-v="calma"><span class="bars"><i style="height:6px"></i><i style="height:10px"></i><i style="height:8px"></i><i style="height:12px"></i><i style="height:7px"></i></span><strong>Serena</strong></button>
+            <button class="voice" type="button" aria-pressed="false" data-v="viva"><span class="bars"><i style="height:12px"></i><i style="height:18px"></i><i style="height:9px"></i><i style="height:16px"></i><i style="height:13px"></i></span><strong>Animada</strong></button>
+            <button class="voice" type="button" aria-pressed="false" data-v="grave"><span class="bars"><i style="height:14px"></i><i style="height:12px"></i><i style="height:15px"></i><i style="height:11px"></i><i style="height:14px"></i></span><strong>Grave</strong></button>
+            <button class="voice" type="button" aria-pressed="false" data-v="clara"><span class="bars"><i style="height:8px"></i><i style="height:14px"></i><i style="height:10px"></i><i style="height:14px"></i><i style="height:8px"></i></span><strong>Clara</strong></button>
+          </div>
+        </div>
+        <div class="field"><span>Jeito de conversar</span>
+          <div class="chips" role="group" aria-label="Jeito de conversar">
+            <button class="chip" type="button" aria-pressed="false" data-p="direta">Direta</button>
+            <button class="chip" type="button" aria-pressed="true" data-p="simpatica">Simpática</button>
             <button class="chip" type="button" aria-pressed="false" data-p="formal">Formal</button>
           </div>
         </div>
         <div class="row-end">
-          <button class="btn ghost" type="button" id="hear">Ouvir a voz</button>
+          <button class="btn ghost sm" type="button" id="hear">Ouvir</button>
           <button class="btn primary" type="button" id="go">Testar na casa de exemplo</button>
         </div>
-        <p class="note">Nesta demonstração a voz usa o sintetizador do seu navegador.</p>
+        <p class="note">Nesta página a voz usa o sintetizador do seu navegador.</p>
       </div>
 
-      <div class="console-body" id="step2" hidden>
-        <div class="demo">
-          <div class="house" id="house"></div>
-          <div class="chat" id="chat" role="log" aria-label="Conversa"></div>
-          <div class="suggest" id="sug"></div>
-          <form class="ask" id="ask">
-            <input id="q" type="text" placeholder="Escreva um pedido, ex.: apaga tudo" autocomplete="off" aria-label="Seu pedido">
-            <button class="btn primary" type="submit">Enviar</button>
-          </form>
-          <div class="row-end">
-            <button class="btn ghost" type="button" id="back">Trocar nome ou voz</button>
-            <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="speak" checked> respostas faladas</label>
-          </div>
-          <p class="note">Casa de exemplo. Nenhum aparelho real é controlado nesta página.</p>
+      <div id="step2" hidden style="flex-direction:column;gap:14px">
+        <div class="chat-top"><svg aria-hidden="true"><use href="#janete-av"/></svg><div><b id="chat-name">Janete</b><div class="note">casa de exemplo · nada real é controlado</div></div></div>
+        <div class="house" id="house"></div>
+        <div class="chat" id="chat" role="log" aria-label="Conversa"></div>
+        <div class="suggest" id="sug"></div>
+        <form class="ask" id="ask">
+          <input id="q" type="text" placeholder="Peça algo, ex.: apaga tudo" autocomplete="off" aria-label="Seu pedido">
+          <button class="btn primary sm" type="submit">Enviar</button>
+        </form>
+        <div class="row-end">
+          <button class="btn ghost sm" type="button" id="back">Trocar nome ou voz</button>
+          <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="speak" checked> respostas faladas</label>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<section class="band" id="como">
+<section class="band" id="canais">
   <div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Como funciona</span><h2>Do primeiro “oi” à casa respondendo, em três passos</h2></div>
-    <div class="how"><ol>
-      <li><span class="n">Passo 1</span><h3>Dê um nome e uma voz</h3><p class="muted">Experimente aqui mesmo, nesta página. Na sua casa, ela já chega com o nome e a voz que você escolheu.</p></li>
-      <li><span class="n">Passo 2</span><h3>Conecte a casa</h3><p class="muted">A equipe Vinci liga a Janete aos aparelhos que você já tem, incluindo os que já respondem à Alexa ou ao Google Home.</p></li>
-      <li><span class="n">Passo 3</span><h3>Fale de onde estiver</h3><p class="muted">Mande mensagem ou áudio no WhatsApp, ou fale com a Janete pela Alexa e pelo Google Home espalhados pela casa.</p></li>
+    <div class="sec-head"><span class="eyebrow">Onde ela está</span><h2>Nos aparelhos que você já usa</h2><p>Nada de aplicativo novo. A Janete chega pelo WhatsApp e pelos alto-falantes que já estão na sua casa.</p></div>
+    <div class="integr">
+      <div class="int"><span class="tag">WhatsApp</span><h3>Texto ou áudio, de casa ou da rua</h3><p class="muted">Mande um áudio no trânsito e chegue com o ar ligado. Ela responde no mesmo chat e manda a foto da câmera quando alguém toca o interfone.</p><q>liga o ar da sala, tô chegando</q></div>
+      <div class="int"><span class="tag">Alexa</span><h3>Nos Echo da sua casa</h3><p class="muted">Chame a Janete pela Alexa e use as cenas e rotinas que a Vinci montou para você, em qualquer cômodo com um Echo.</p><q>Alexa, pede pra Janete o modo cinema</q></div>
+      <div class="int"><span class="tag">Google Home</span><h3>Nos Nest e no app Google Home</h3><p class="muted">Os mesmos cômodos e aparelhos, com a voz e o nome que você escolheu. Quem já tem Google Home não precisa trocar nada.</p><q>Ok Google, falar com a Janete</q></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="dia">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Um dia com a Janete</span><h2>Ela trabalha enquanto você vive</h2></div>
+    <div class="day"><ol>
+      <li><time>06:30</time><h3>Bom dia</h3><p class="muted">Abre a cortina do quarto, liga a cafeteira e lê os compromissos do dia.</p></li>
+      <li><time>12:10</time><h3>Entrega no portão</h3><p class="muted">Manda a foto da câmera no WhatsApp. Você responde “abre” e ela abre.</p></li>
+      <li><time>19:40</time><h3>Chegando em casa</h3><p class="muted">Pelo áudio no carro, liga o ar em 22° e acende a luz da varanda.</p></li>
+      <li><time>23:00</time><h3>Boa noite</h3><p class="muted">Apaga as luzes, confere o portão e avisa se alguma janela ficou aberta.</p></li>
     </ol></div>
   </div>
 </section>
@@ -276,69 +383,95 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   <div class="wrap">
     <div class="sec-head"><span class="eyebrow">O que ela faz</span><h2>Tudo que a casa tem, num pedido só</h2></div>
     <div class="feat">
-      <div><h3>WhatsApp</h3><p class="muted">Converse por texto ou áudio, de casa ou da rua, sem instalar nada.</p><code>áudio de 5 s → ação</code></div>
-      <div><h3>Alexa</h3><p class="muted">Peça para a Alexa chamar a Janete e use os alto-falantes Echo que você já tem.</p><code>“Alexa, pede pra Janete o modo cinema”</code></div>
-      <div><h3>Google Home</h3><p class="muted">Funciona nos Nest e no app Google Home, com os mesmos cômodos e aparelhos.</p><code>“Ok Google, falar com a Janete”</code></div>
       <div><h3>Luzes, ar e tomadas</h3><p class="muted">Liga, desliga, ajusta brilho e temperatura por cômodo ou na casa toda.</p><code>“apaga tudo menos a varanda”</code></div>
-      <div><h3>Cenas e rotinas</h3><p class="muted">Modo cinema, boa noite, saindo de casa. Crie as suas falando com ela.</p><code>“todo dia às 6h abre a cortina”</code></div>
-      <div><h3>Portão e câmeras</h3><p class="muted">Abre o portão para quem chegou e manda a imagem da entrada no WhatsApp.</p><code>“quem está no portão?”</code></div>
+      <div><h3>Cenas e rotinas</h3><p class="muted">Modo cinema, boa noite, saindo de casa. Crie novas falando com ela.</p><code>“todo dia às 6h30 abre a cortina”</code></div>
+      <div><h3>Portão e câmeras</h3><p class="muted">Abre o portão para quem chegou e manda a imagem da entrada.</p><code>“quem está no portão?”</code></div>
+      <div><h3>Agenda e lembretes</h3><p class="muted">Lê a agenda Google, avisa compromissos e cria lembretes por voz.</p><code>“me lembra de regar as plantas”</code></div>
+      <div><h3>A família toda</h3><p class="muted">Cada pessoa da casa fala com a mesma Janete, pelo próprio WhatsApp.</p><code>até 5 pessoas no plano Casa</code></div>
+      <div><h3>Sua personalidade</h3><p class="muted">Nome, voz e jeito de conversar mudam quando você quiser, só pedindo.</p><code>“a partir de hoje, me chama de chefe”</code></div>
     </div>
   </div>
 </section>
 
 <section class="band">
   <div class="wrap vinci">
-    <div class="sec-head" style="margin:0"><span class="eyebrow">Por que Vinci</span><h2>Feita por quem instala automação de verdade</h2>
-      <p class="muted">A Janete nasceu dentro da Vinci Automação. Quem projeta e instala a sua casa é quem cuida da assistente.</p></div>
+    <div class="sec-head" style="margin:0"><span class="eyebrow">Por que Vinci</span><h2>Feita por quem instala automação de verdade</h2><p>A Janete nasceu dentro da Vinci Automação, no Rio de Janeiro. Quem projeta a sua casa é quem cuida da assistente.</p></div>
     <ul>
-      <li><div><strong>Instalação e configuração pela equipe Vinci.</strong> <span class="muted">Você não precisa saber o que é Home Assistant.</span></div></li>
-      <li><div><strong>Suporte por gente.</strong> <span class="muted">Canal direto com a equipe que conhece o seu projeto.</span></div></li>
-      <li><div><strong>Privacidade clara.</strong> <span class="muted">Você vê o que a Janete guarda e pode apagar quando quiser.</span></div></li>
-      <li><div><strong>Atendimento no Rio de Janeiro.</strong> <span class="muted">Projeto, instalação e manutenção feitos pela mesma equipe.</span></div></li>
+      <li><strong>Instalação pela equipe Vinci</strong><span class="muted">Você não precisa entender de integração. A gente liga a Janete aos seus aparelhos.</span></li>
+      <li><strong>Suporte com gente</strong><span class="muted">Canal direto com a equipe que conhece o seu projeto.</span></li>
+      <li><strong>Privacidade clara</strong><span class="muted">Ela só escuta quando você chama, e você pode apagar o histórico quando quiser.</span></li>
+      <li><strong>Mesmas regras em todo lugar</strong><span class="muted">Os limites de cada plano são os mesmos nesta página, nos termos e no atendimento.</span></li>
     </ul>
   </div>
 </section>
 
 <section class="band" id="planos">
   <div class="wrap">
-    <div class="sec-head"><span class="eyebrow">Como contratar</span><h2>A Janete vem junto com o seu projeto Vinci</h2><p class="muted">Cada casa tem aparelhos diferentes, então a gente monta a proposta depois de entender a sua. Mande uma mensagem e a equipe responde pelo WhatsApp.</p></div>
-    <div class="plans">
-      <div class="plan"><h3>Já tenho automação</h3><p class="muted">Você tem Alexa, Google Home ou aparelhos inteligentes e quer a Janete comandando tudo.</p><ul><li>Avaliação do que você já tem</li><li>Configuração da Janete</li><li>WhatsApp, Alexa e Google Home</li></ul></div>
-      <div class="plan main"><h3>Casa nova ou reforma</h3><p class="muted">A Vinci projeta e instala a automação, e a Janete já sai pronta.</p><ul><li>Projeto e instalação Vinci</li><li>Cenas e rotinas sob medida</li><li>Treinamento da família</li></ul></div>
-      <div class="plan"><h3>Empresas</h3><p class="muted">Escritórios, clínicas e lojas que querem comando por voz e WhatsApp.</p><ul><li>Salas, ar e iluminação</li><li>Acesso e portaria</li><li>Proposta sob medida</li></ul></div>
+    <div class="sec-head"><span class="eyebrow">Planos</span><h2>Escolha o tamanho da sua casa</h2><p>Cancele quando quiser. No anual, você paga 10 meses e usa 12.</p>
+      <div class="billing" role="group" aria-label="Forma de pagamento">
+        <button type="button" id="bm" aria-pressed="true">Mensal</button>
+        <button type="button" id="ba" aria-pressed="false">Anual <small>2 meses grátis</small></button>
+      </div>
     </div>
-    <p style="margin-top:28px"><a class="btn primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Falar com a Vinci no WhatsApp</a></p>
+    <div class="plans">
+      <div class="plan"><h3>Essencial</h3>
+        <div><div class="price"><span class="cur">R$</span><span class="val" data-m="58,90" data-a="49,08">58,90</span><span class="per">/mês</span></div><div class="sub" data-m="cobrado todo mês" data-a="R$ 589,00 por ano">cobrado todo mês</div></div>
+        <ul><li>WhatsApp, Alexa e Google Home</li><li>2 vozes à escolha</li><li>4 rotinas ativas</li><li>Até 2 pessoas da casa</li></ul>
+        <a class="btn ghost" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Assinar Essencial</a></div>
+      <div class="plan main"><span class="badge">Mais escolhido</span><h3>Casa</h3>
+        <div><div class="price"><span class="cur">R$</span><span class="val" data-m="126,90" data-a="105,75">126,90</span><span class="per">/mês</span></div><div class="sub" data-m="cobrado todo mês" data-a="R$ 1.269,00 por ano">cobrado todo mês</div></div>
+        <ul><li>Tudo do Essencial</li><li>Todas as vozes</li><li>10 rotinas ativas</li><li>Câmeras e portão</li><li>Até 5 pessoas da casa</li></ul>
+        <a class="btn primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Assinar Casa</a></div>
+      <div class="plan"><h3>Casa Total</h3>
+        <div><div class="price"><span class="cur">R$</span><span class="val" data-m="252,90" data-a="210,75">252,90</span><span class="per">/mês</span></div><div class="sub" data-m="cobrado todo mês" data-a="R$ 2.529,00 por ano">cobrado todo mês</div></div>
+        <ul><li>Tudo do Casa</li><li>25 rotinas ativas</li><li>Até 3 imóveis</li><li>Pessoas sem limite</li><li>Suporte prioritário Vinci</li></ul>
+        <a class="btn ghost" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Assinar Casa Total</a></div>
+    </div>
+    <div class="plan-foot"><div><strong>Ainda não tem automação?</strong> <span class="muted">A Vinci projeta e instala. Orçamento sem compromisso.</span></div><a class="btn ghost sm" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Pedir orçamento</a></div>
   </div>
 </section>
 
 <section class="band" id="duvidas">
-  <div class="wrap" style="max-width:820px">
+  <div class="wrap" style="max-width:860px">
     <div class="sec-head"><span class="eyebrow">Dúvidas</span><h2>Perguntas frequentes</h2></div>
     <details><summary>Preciso trocar meus aparelhos?</summary><p>Na maioria dos casos, não. Se o aparelho já funciona com a Alexa ou o Google Home, a Janete consegue comandar. A equipe Vinci avalia o que você tem.</p></details>
-    <details><summary>Posso mudar o nome e a voz depois?</summary><p>Sim, a qualquer momento, nas configurações ou pedindo para ela.</p></details>
-    <details><summary>A Janete fica ouvindo tudo?</summary><p>Não. Pelo WhatsApp ela só lê o que você manda. Na Alexa e no Google Home, ela só entra na conversa quando você chama a Janete pelo nome.</p></details>
-    <details><summary>Funciona fora do Rio?</summary><p>A instalação é feita pela equipe Vinci no Rio de Janeiro. Para outras cidades, fale com a gente pelo WhatsApp.</p></details>
+    <details><summary>O que é uma rotina ativa?</summary><p>É uma ação que a Janete faz sozinha, num horário ou quando algo acontece, como abrir a cortina às 6h30. Pedidos que você faz na hora não contam no limite.</p></details>
+    <details><summary>Posso mudar o nome e a voz depois?</summary><p>Sim, a qualquer momento, pedindo para ela.</p></details>
+    <details><summary>A Janete fica ouvindo tudo?</summary><p>Não. No WhatsApp ela só lê o que você manda. Na Alexa e no Google Home, ela só entra na conversa quando você chama a Janete pelo nome.</p></details>
+    <details><summary>Como cancelo?</summary><p>Pelo WhatsApp da Vinci, sem multa. O plano segue ativo até o fim do período pago.</p></details>
+    <details><summary>Funciona fora do Rio?</summary><p>Se a sua casa já tem Alexa ou Google Home, sim. A instalação presencial é feita pela equipe Vinci no Rio de Janeiro.</p></details>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap final">
+    <svg role="img" aria-label="Avatar da Janete"><use href="#janete-av"/></svg>
+    <h2>Pronta para conhecer a sua casa.</h2>
+    <div class="cta" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <a class="btn primary" href="#criar">Criar minha Janete</a>
+      <a class="btn ghost" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Falar com a Vinci</a>
+    </div>
   </div>
 </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <div><strong style="color:var(--ink)">Vinci Automação</strong><br>Rio de Janeiro · WhatsApp (21) 99929-2915</div>
+    <div><strong style="color:var(--text)">Vinci Automação</strong><br>Rio de Janeiro · WhatsApp (21) 99929-2915</div>
     <div><a href="/">Site da Vinci</a> · <a href="/privacidade.html">Privacidade</a> · <a href="/contato.html">Contato</a></div>
   </div>
 </footer>
 
 <script>
 (function () {
-  var state = { name: "Janete", voice: "calma", persona: "direta" };
+  var state = { name: "Janete", voice: "calma", persona: "simpatica" };
   var VOICES = { calma: { pitch: 1.0, rate: 0.92 }, viva: { pitch: 1.25, rate: 1.12 }, grave: { pitch: 0.7, rate: 0.95 }, clara: { pitch: 1.1, rate: 1.0 } };
   var $ = function (s) { return document.querySelector(s); };
   var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
 
   function setPressed(group, btn) { group.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); }); }
   function cleanName(v) { v = (v || "").trim(); return v ? v.charAt(0).toUpperCase() + v.slice(1) : "Janete"; }
-  function renderName() { $("#preview-name").textContent = state.name; }
+  function renderName() { $("#preview-name").textContent = state.name; $("#chat-name").textContent = state.name; }
 
   $("#nm").addEventListener("input", function (e) {
     state.name = cleanName(e.target.value); renderName();
@@ -348,13 +481,13 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
     state.name = b.dataset.name; $("#nm").value = b.dataset.name; renderName(); setPressed($$("[data-name]"), b);
   }); });
   $$("[data-v]").forEach(function (b) { b.addEventListener("click", function () {
-    state.voice = b.dataset.v; setPressed($$("[data-v]"), b); speak(greeting(), $("#orb1"));
+    state.voice = b.dataset.v; setPressed($$("[data-v]"), b); speak(greeting(), $("#halo"));
   }); });
-  $$("[data-p]").forEach(function (b) { b.addEventListener("click", function () { state.persona = b.dataset.p; setPressed($$("[data-p]"), b); }); });
+  $$("[data-p]").forEach(function (b) { b.addEventListener("click", function () { state.persona = b.dataset.p; setPressed($$("[data-p]"), b); $("#hello").textContent = state.persona === "formal" ? "Muito prazer, sou" : "Oi! Eu sou a"; }); });
 
   function greeting() {
     if (state.persona === "formal") return "Boa noite. Sou " + state.name + ", sua assistente. Estou à disposição.";
-    if (state.persona === "simpatica") return "Oi! Eu sou a " + state.name + ". Que bom te conhecer, bora deixar essa casa do seu jeito?";
+    if (state.persona === "simpatica") return "Oi! Eu sou a " + state.name + ". Que bom te conhecer! Bora deixar essa casa do seu jeito?";
     return "Oi, sou a " + state.name + ". É só pedir.";
   }
 
@@ -366,11 +499,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
       u.lang = "pt-BR"; var v = VOICES[state.voice]; u.pitch = v.pitch; u.rate = v.rate;
       var pt = window.speechSynthesis.getVoices().filter(function (x) { return /pt(-|_)BR/i.test(x.lang); });
       if (pt.length) u.voice = pt[0];
-      if (orb) { orb.classList.add("talking"); u.onend = function () { orb.classList.remove("talking"); }; }
+      var o = orb || $("#halo"); o.classList.add("talking"); u.onend = u.onerror = function () { o.classList.remove("talking"); };
       window.speechSynthesis.speak(u);
     } catch (e) {}
   }
-  $("#hear").addEventListener("click", function () { speak(greeting(), $("#orb1")); });
+  $("#hear").addEventListener("click", function () { speak(greeting(), $("#halo")); });
 
   /* casa de exemplo */
   var home = {
@@ -476,6 +609,11 @@ footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; g
   $("#back").addEventListener("click", function () { $("#step2").hidden = true; $("#step1").hidden = false; $("#s2").classList.remove("on"); $("#s1").classList.add("on"); });
   $("#ask").addEventListener("submit", function (e) { e.preventDefault(); send($("#q").value); $("#q").value = ""; });
   renderHouse();
+  $$(".billing button").forEach(function (b) { b.addEventListener("click", function () {
+    var annual = b.id === "ba"; setPressed($$(".billing button"), b);
+    $$(".price .val").forEach(function (v) { v.textContent = annual ? v.dataset.a : v.dataset.m; });
+    $$(".plan .sub").forEach(function (v) { v.textContent = annual ? v.dataset.a : v.dataset.m; });
+  }); });
 })();
 </script>
 </body>
