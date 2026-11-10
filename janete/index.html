@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Janete, a assistente de casa inteligente da Vinci Automação. Comande luzes, ar, portão e cenas pelo WhatsApp, Alexa e Google Home.">
+<link rel="canonical" href="https://www.vinciautomacao.com/janete/">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:title" content="Janete da Vinci">
+<meta property="og:description" content="Sua casa entende o que você fala.">
+<meta property="og:url" content="https://www.vinciautomacao.com/janete/">
+<title>Janete da Vinci</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: split hero with a live "set up your Janete" console on the right; quiet sections below. */
+:root {
+  --bg: #F3F5F2;
+  --surface: #FFFFFF;
+  --ink: #16241F;
+  --muted: #5B6B65;
+  --line: #DCE3DF;
+  --accent: #0F7B5F;      /* verde-folha da Janete */
+  --accent-ink: #FFFFFF;
+  --glow: #F4B942;        /* âmbar: luz acesa */
+  --soft: #E4EFEA;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1714; --surface: #17221E; --ink: #E8EFEB; --muted: #9AABA4; --line: #2A3833;
+    --accent: #3BC79C; --accent-ink: #0B1310; --glow: #F6C35A; --soft: #1C2B26; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1714; --surface: #17221E; --ink: #E8EFEB; --muted: #9AABA4; --line: #2A3833;
+  --accent: #3BC79C; --accent-ink: #0B1310; --glow: #F6C35A; --soft: #1C2B26; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); margin: 0; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); line-height: 1.08; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.4rem, 5.4vw, 4.1rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.7rem, 3.2vw, 2.4rem); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.15rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); }
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.eyebrow { font: 500 .78rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.muted { color: var(--muted); }
+
+/* top bar */
+header.top { padding-block: 18px; }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.brand { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1.1rem; }
+.brand small { font: 500 .75rem var(--body); color: var(--muted); }
+nav.links { display: flex; gap: 22px; font-size: .95rem; }
+nav.links a { color: var(--ink); text-decoration: none; }
+nav.links a:hover { color: var(--accent); }
+@media (max-width: 720px) { nav.links { display: none; } }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; border: 0; border-radius: 999px; padding: 12px 22px; font-weight: 600; cursor: pointer; text-decoration: none; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+.btn:hover { filter: brightness(1.06); }
+
+/* hero */
+.hero { padding-block: 28px 64px; }
+.hero .wrap { display: grid; grid-template-columns: 1fr 1.05fr; gap: 48px; align-items: start; }
+.hero-copy { display: flex; flex-direction: column; gap: 22px; padding-top: 36px; min-width: 0; }
+.hero-copy .lead { font-size: 1.15rem; color: var(--muted); max-width: 34ch; }
+.hero-copy .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.say { font-family: var(--mono); font-size: .9rem; color: var(--muted); display: flex; flex-direction: column; gap: 6px; }
+.say span::before { content: "“"; color: var(--accent); }
+.say span::after { content: "”"; color: var(--accent); }
+@media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; } .hero-copy { padding-top: 8px; } }
+
+/* console */
+.console { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; box-shadow: 0 24px 60px -30px rgba(15, 60, 45, .35); overflow: hidden; min-width: 0; }
+.console-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); gap: 12px; }
+.steps { display: flex; gap: 6px; font: 500 .72rem var(--mono); color: var(--muted); }
+.steps b { padding: 4px 9px; border-radius: 999px; background: var(--soft); font-weight: 500; }
+.steps b.on { background: var(--accent); color: var(--accent-ink); }
+.console-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+.orb { width: 64px; height: 64px; border-radius: 50%; flex: none; position: relative;
+  background: radial-gradient(circle at 35% 30%, var(--glow), var(--accent) 70%); }
+.orb::after { content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid var(--accent); opacity: .35; }
+.orb.talking::after { animation: pulse 1s ease-in-out infinite; }
+@keyframes pulse { 50% { inset: -12px; opacity: .1; } }
+@media (prefers-reduced-motion: reduce) { .orb.talking::after { animation: none; } }
+
+.who { display: flex; gap: 16px; align-items: center; }
+.who .name { font-family: var(--display); font-size: 1.7rem; font-weight: 800; }
+label.f { display: flex; flex-direction: column; gap: 6px; font-size: .85rem; font-weight: 600; }
+.f input[type=text] { border: 1.5px solid var(--line); background: var(--bg); border-radius: 12px; padding: 11px 14px; font-size: 1rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: .9rem; }
+.chip[aria-pressed="true"] { border-color: var(--accent); background: var(--soft); color: var(--ink); font-weight: 600; }
+.voices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.voice { text-align: left; border: 1.5px solid var(--line); background: transparent; border-radius: 14px; padding: 12px; cursor: pointer; display: flex; flex-direction: column; gap: 2px; }
+.voice strong { font-size: .95rem; }
+.voice small { color: var(--muted); font-size: .8rem; }
+.voice[aria-pressed="true"] { border-color: var(--accent); background: var(--soft); }
+.row-end { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.note { font-size: .78rem; color: var(--muted); }
+
+/* demo */
+.demo { display: grid; grid-template-columns: 1fr; gap: 14px; }
+.house { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.room { border: 1px solid var(--line); border-radius: 12px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); min-width: 0; }
+.room h4 { margin: 0; font: 600 .8rem var(--body); }
+.dev { display: flex; justify-content: space-between; align-items: center; font-size: .78rem; gap: 6px; }
+.dev .st { font-family: var(--mono); font-size: .72rem; padding: 2px 7px; border-radius: 999px; background: var(--line); color: var(--muted); white-space: nowrap; }
+.dev .st.on { background: var(--glow); color: #2B1E00; }
+.dev.flash { animation: flash .9s ease; }
+@keyframes flash { 30% { background: var(--soft); } }
+@media (max-width: 480px) { .house { grid-template-columns: repeat(2, minmax(0, 1fr)); } .voices { grid-template-columns: 1fr; } }
+
+.chat { border: 1px solid var(--line); border-radius: 14px; height: 220px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
+.msg { max-width: 85%; padding: 8px 12px; border-radius: 14px; font-size: .92rem; }
+.msg.me { align-self: flex-end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; }
+.msg.her { align-self: flex-start; background: var(--surface); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg.her b { font-family: var(--display); }
+form.ask { display: flex; gap: 8px; }
+form.ask input { flex: 1; min-width: 0; border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 11px 16px; }
+.suggest { display: flex; gap: 6px; flex-wrap: wrap; }
+.suggest button { font-size: .78rem; padding: 5px 11px; }
+
+/* sections */
+section.band { padding-block: 72px; border-top: 1px solid var(--line); }
+.sec-head { display: flex; flex-direction: column; gap: 10px; max-width: 640px; margin-bottom: 36px; }
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+.how li { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.how .n { font: 500 .8rem var(--mono); color: var(--accent); }
+.how ol { margin: 0; padding: 0; display: contents; }
+.feat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+.feat div { background: var(--surface); padding: 22px; display: flex; flex-direction: column; gap: 8px; }
+.feat code { font: .82rem var(--mono); color: var(--accent); }
+@media (max-width: 820px) { .how, .feat { grid-template-columns: 1fr; } }
+
+.vinci { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
+.vinci ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.vinci li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; }
+.vinci li::before { content: ""; width: 10px; height: 10px; margin-top: 8px; border-radius: 50%; background: var(--accent); }
+@media (max-width: 820px) { .vinci { grid-template-columns: 1fr; } }
+
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 24px; display: flex; flex-direction: column; gap: 14px; }
+.plan.main { border: 2px solid var(--accent); }
+.plan .price { font: 700 1.6rem var(--display); }
+.plan .price small { font: 500 .8rem var(--mono); color: var(--muted); display: block; }
+.plan ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: .93rem; }
+.tbd { display: inline-block; font: 500 .7rem var(--mono); background: var(--glow); color: #2B1E00; padding: 2px 8px; border-radius: 6px; vertical-align: middle; }
+@media (max-width: 820px) { .plans { grid-template-columns: 1fr; } }
+
+details { border-bottom: 1px solid var(--line); padding-block: 16px; }
+summary { cursor: pointer; font-weight: 600; font-size: 1.05rem; }
+details p { margin-top: 10px; color: var(--muted); max-width: 70ch; }
+
+footer { padding-block: 40px 56px; border-top: 1px solid var(--line); font-size: .88rem; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
+.proto { background: var(--soft); border-bottom: 1px solid var(--line); font-size: .82rem; padding-block: 8px; }
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" style="color:var(--ink);text-decoration:none"><span class="orb" style="width:28px;height:28px" aria-hidden="true"></span>Janete <small>por Vinci Automação</small></a>
+    <nav class="links" aria-label="Seções">
+      <a href="#como">Como funciona</a><a href="#faz">O que ela faz</a><a href="#planos">Planos</a><a href="#duvidas">Dúvidas</a>
+    </nav>
+    <a class="btn primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Quero a Janete</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="criar">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Assistente de casa inteligente</span>
+      <h1>Sua casa entende o que você fala.</h1>
+      <p class="lead">A Janete acende luzes, ajusta o ar, abre o portão e responde suas dúvidas pelo WhatsApp, pela Alexa ou pelo Google Home. Você escolhe o nome e a voz em um minuto.</p>
+      <div class="say" aria-label="Exemplos de pedidos">
+        <span>Janete, liga o ar do quarto em 23 graus</span>
+        <span>Ativa o modo cinema</span>
+        <span>Eu deixei alguma luz acesa?</span>
+      </div>
+      <div class="cta">
+        <a class="btn primary" href="#criar" onclick="document.getElementById('nm').focus()">Experimentar agora</a>
+        <a class="btn ghost" href="#como">Ver como funciona</a>
+      </div>
+    </div>
+
+    <div class="console" aria-live="polite">
+      <div class="console-head">
+        <strong>Monte sua assistente</strong>
+        <div class="steps"><b id="s1" class="on">1 Nome e voz</b><b id="s2">2 Teste</b></div>
+      </div>
+
+      <div class="console-body" id="step1">
+        <div class="who">
+          <div class="orb" id="orb1" aria-hidden="true"></div>
+          <div><div class="muted" style="font-size:.85rem">Prazer, eu sou a</div><div class="name" id="preview-name">Janete</div></div>
+        </div>
+        <label class="f" for="nm">Como você quer me chamar?
+          <input id="nm" type="text" value="Janete" maxlength="20" autocomplete="off">
+        </label>
+        <div class="chips" role="group" aria-label="Sugestões de nome">
+          <button class="chip" type="button" aria-pressed="true" data-name="Janete">Janete</button>
+          <button class="chip" type="button" aria-pressed="false" data-name="Dona Jane">Dona Jane</button>
+          <button class="chip" type="button" aria-pressed="false" data-name="Vina">Vina</button>
+          <button class="chip" type="button" aria-pressed="false" data-name="Casa">Casa</button>
+        </div>
+        <div class="f" style="gap:8px"><span>Escolha a voz</span>
+          <div class="voices" role="group" aria-label="Vozes">
+            <button class="voice" type="button" aria-pressed="true" data-v="calma"><strong>Serena</strong><small>calma, ritmo tranquilo</small></button>
+            <button class="voice" type="button" aria-pressed="false" data-v="viva"><strong>Animada</strong><small>alegre e rápida</small></button>
+            <button class="voice" type="button" aria-pressed="false" data-v="grave"><strong>Grave</strong><small>tom mais baixo</small></button>
+            <button class="voice" type="button" aria-pressed="false" data-v="clara"><strong>Clara</strong><small>bem articulada</small></button>
+          </div>
+        </div>
+        <div class="f" style="gap:8px"><span>Jeito de conversar</span>
+          <div class="chips" role="group" aria-label="Personalidade">
+            <button class="chip" type="button" aria-pressed="true" data-p="direta">Direta</button>
+            <button class="chip" type="button" aria-pressed="false" data-p="simpatica">Simpática</button>
+            <button class="chip" type="button" aria-pressed="false" data-p="formal">Formal</button>
+          </div>
+        </div>
+        <div class="row-end">
+          <button class="btn ghost" type="button" id="hear">Ouvir a voz</button>
+          <button class="btn primary" type="button" id="go">Testar na casa de exemplo</button>
+        </div>
+        <p class="note">Nesta demonstração a voz usa o sintetizador do seu navegador.</p>
+      </div>
+
+      <div class="console-body" id="step2" hidden>
+        <div class="demo">
+          <div class="house" id="house"></div>
+          <div class="chat" id="chat" role="log" aria-label="Conversa"></div>
+          <div class="suggest" id="sug"></div>
+          <form class="ask" id="ask">
+            <input id="q" type="text" placeholder="Escreva um pedido, ex.: apaga tudo" autocomplete="off" aria-label="Seu pedido">
+            <button class="btn primary" type="submit">Enviar</button>
+          </form>
+          <div class="row-end">
+            <button class="btn ghost" type="button" id="back">Trocar nome ou voz</button>
+            <label class="note" style="display:flex;gap:6px;align-items:center"><input type="checkbox" id="speak" checked> respostas faladas</label>
+          </div>
+          <p class="note">Casa de exemplo. Nenhum aparelho real é controlado nesta página.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="como">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Como funciona</span><h2>Do primeiro “oi” à casa respondendo, em três passos</h2></div>
+    <div class="how"><ol>
+      <li><span class="n">Passo 1</span><h3>Dê um nome e uma voz</h3><p class="muted">Experimente aqui mesmo, nesta página. Na sua casa, ela já chega com o nome e a voz que você escolheu.</p></li>
+      <li><span class="n">Passo 2</span><h3>Conecte a casa</h3><p class="muted">A equipe Vinci liga a Janete aos aparelhos que você já tem, incluindo os que já respondem à Alexa ou ao Google Home.</p></li>
+      <li><span class="n">Passo 3</span><h3>Fale de onde estiver</h3><p class="muted">Mande mensagem ou áudio no WhatsApp, ou fale com a Janete pela Alexa e pelo Google Home espalhados pela casa.</p></li>
+    </ol></div>
+  </div>
+</section>
+
+<section class="band" id="faz">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">O que ela faz</span><h2>Tudo que a casa tem, num pedido só</h2></div>
+    <div class="feat">
+      <div><h3>WhatsApp</h3><p class="muted">Converse por texto ou áudio, de casa ou da rua, sem instalar nada.</p><code>áudio de 5 s → ação</code></div>
+      <div><h3>Alexa</h3><p class="muted">Peça para a Alexa chamar a Janete e use os alto-falantes Echo que você já tem.</p><code>“Alexa, pede pra Janete o modo cinema”</code></div>
+      <div><h3>Google Home</h3><p class="muted">Funciona nos Nest e no app Google Home, com os mesmos cômodos e aparelhos.</p><code>“Ok Google, falar com a Janete”</code></div>
+      <div><h3>Luzes, ar e tomadas</h3><p class="muted">Liga, desliga, ajusta brilho e temperatura por cômodo ou na casa toda.</p><code>“apaga tudo menos a varanda”</code></div>
+      <div><h3>Cenas e rotinas</h3><p class="muted">Modo cinema, boa noite, saindo de casa. Crie as suas falando com ela.</p><code>“todo dia às 6h abre a cortina”</code></div>
+      <div><h3>Portão e câmeras</h3><p class="muted">Abre o portão para quem chegou e manda a imagem da entrada no WhatsApp.</p><code>“quem está no portão?”</code></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap vinci">
+    <div class="sec-head" style="margin:0"><span class="eyebrow">Por que Vinci</span><h2>Feita por quem instala automação de verdade</h2>
+      <p class="muted">A Janete nasceu dentro da Vinci Automação. Quem projeta e instala a sua casa é quem cuida da assistente.</p></div>
+    <ul>
+      <li><div><strong>Instalação e configuração pela equipe Vinci.</strong> <span class="muted">Você não precisa saber o que é Home Assistant.</span></div></li>
+      <li><div><strong>Suporte por gente.</strong> <span class="muted">Canal direto com a equipe que conhece o seu projeto.</span></div></li>
+      <li><div><strong>Privacidade clara.</strong> <span class="muted">Você vê o que a Janete guarda e pode apagar quando quiser.</span></div></li>
+      <li><div><strong>Atendimento no Rio de Janeiro.</strong> <span class="muted">Projeto, instalação e manutenção feitos pela mesma equipe.</span></div></li>
+    </ul>
+  </div>
+</section>
+
+<section class="band" id="planos">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Como contratar</span><h2>A Janete vem junto com o seu projeto Vinci</h2><p class="muted">Cada casa tem aparelhos diferentes, então a gente monta a proposta depois de entender a sua. Mande uma mensagem e a equipe responde pelo WhatsApp.</p></div>
+    <div class="plans">
+      <div class="plan"><h3>Já tenho automação</h3><p class="muted">Você tem Alexa, Google Home ou aparelhos inteligentes e quer a Janete comandando tudo.</p><ul><li>Avaliação do que você já tem</li><li>Configuração da Janete</li><li>WhatsApp, Alexa e Google Home</li></ul></div>
+      <div class="plan main"><h3>Casa nova ou reforma</h3><p class="muted">A Vinci projeta e instala a automação, e a Janete já sai pronta.</p><ul><li>Projeto e instalação Vinci</li><li>Cenas e rotinas sob medida</li><li>Treinamento da família</li></ul></div>
+      <div class="plan"><h3>Empresas</h3><p class="muted">Escritórios, clínicas e lojas que querem comando por voz e WhatsApp.</p><ul><li>Salas, ar e iluminação</li><li>Acesso e portaria</li><li>Proposta sob medida</li></ul></div>
+    </div>
+    <p style="margin-top:28px"><a class="btn primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20a%20Janete%20na%20minha%20casa." target="_blank" rel="noopener">Falar com a Vinci no WhatsApp</a></p>
+  </div>
+</section>
+
+<section class="band" id="duvidas">
+  <div class="wrap" style="max-width:820px">
+    <div class="sec-head"><span class="eyebrow">Dúvidas</span><h2>Perguntas frequentes</h2></div>
+    <details><summary>Preciso trocar meus aparelhos?</summary><p>Na maioria dos casos, não. Se o aparelho já funciona com a Alexa ou o Google Home, a Janete consegue comandar. A equipe Vinci avalia o que você tem.</p></details>
+    <details><summary>Posso mudar o nome e a voz depois?</summary><p>Sim, a qualquer momento, nas configurações ou pedindo para ela.</p></details>
+    <details><summary>A Janete fica ouvindo tudo?</summary><p>Não. Pelo WhatsApp ela só lê o que você manda. Na Alexa e no Google Home, ela só entra na conversa quando você chama a Janete pelo nome.</p></details>
+    <details><summary>Funciona fora do Rio?</summary><p>A instalação é feita pela equipe Vinci no Rio de Janeiro. Para outras cidades, fale com a gente pelo WhatsApp.</p></details>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><strong style="color:var(--ink)">Vinci Automação</strong><br>Rio de Janeiro · WhatsApp (21) 99929-2915</div>
+    <div><a href="/">Site da Vinci</a> · <a href="/privacidade.html">Privacidade</a> · <a href="/contato.html">Contato</a></div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var state = { name: "Janete", voice: "calma", persona: "direta" };
+  var VOICES = { calma: { pitch: 1.0, rate: 0.92 }, viva: { pitch: 1.25, rate: 1.12 }, grave: { pitch: 0.7, rate: 0.95 }, clara: { pitch: 1.1, rate: 1.0 } };
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+
+  function setPressed(group, btn) { group.forEach(function (b) { b.setAttribute("aria-pressed", b === btn ? "true" : "false"); }); }
+  function cleanName(v) { v = (v || "").trim(); return v ? v.charAt(0).toUpperCase() + v.slice(1) : "Janete"; }
+  function renderName() { $("#preview-name").textContent = state.name; }
+
+  $("#nm").addEventListener("input", function (e) {
+    state.name = cleanName(e.target.value); renderName();
+    setPressed($$("[data-name]"), $$("[data-name]").filter(function (b) { return b.dataset.name === state.name; })[0]);
+  });
+  $$("[data-name]").forEach(function (b) { b.addEventListener("click", function () {
+    state.name = b.dataset.name; $("#nm").value = b.dataset.name; renderName(); setPressed($$("[data-name]"), b);
+  }); });
+  $$("[data-v]").forEach(function (b) { b.addEventListener("click", function () {
+    state.voice = b.dataset.v; setPressed($$("[data-v]"), b); speak(greeting(), $("#orb1"));
+  }); });
+  $$("[data-p]").forEach(function (b) { b.addEventListener("click", function () { state.persona = b.dataset.p; setPressed($$("[data-p]"), b); }); });
+
+  function greeting() {
+    if (state.persona === "formal") return "Boa noite. Sou " + state.name + ", sua assistente. Estou à disposição.";
+    if (state.persona === "simpatica") return "Oi! Eu sou a " + state.name + ". Que bom te conhecer, bora deixar essa casa do seu jeito?";
+    return "Oi, sou a " + state.name + ". É só pedir.";
+  }
+
+  function speak(text, orb) {
+    try {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text.replace(/<[^>]+>/g, ""));
+      u.lang = "pt-BR"; var v = VOICES[state.voice]; u.pitch = v.pitch; u.rate = v.rate;
+      var pt = window.speechSynthesis.getVoices().filter(function (x) { return /pt(-|_)BR/i.test(x.lang); });
+      if (pt.length) u.voice = pt[0];
+      if (orb) { orb.classList.add("talking"); u.onend = function () { orb.classList.remove("talking"); }; }
+      window.speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  $("#hear").addEventListener("click", function () { speak(greeting(), $("#orb1")); });
+
+  /* casa de exemplo */
+  var home = {
+    sala: { label: "Sala", devs: { luz: { l: "Luz", on: true }, tv: { l: "TV", on: false }, ar: { l: "Ar", on: false, t: 24 } } },
+    quarto: { label: "Quarto", devs: { luz: { l: "Luz", on: false }, ar: { l: "Ar", on: false, t: 23 } } },
+    cozinha: { label: "Cozinha", devs: { luz: { l: "Luz", on: true } } },
+    varanda: { label: "Varanda", devs: { luz: { l: "Luz", on: false }, cortina: { l: "Cortina", on: false } } },
+    entrada: { label: "Entrada", devs: { portao: { l: "Portão", on: false }, cam: { l: "Câmera", on: true } } }
+  };
+  function stText(id, d) {
+    if (id === "cortina" || id === "portao") return d.on ? "aberto" : "fechado";
+    if (id === "ar") return d.on ? d.t + "°" : "off";
+    return d.on ? "on" : "off";
+  }
+  function renderHouse(flash) {
+    var h = "";
+    Object.keys(home).forEach(function (r) {
+      h += '<div class="room"><h4>' + home[r].label + "</h4>";
+      Object.keys(home[r].devs).forEach(function (k) {
+        var d = home[r].devs[k], key = r + "." + k;
+        h += '<div class="dev' + (flash && flash.indexOf(key) > -1 ? " flash" : "") + '"><span>' + d.l + '</span><span class="st' + (d.on ? " on" : "") + '">' + stText(k, d) + "</span></div>";
+      });
+      h += "</div>";
+    });
+    $("#house").innerHTML = h;
+  }
+
+  function norm(s) { return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, ""); }
+  var ROOMS = { sala: /sala/, quarto: /quarto/, cozinha: /cozinha/, varanda: /varanda/, entrada: /entrada|portao/ };
+
+  function ans(text) {
+    if (state.persona === "formal") return text.replace(/^Pronto/, "Feito").replace(/^Beleza/, "Certo");
+    if (state.persona === "simpatica") return text + (Math.random() < .5 ? " Mais alguma coisa?" : "");
+    return text;
+  }
+
+  function act(q) {
+    var t = norm(q), changed = [];
+    function set(r, k, on, extra) { if (home[r] && home[r].devs[k]) { home[r].devs[k].on = on; if (extra) Object.assign(home[r].devs[k], extra); changed.push(r + "." + k); } }
+    var rooms = Object.keys(ROOMS).filter(function (r) { return ROOMS[r].test(t); });
+    var off = /(apaga|desliga|fecha)/.test(t), on = /(acende|liga|abre|abrir)/.test(t);
+    var temp = (t.match(/(\d{2})\s*(graus|°)?/) || [])[1];
+    var reply;
+
+    if (/cinema/.test(t)) {
+      set("sala", "luz", false); set("sala", "tv", true); set("varanda", "cortina", false); set("sala", "ar", true, { t: 22 });
+      reply = "Modo cinema ativado: luz da sala apagada, TV ligada, cortina fechada e ar em 22°.";
+    } else if (/boa noite|dormir/.test(t)) {
+      Object.keys(home).forEach(function (r) { if (home[r].devs.luz) set(r, "luz", false); });
+      set("sala", "tv", false); set("entrada", "portao", false); set("quarto", "ar", true, { t: 23 });
+      reply = "Boa noite! Apaguei as luzes, desliguei a TV, conferi o portão e deixei o ar do quarto em 23°.";
+    } else if (/saindo|sai de casa|vou sair/.test(t)) {
+      Object.keys(home).forEach(function (r) { Object.keys(home[r].devs).forEach(function (k) { if (k !== "cam") set(r, k, false); }); });
+      reply = "Tudo desligado e portão fechado. A câmera da entrada continua gravando. Boa saída!";
+    } else if (/(alguma|tem) luz|esqueci|como (esta|ta) a casa|status/.test(t)) {
+      var lit = Object.keys(home).filter(function (r) { return home[r].devs.luz && home[r].devs.luz.on; }).map(function (r) { return home[r].label.toLowerCase(); });
+      reply = lit.length ? "Tem luz acesa na " + lit.join(" e na ") + ". Quer que eu apague?" : "Nenhuma luz acesa. O portão está " + stText("portao", home.entrada.devs.portao) + ".";
+    } else if (/portao/.test(t)) {
+      set("entrada", "portao", !off);
+      reply = off ? "Portão fechado." : "Abrindo o portão. Ele fecha sozinho em 2 minutos.";
+    } else if (/cortina/.test(t)) {
+      set("varanda", "cortina", !off); reply = off ? "Cortina fechada." : "Cortina aberta.";
+    } else if (/\bar\b|ar-condicionado|ar condicionado|temperatura/.test(t)) {
+      var rs = rooms.filter(function (r) { return home[r].devs.ar; }); if (!rs.length) rs = ["sala"];
+      rs.forEach(function (r) { set(r, "ar", !off, temp ? { t: +temp } : null); });
+      reply = off ? "Ar desligado." : "Ar ligado em " + home[rs[0]].devs.ar.t + "°.";
+    } else if (/\btv\b|televisao/.test(t)) {
+      set("sala", "tv", !off); reply = off ? "TV desligada." : "TV da sala ligada.";
+    } else if (/luz|luzes|tudo/.test(t) && (on || off)) {
+      var except = (t.match(/menos (a |o )?(\w+)/) || [])[2];
+      var target = rooms.length && !except ? rooms : Object.keys(home);
+      target.forEach(function (r) { if (home[r].devs.luz && r !== except) set(r, "luz", on && !off); });
+      reply = (off ? "Apaguei" : "Acendi") + " " + (rooms.length && !except ? "a luz da " + target.map(function (r) { return home[r].label.toLowerCase(); }).join(" e da ") : "as luzes" + (except ? ", menos a da " + except : "")) + ".";
+    } else if (/^(oi|ola|e ai|bom dia|boa tarde)/.test(t)) {
+      reply = greeting();
+    } else if (/quem (e|esta)|seu nome/.test(t)) {
+      reply = "Sou a " + state.name + ", assistente da sua casa, feita pela Vinci Automação.";
+    } else {
+      reply = "Nessa prévia eu entendo pedidos sobre luzes, ar, TV, cortina, portão e cenas como modo cinema ou boa noite. Tenta um desses?";
+    }
+    renderHouse(changed);
+    return ans(reply);
+  }
+
+  function push(cls, html) { var d = document.createElement("div"); d.className = "msg " + cls; d.innerHTML = html; $("#chat").appendChild(d); $("#chat").scrollTop = 1e6; }
+  function esc(s) { return s.replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function send(q) {
+    if (!q.trim()) return;
+    push("me", esc(q));
+    var r = act(q);
+    setTimeout(function () { push("her", "<b>" + esc(state.name) + ":</b> " + esc(r)); if ($("#speak").checked) speak(r); }, 350);
+  }
+
+  var SUG = ["Ativa o modo cinema", "Tem alguma luz acesa?", "Liga o ar do quarto em 21 graus", "Abre o portão", "Boa noite"];
+  $("#sug").innerHTML = SUG.map(function (s) { return '<button class="chip" type="button">' + s + "</button>"; }).join("");
+  $$("#sug button").forEach(function (b) { b.addEventListener("click", function () { send(b.textContent); }); });
+
+  $("#go").addEventListener("click", function () {
+    $("#step1").hidden = true; $("#step2").hidden = false; $("#s1").classList.remove("on"); $("#s2").classList.add("on");
+    if (!$("#chat").children.length) { renderHouse(); push("her", "<b>" + esc(state.name) + ":</b> " + esc(greeting() + " Esta é uma casa de exemplo, pode testar.")); }
+    $("#q").focus();
+  });
+  $("#back").addEventListener("click", function () { $("#step2").hidden = true; $("#step1").hidden = false; $("#s2").classList.remove("on"); $("#s1").classList.add("on"); });
+  $("#ask").addEventListener("submit", function (e) { e.preventDefault(); send($("#q").value); $("#q").value = ""; });
+  renderHouse();
+})();
+</script>
+</body>
+</html>
