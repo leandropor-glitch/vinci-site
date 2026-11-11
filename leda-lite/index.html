@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0E1519">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="referrer" content="no-referrer">
+  <title>Leda Lite · VINCI</title>
+  <meta name="description" content="Leda: a assistente virtual da VINCI, rodando no próprio aparelho, sem internet.">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css?v=l-1">
+  <script type="module" src="app.js?v=l-1"></script>
+</head>
+<body>
+  <section id="gate" class="gate-screen" aria-label="Acordar a Leda">
+    <img class="gate-avatar" src="leda-avatar.jpg" alt="Leda, a robozinha assistente da VINCI, sorrindo">
+    <div class="gate-form">
+      <div class="gate-title"><b>LEDA LITE</b><small>ASSISTENTE DA CASA · VINCI</small></div>
+      <form id="pw-form" class="pw-form" autocomplete="on">
+        <input id="password" type="password" autocomplete="current-password" required placeholder="Senha" aria-label="Senha" enterkeyhint="go">
+        <button id="pw-enter" class="wake-button" type="submit">Entrar</button>
+      </form>
+      <div id="unlocked" hidden>
+      <p class="brain-note">Cérebro leve · 1B · baixa ~0,7 GB só na primeira vez</p>
+      <button id="wake" class="wake-button" type="button">Acordar a Leda</button>
+      <div class="progress" id="progress" hidden><i id="progress-bar"></i></div>
+      </div>
+      <p id="gate-status" class="gate-status" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <div id="site-app" class="shell" hidden>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">L</span><span><b>LEDA LITE</b><small>ASSISTENTE · VINCI</small></span></div>
+      <div class="top-actions"><span id="connection" class="connection" role="status"><i></i> Carregando</span></div>
+    </header>
+    <main class="layout">
+      <section class="stage" aria-labelledby="leda-title">
+        <div class="stage-heading"><span class="kicker">LEDA</span><span class="stage-tag">01 / LITE</span></div>
+        <div class="portrait-wrap">
+          <div class="halo"></div><img class="portrait" src="leda-corpo.jpg" alt="Leda acenando, com o nome LEDA na telinha do peito">
+          <div class="portrait-glow"></div>
+        </div>
+        <div class="stage-bottom">
+          <div class="identity"><span class="kicker">CÉREBRO NO APARELHO</span><h1 id="leda-title">Leda<span class="period">.</span></h1><p>Gentil, esperta e sempre por perto. Roda aqui mesmo, até sem internet.</p></div>
+          <div class="live-control"><div class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span id="live-state">Live desligada</span><button id="live-toggle" class="live-button" type="button">▶ Iniciar live</button></div>
+        </div>
+      </section>
+      <section class="chat" aria-label="Conversa com a Leda">
+        <div class="chat-header"><div><span class="kicker">CÉREBRO LOCAL · <span id="model-name">—</span></span><h2>Conversa</h2></div><div class="view-switch" role="group" aria-label="Voz"><button id="voice-on" class="active" type="button">Com voz</button><button id="voice-off" type="button">Mudo</button></div></div>
+        <div id="notice" class="notice" role="alert" hidden></div>
+        <div id="messages" class="messages" aria-live="polite"><div class="empty">Oi! Eu sou a Leda. Em que posso ajudar a sua casa hoje?</div></div>
+        <div class="composer">
+          <div id="dictation-status" class="dictation-status" aria-live="polite">Escreva ou use o microfone.</div>
+          <form id="send-form"><button id="mic" type="button" class="icon-button" title="Falar" aria-label="Falar">🎙</button><textarea id="draft" rows="2" placeholder="Fala com a Leda…" aria-label="Mensagem para a Leda" maxlength="4000"></textarea><button id="send" type="submit" class="send-button">Enviar <span aria-hidden="true">↗</span></button></form>
+          <div class="composer-foot"><span>Enter envia · Shift+Enter quebra linha</span><span id="speed"></span></div>
+        </div>
+      </section>
+    </main>
+    <footer>VINCI AUTOMAÇÃO <span>·</span> LEDA LITE · OFFLINE</footer>
+  </div>
+</body>
+</html>

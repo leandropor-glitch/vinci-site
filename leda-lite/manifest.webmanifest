@@ -1,0 +1,14 @@
+{
+  "name": "Leda Lite · VINCI",
+  "short_name": "Leda Lite",
+  "description": "A assistente virtual da VINCI, rodando no aparelho, sem internet.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#030506",
+  "theme_color": "#0E1519",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
