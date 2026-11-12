@@ -1,6 +1,6 @@
 // Leda: guarda a página e a biblioteca para abrir sem internet.
 // O modelo em si fica no cache próprio do WebLLM (baixado uma vez, do Hugging Face).
-const CACHE = "leda-lite-v2";
+const CACHE = "leda-lite-v3";
 const SHELL = [
   "./", "index.html", "style.css?v=l-1", "app.js?v=l-1", "worker.js",
   "vendor/web-llm-0.2.86.js", "leda-avatar.jpg", "leda-corpo.jpg", "icon-192.png", "icon-512.png", "manifest.webmanifest",
