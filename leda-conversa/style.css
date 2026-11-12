@@ -60,3 +60,19 @@ body:has(.gate-screen:not([hidden])){overflow:hidden}
 .connection.ok i{background:#d7a06a;box-shadow:0 0 12px #d7a06a}
 textarea::placeholder{color:#d7a06a;opacity:.9}
 .gate-avatar,.portrait{box-shadow:0 0 0 2px #a8703a,0 18px 50px #0008}
+
+/* Leda tela cheia (12/11/2026): Leda ocupa a tela, cabelo inteiro, frase embaixo do microfone */
+.gate-screen{background:#291B16;display:block}
+.gate-avatar{position:absolute;top:0;left:50%;bottom:auto;transform:translateX(-50%);width:min(100vw,calc(100dvh * .84));height:auto!important;max-height:none!important;max-width:none;border-radius:0!important;box-shadow:none!important;mix-blend-mode:normal;object-fit:contain}
+.gate-form{bottom:max(16px,env(safe-area-inset-bottom));gap:8px}
+.gate-form:has(#unlocked:not([hidden])) .gate-title{display:none}
+#unlocked{justify-items:center;gap:6px}
+#wake.mic-wake{width:78px;height:78px;border-radius:50%!important;padding:0;display:grid;place-items:center}
+.fale{margin:4px 0 0;font-size:17px;font-weight:700;letter-spacing:.02em;text-align:center;background:linear-gradient(180deg,#f3cf9f 0%,#d29a5e 30%,#a8703a 58%,#7d4f25 78%,#c99059 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#unlocked .brain-note{font-size:10px;opacity:.75;margin:2px 0 0}
+#unlocked .progress{width:100%}
+#mic{position:relative;margin-bottom:16px;color:#2a1a12}
+#mic::after{content:"Fale com a Leda";position:absolute;top:100%;left:50%;transform:translateX(-50%);margin-top:4px;white-space:nowrap;font-size:9px;font-weight:700;color:#d7a06a}
+
+#mic{margin-left:6px}
+#mic::after{left:0;transform:none;font-size:8.5px}

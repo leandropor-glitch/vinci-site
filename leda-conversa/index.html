@@ -11,12 +11,12 @@
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="style.css?v=l-3">
+  <link rel="stylesheet" href="style.css?v=l-4">
   <script type="module" src="app.js?v=l-1"></script>
 </head>
 <body>
   <section id="gate" class="gate-screen" aria-label="Acordar a Leda">
-    <img class="gate-avatar" src="leda-avatar.jpg?v=6" alt="Leda, a robozinha assistente da VINCI, sorrindo">
+    <img class="gate-avatar" src="leda-tela.jpg?v=1" alt="Leda, a robozinha assistente da VINCI, sorrindo">
     <div class="gate-form">
       <div class="gate-title"><b>LEDA</b><small>ASSISTENTE DA CASA · VINCI</small></div>
       <form id="pw-form" class="pw-form" autocomplete="on">
@@ -24,9 +24,10 @@
         <button id="pw-enter" class="wake-button" type="submit">Entrar</button>
       </form>
       <div id="unlocked" hidden>
-      <p class="brain-note">Cérebro completo · 8B · baixa ~4,5 GB só na primeira vez</p>
-      <button id="wake" class="wake-button" type="button">Acordar a Leda</button>
+      <button id="wake" class="wake-button mic-wake" type="button" aria-label="Fale com a Leda"><svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/><path d="M12 18v4"/></svg></button>
+      <p class="fale">Fale com a Leda</p>
       <div class="progress" id="progress" hidden><i id="progress-bar"></i></div>
+      <p class="brain-note">Cérebro completo · 8B · baixa ~4,5 GB só na primeira vez</p>
       </div>
       <p id="gate-status" class="gate-status" role="status" aria-live="polite"></p>
     </div>
@@ -55,7 +56,7 @@
         <div id="messages" class="messages" aria-live="polite"><div class="empty">Oi! Eu sou a Leda. Em que posso ajudar a sua casa hoje?</div></div>
         <div class="composer">
           <div id="dictation-status" class="dictation-status" aria-live="polite">Escreva ou use o microfone.</div>
-          <form id="send-form"><button id="mic" type="button" class="icon-button" title="Falar" aria-label="Falar">🎙</button><textarea id="draft" rows="2" placeholder="Fale com a Leda" aria-label="Mensagem para a Leda" maxlength="4000"></textarea><button id="send" type="submit" class="send-button">Enviar <span aria-hidden="true">↗</span></button></form>
+          <form id="send-form"><button id="mic" type="button" class="icon-button" title="Fale com a Leda" aria-label="Fale com a Leda"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M5 10v1a7 7 0 0 0 14 0v-1"/><path d="M12 18v4"/></svg></button><textarea id="draft" rows="2" placeholder="Escreva para a Leda" aria-label="Mensagem para a Leda" maxlength="4000"></textarea><button id="send" type="submit" class="send-button">Enviar <span aria-hidden="true">↗</span></button></form>
           <div class="composer-foot"><span>Enter envia · Shift+Enter quebra linha</span><span id="speed"></span></div>
         </div>
       </section>
