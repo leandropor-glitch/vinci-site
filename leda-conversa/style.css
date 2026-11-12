@@ -42,8 +42,9 @@ body:has(.gate-screen:not([hidden])){overflow:hidden}
 .pw-form{display:grid;gap:10px}
 
 /* Leda (11/11/2026): imagens com fundo claro, sem mistura com o fundo escuro */
-.portrait{mix-blend-mode:normal;height:auto;width:auto;max-height:100%;max-width:92%;border-radius:26px;transform:none;object-fit:contain;box-shadow:0 18px 50px #0008}
+.portrait{mix-blend-mode:normal;height:100%;width:auto;max-height:100%;max-width:92%;border-radius:26px;transform:none;object-fit:contain;box-shadow:0 18px 50px #0008}
 @media(max-width:900px){.stage{min-height:620px}}@media(max-width:560px){.stage{min-height:560px}}
 .stage.speaking .portrait{animation:leda-pulse .55s ease-in-out infinite alternate}@keyframes leda-pulse{to{transform:scale(1.015)}}
 .gate-avatar{mix-blend-mode:normal;top:28px;height:min(calc(100dvh - 300px),560px);border-radius:34px;box-shadow:0 18px 60px #0009}
 @media(max-width:560px){.gate-avatar{top:20px;height:min(calc(100dvh - 290px),470px)}}
+.portrait-wrap{display:flex;align-items:center;justify-content:center}.portrait-wrap .portrait{height:100%;width:auto;max-width:92%;min-height:0}
