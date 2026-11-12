@@ -76,3 +76,7 @@ textarea::placeholder{color:#d7a06a;opacity:.9}
 
 #mic{margin-left:6px}
 #mic::after{left:0;transform:none;font-size:8.5px}
+
+.gate-avatar{filter:none!important}
+#mic{margin-left:0;margin-bottom:26px}
+#mic::after{left:50%;transform:translateX(-50%);width:52px;white-space:normal;text-align:center;line-height:1.05;font-size:9px}
