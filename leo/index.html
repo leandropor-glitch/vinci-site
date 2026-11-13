@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="pt-BR" data-reservado-pagina>
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow">
+<script src="/assets/js/reservado.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Leo da Vinci</title>
+<meta name="description" content="Leo, o assistente da Vinci Automação no estilo Jarvis: um painel na tela da sua casa, ordens pelo WhatsApp e cérebro GPT.">
+<meta name="theme-color" content="#000000">
+<link rel="canonical" href="https://www.vinciautomacao.com/leo/">
+<link rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta property="og:title" content="Leo da Vinci">
+<meta property="og:description" content="O painel que comanda a sua casa.">
+<meta property="og:url" content="https://www.vinciautomacao.com/leo/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+/* Layout: mesmo molde das páginas Felyx e Leda; identidade do Leo: preto puro, amarelo neon, bando de pontos em revoada. Hero = texto à esquerda + painel do Leo à direita. */
+/* Layout: dark Vinci stage; hero = headline left + "set up your Felyx" device right with her avatar in a volt halo; then integrations, a day timeline, features grid, plans with monthly/annual switch, FAQ. */
+:root {
+  --bg: #000000;
+  --surface: #0a0a05;
+  --raise: #12120a;
+  --line: #2c2b12;
+  --muted: #93a3af;
+  --text: #e8edf0;
+  --volt: #ffe600;
+  --volt-press: #e6cf00;
+  --on-volt: #000000;
+  --paper: #e9ecec;
+  --gold: #e0a526;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --body: "Manrope", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { animation: none !important; transition: none !important; } }
+body { background: var(--bg); color: var(--text); font: 17px/1.6 var(--body); margin: 0; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1200px; margin: 0 auto; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+h1 { font-size: clamp(2.3rem, 5.2vw, 4.3rem); font-weight: 700; line-height: 1.02; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.6rem, 3.1vw, 2.6rem); font-weight: 600; line-height: 1.08; letter-spacing: -0.02em; }
+h3 { font-size: 1.02rem; font-weight: 600; line-height: 1.25; }
+p { margin: 0; }
+a { color: var(--volt); }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--volt); outline-offset: 3px; }
+.eyebrow { font: 500 .76rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--volt); }
+.muted { color: var(--muted); }
+.hl { color: var(--volt); }
+
+/* header */
+header.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: rgba(0, 0, 0, .82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 21; background: var(--bg); }
+header.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 66px; }
+.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; }
+.brand svg { width: 36px; height: 36px; }
+.brand b { font: 700 1.05rem var(--display); letter-spacing: -.01em; }
+.brand small { display: block; font: 500 .68rem var(--mono); color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+nav.links { display: flex; gap: 26px; font-size: .93rem; font-weight: 600; }
+nav.links a { color: var(--muted); text-decoration: none; }
+nav.links a:hover { color: var(--text); }
+@media (max-width: 860px) { nav.links { display: none; } }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid transparent; border-radius: 999px; padding: 12px 22px; font-weight: 700; font-size: .95rem; cursor: pointer; text-decoration: none; transition: transform .15s ease, background .15s ease; }
+.btn.primary { background: var(--volt); color: var(--on-volt); }
+.btn.primary:hover { background: var(--volt-press); transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--text); border-color: var(--line); }
+.btn.ghost:hover { border-color: var(--muted); }
+.btn.sm { padding: 9px 16px; font-size: .88rem; }
+
+/* hero */
+.hero { position: relative; overflow: hidden; padding-block: 56px 80px; }
+.hero::before { content: ""; position: absolute; width: 720px; height: 720px; right: -160px; top: -200px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 230, 0, .13), transparent); pointer-events: none; }
+.hero .wrap { position: relative; display: grid; grid-template-columns: 1fr minmax(0, 480px); gap: 56px; align-items: center; }
+.hero-copy { display: flex; flex-direction: column; gap: 26px; min-width: 0; }
+.hero-copy .lead { font-size: 1.16rem; color: var(--muted); max-width: 40ch; }
+.hero-copy .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.channels { display: flex; flex-wrap: wrap; gap: 8px; }
+.channels span { font: 500 .78rem var(--mono); padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); background: var(--surface); }
+.channels span::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--volt); margin-right: 8px; vertical-align: 1px; }
+@media (max-width: 940px) { .hero .wrap { grid-template-columns: 1fr; } }
+
+/* device */
+.device { background: linear-gradient(180deg, var(--raise), var(--surface)); border: 1px solid var(--line); border-radius: 30px; padding: 22px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 40px 80px -40px rgba(0, 0, 0, .8), 0 0 0 6px rgba(255, 230, 0, .04); min-width: 0; }
+.dev-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.steps { display: flex; gap: 6px; font: 500 .7rem var(--mono); }
+.steps b { font-weight: 500; padding: 5px 10px; border-radius: 999px; background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+.steps b.on { background: var(--volt); color: var(--on-volt); border-color: var(--volt); }
+.live { font: 500 .7rem var(--mono); color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--volt); box-shadow: 0 0 10px var(--volt); }
+
+.who { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding-top: 4px; }
+.halo { position: relative; width: 148px; height: 148px; }
+.halo svg { width: 100%; height: 100%; display: block; filter: drop-shadow(0 0 22px rgba(255, 230, 0, .25)); }
+.halo .wave { position: absolute; inset: -10px; border-radius: 50%; border: 2px solid var(--volt); opacity: 0; }
+.halo.talking .wave { animation: wave 1.4s ease-out infinite; }
+.halo.talking .wave:nth-child(2) { animation-delay: .45s; }
+@keyframes wave { from { inset: -4px; opacity: .55; } to { inset: -30px; opacity: 0; } }
+.who .hello { font-size: .9rem; color: var(--muted); }
+.who .name { font: 700 1.9rem/1 var(--display); letter-spacing: -.02em; }
+
+.field { display: flex; flex-direction: column; gap: 8px; }
+.field > span, .field > label { font: 500 .72rem var(--mono); color: var(--muted); letter-spacing: .08em; text-transform: uppercase; }
+.field input[type=text] { border: 1.5px solid var(--line); background: var(--bg); border-radius: 14px; padding: 12px 14px; font-size: 1.02rem; font-weight: 600; }
+.field input[type=text]:focus { border-color: var(--volt); outline: none; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border: 1.5px solid var(--line); background: transparent; border-radius: 999px; padding: 7px 14px; cursor: pointer; font-size: .88rem; font-weight: 600; color: var(--text); }
+.chip:hover { border-color: var(--muted); }
+.chip[aria-pressed="true"] { border-color: var(--volt); background: rgba(255, 230, 0, .1); color: var(--volt); }
+.voices { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.voice { border: 1.5px solid var(--line); background: var(--bg); border-radius: 14px; padding: 10px 6px; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.voice .bars { display: flex; gap: 2px; align-items: flex-end; height: 18px; }
+.voice .bars i { width: 3px; background: var(--muted); border-radius: 2px; }
+.voice strong { font-size: .82rem; }
+.voice[aria-pressed="true"] { border-color: var(--volt); }
+.voice[aria-pressed="true"] .bars i { background: var(--volt); }
+@media (max-width: 440px) { .voices { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.row-end { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.note { font-size: .76rem; color: var(--muted); }
+
+/* demo */
+.house { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.room { border: 1px solid var(--line); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); min-width: 0; }
+.room h4 { margin: 0; font: 500 .68rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.dev { display: flex; justify-content: space-between; align-items: center; font-size: .8rem; gap: 6px; border-radius: 8px; }
+.dev .st { font: 500 .7rem var(--mono); padding: 2px 7px; border-radius: 999px; background: var(--raise); color: var(--muted); white-space: nowrap; }
+.dev .st.on { background: var(--volt); color: var(--on-volt); }
+.dev.flash { animation: flash 1s ease; }
+@keyframes flash { 30% { background: rgba(255, 230, 0, .16); } }
+@media (max-width: 440px) { .house { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.chat-top { display: flex; align-items: center; gap: 10px; }
+.chat-top svg { width: 34px; height: 34px; flex: none; }
+.chat-top b { font-family: var(--display); font-size: .95rem; }
+.chat { border: 1px solid var(--line); border-radius: 16px; height: 210px; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; background: var(--bg); }
+.msg { max-width: 86%; padding: 8px 12px; border-radius: 16px; font-size: .9rem; line-height: 1.45; }
+.msg.me { align-self: flex-end; background: var(--volt); color: var(--on-volt); font-weight: 600; border-bottom-right-radius: 4px; }
+.msg.her { align-self: flex-start; background: var(--raise); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+form.ask { display: flex; gap: 8px; }
+form.ask input { flex: 1; min-width: 0; border: 1.5px solid var(--line); background: var(--bg); border-radius: 999px; padding: 11px 16px; }
+form.ask input:focus { border-color: var(--volt); outline: none; }
+.suggest { display: flex; gap: 6px; flex-wrap: wrap; }
+.suggest .chip { font-size: .76rem; padding: 5px 11px; }
+
+/* sections */
+section.band { padding-block: clamp(72px, 9vw, 120px); border-top: 1px solid var(--line); }
+.sec-head { display: flex; flex-direction: column; gap: 14px; max-width: 660px; margin-bottom: 44px; }
+.sec-head p { color: var(--muted); font-size: 1.05rem; }
+
+.integr { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.int { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.int .tag { font: 500 .72rem var(--mono); color: var(--volt); letter-spacing: .08em; text-transform: uppercase; }
+.int q { font: 500 .88rem var(--mono); color: var(--text); background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; quotes: "“" "”"; }
+@media (max-width: 860px) { .integr { grid-template-columns: 1fr; } }
+
+.day { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; border-top: 2px solid var(--line); position: relative; }
+.day li { list-style: none; padding: 24px 22px 0 0; display: flex; flex-direction: column; gap: 10px; position: relative; }
+.day li::before { content: ""; position: absolute; top: -8px; left: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--volt); }
+.day time { font: 500 1.5rem var(--mono); color: var(--volt); font-variant-numeric: tabular-nums; }
+.day ol { display: contents; }
+@media (max-width: 860px) { .day { grid-template-columns: 1fr; border-top: 0; border-left: 2px solid var(--line); padding-left: 22px; } .day li { padding: 0 0 28px; } .day li::before { left: -31px; top: 8px; } }
+
+.feat { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 22px; overflow: hidden; }
+.feat div { background: var(--surface); padding: 26px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.feat code { font: .8rem var(--mono); color: var(--volt); margin-top: 4px; }
+@media (max-width: 860px) { .feat { grid-template-columns: 1fr; } }
+
+.vinci { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.vinci ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+.vinci li { padding-block: 18px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 4px; }
+@media (max-width: 860px) { .vinci { grid-template-columns: 1fr; } }
+
+.billing { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; padding: 4px; gap: 4px; background: var(--surface); align-self: flex-start; }
+.billing button { border: 0; background: transparent; border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: .88rem; cursor: pointer; color: var(--muted); }
+.billing button[aria-pressed="true"] { background: var(--volt); color: var(--on-volt); }
+.billing small { font: 500 .7rem var(--mono); }
+.plans { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.plan { background: var(--surface); border: 1px solid var(--line); border-radius: 24px; padding: 28px; display: flex; flex-direction: column; gap: 18px; position: relative; min-width: 0; }
+.plan.main { border: 2px solid var(--volt); background: linear-gradient(180deg, rgba(255, 230, 0, .07), var(--surface) 40%); }
+.plan .badge { position: absolute; top: -13px; left: 24px; background: var(--volt); color: var(--on-volt); font: 600 .7rem var(--mono); padding: 5px 10px; border-radius: 999px; letter-spacing: .06em; text-transform: uppercase; }
+.price { display: flex; align-items: baseline; gap: 6px; font-variant-numeric: tabular-nums; }
+.price .cur { font: 600 1rem var(--display); color: var(--muted); }
+.price .val { font: 700 2.4rem/1 var(--display); letter-spacing: -.03em; }
+.price .per { font: 500 .8rem var(--mono); color: var(--muted); }
+.plan .sub { font: 500 .78rem var(--mono); color: var(--muted); min-height: 1.3em; }
+.plan ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; font-size: .94rem; flex: 1; }
+.plan li { display: grid; grid-template-columns: 18px 1fr; gap: 8px; }
+.plan li::before { content: ""; width: 10px; height: 6px; border-left: 2px solid var(--volt); border-bottom: 2px solid var(--volt); transform: rotate(-45deg); margin-top: 8px; }
+.plan-foot { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; padding: 22px 26px; border: 1px dashed var(--line); border-radius: 20px; }
+@media (max-width: 900px) { .plans { grid-template-columns: 1fr; } }
+
+details { border-bottom: 1px solid var(--line); padding-block: 20px; }
+summary { cursor: pointer; font-weight: 700; font-size: 1.05rem; list-style: none; display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font: 500 1.3rem/1 var(--mono); color: var(--volt); }
+details[open] summary::after { content: "–"; }
+details p { margin-top: 12px; color: var(--muted); max-width: 70ch; }
+
+.final { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.final svg { width: 110px; height: 110px; }
+
+footer { padding-block: 40px 56px; border-top: 1px solid var(--line); font-size: .88rem; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; }
+footer a { color: var(--muted); }
+[hidden] { display: none !important; }
+/* Leo: logotipo, painel e bando */
+.logo-leo { font: 500 1.05rem/1 var(--display); letter-spacing: .5em; color: var(--volt); padding-left: .1em; }
+.brand .mark { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid var(--volt); display: grid; place-items: center; }
+.brand .mark i { width: 8px; height: 8px; border-radius: 50%; background: var(--volt); box-shadow: 0 0 10px var(--volt); }
+.panel { background: #000; border: 1px solid var(--line); border-radius: 30px; padding: 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 40px 80px -40px rgba(255, 230, 0, .25); min-width: 0; }
+.flock { position: relative; height: 190px; border-radius: 18px; overflow: hidden; }
+.flock canvas { width: 100%; height: 100%; display: block; }
+.flock .cap { position: absolute; left: 0; right: 0; bottom: 10px; text-align: center; display: flex; flex-direction: column; gap: 4px; align-items: center; }
+.flock .cap small { font-size: .8rem; color: var(--muted); }
+.tiles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tile { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px 10px; text-align: center; font-size: .84rem; font-weight: 600; cursor: pointer; color: var(--text); display: flex; flex-direction: column; gap: 4px; align-items: center; transition: border-color .2s, background .2s; }
+.tile b { color: var(--volt); font-size: 1rem; line-height: 1; }
+.tile:hover, .tile.on { border-color: var(--volt); background: rgba(255, 230, 0, .08); }
+.cards2 { display: grid; grid-template-columns: 1.6fr 1fr; gap: 8px; }
+.card { border: 1px solid var(--line); background: var(--surface); border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.card .k { font: 500 .66rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--volt); }
+.card .v { font-size: .86rem; display: flex; justify-content: space-between; gap: 8px; }
+.card .v em { font-style: normal; color: var(--volt); white-space: nowrap; }
+.card .big { font: 600 1.5rem/1 var(--display); }
+.said { min-height: 3.1em; font-size: .92rem; }
+.said .me { color: var(--muted); display: block; font-size: .8rem; }
+form.ask { display: flex; gap: 8px; }
+form.ask input { flex: 1; min-width: 0; border: 1.5px solid var(--line); background: #000; border-radius: 999px; padding: 11px 16px; }
+form.ask input:focus { border-color: var(--volt); outline: none; }
+@media (max-width: 440px) { .cards2 { grid-template-columns: 1fr; } .tiles .tile { font-size: .76rem; padding: 10px 4px; } }
+.panel-big { border: 1px solid var(--line); border-radius: 24px; overflow: hidden; background: #000; }
+.panel-big img { display: block; width: 100%; height: auto; }
+.cap-img { font-size: .85rem; color: var(--muted); margin-top: 12px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="Leo, da Vinci Automação"><span class="mark" aria-hidden="true"><i></i></span><span><b>Leo</b><small>Vinci Automação</small></span></a>
+    <nav class="links" aria-label="Seções">
+      <a href="#canais">Onde ele está</a><a href="#dia">Um dia</a><a href="#faz">O que faz</a><a href="#duvidas">Dúvidas</a><a href="/felyx-ai/">Felyx</a><a href="/leda/">Leda</a>
+    </nav>
+    <a class="btn primary sm" href="#quero">Quero o Leo</a>
+  </div>
+</header>
+
+<main>
+<section class="hero" id="topo">
+  <div class="wrap">
+    <div class="hero-copy">
+      <span class="eyebrow">Assistente pessoal da casa</span>
+      <h1>O painel que <span class="hl">comanda</span> a sua casa.</h1>
+      <p class="lead">O Leo fica numa tela da casa, como um Jarvis. Você fala ou escreve, ele aciona as cenas, mostra o que está acontecendo e resolve. De fora, é só mandar uma mensagem no WhatsApp.</p>
+      <div class="channels" aria-label="Canais"><span>Painel na tela</span><span>WhatsApp</span><span>Celular</span></div>
+      <div class="cta">
+        <a class="btn primary" href="#quero">Quero o Leo</a>
+        <a class="btn ghost" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20Leo." target="_blank" rel="noopener">Falar com a Vinci</a>
+      </div>
+    </div>
+
+    <div class="panel" aria-label="Painel de demonstração do Leo">
+      <div class="flock" id="flock"><canvas id="cv" aria-hidden="true"></canvas>
+        <div class="cap"><span class="logo-leo">LEO</span><small id="estado">Pronto.</small></div>
+      </div>
+      <div class="tiles" role="group" aria-label="Cenas">
+        <button class="tile" type="button" data-c="Master OFF"><b>⏻</b>Master OFF</button>
+        <button class="tile" type="button" data-c="Cheguei"><b>⌂</b>Cheguei</button>
+        <button class="tile" type="button" data-c="Estou saindo"><b>→</b>Estou saindo</button>
+      </div>
+      <div class="cards2">
+        <div class="card"><span class="k">Casa Vinci</span><div class="v">Luzes da sala<em id="t-luz">acesas</em></div><div class="v">Ar da sala<em id="t-ar">22°</em></div></div>
+        <div class="card"><span class="k">Clima · Rio</span><span class="big">27°</span><span class="muted" style="font-size:.78rem">sol entre nuvens</span></div>
+      </div>
+      <div class="card"><span class="k">Leo disse</span><div class="said" id="said" aria-live="polite"><span class="me">você: boa noite, Leo</span>Boa noite. Apaguei a sala e baixei o ar para 23°.</div></div>
+      <form class="ask" id="ask"><input id="q" type="text" placeholder="Fale ou escreva para o Leo" autocomplete="off" aria-label="Seu pedido"><button class="btn primary sm" type="submit">Enviar</button></form>
+      <p class="note">Demonstração: nada real é controlado nesta página.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="canais">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Onde ele está</span><h2>Na tela da casa e no seu bolso</h2><p>O Leo mora num computador da casa e aparece onde for mais prático para você.</p></div>
+    <div class="integr">
+      <div class="int"><span class="tag">Painel</span><h3>Uma tela que mostra e comanda</h3><p class="muted">Na TV, no monitor ou no tablet da parede. Cenas a um toque, o estado da casa e o clima, tudo à vista.</p><q>Leo, modo cinema</q></div>
+      <div class="int"><span class="tag">WhatsApp</span><h3>Ordens por mensagem, de onde estiver</h3><p class="muted">O Leo tem número próprio. Só os números que você autorizar dão ordens a ele, e ele responde no mesmo chat.</p><q>liga o ar da sala, tô chegando</q></div>
+      <div class="int"><span class="tag">Celular</span><h3>O mesmo painel, fora de casa</h3><p class="muted">Abra o painel do Leo no celular, com senha, e veja a casa como se estivesse na frente da tela.</p><q>tem alguma luz acesa?</q></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="dia">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Um dia com o Leo</span><h2>Ele resolve sem você pedir duas vezes</h2></div>
+    <div class="day"><ol>
+      <li><time>07:00</time><h3>Bom dia</h3><p class="muted">Mostra no painel o clima do Rio e os compromissos, e abre as persianas.</p></li>
+      <li><time>14:30</time><h3>Do escritório</h3><p class="muted">Pelo WhatsApp você pergunta se ficou algo ligado. Ele confere e desliga.</p></li>
+      <li><time>19:15</time><h3>Cheguei</h3><p class="muted">Um toque no painel: luz baixa, ar a 22° e a música da sala.</p></li>
+      <li><time>23:30</time><h3>Master OFF</h3><p class="muted">Apaga tudo, desliga a TV e o ar, e avisa se algo não respondeu.</p></li>
+    </ol></div>
+  </div>
+</section>
+
+<section class="band" id="faz">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">O que ele faz</span><h2>Um assistente que executa</h2><p>O Leo não pede confirmação a cada passo. Quem dá a ordem é você, e só quem você autorizou.</p></div>
+    <div class="feat">
+      <div><h3>Cenas da casa</h3><p class="muted">Cheguei, Estou saindo, Boa noite, Master OFF e as outras cenas que a Vinci montou para você.</p><code>“Leo, estou saindo”</code></div>
+      <div><h3>Luzes, ar e TV</h3><p class="muted">Por cômodo ou na casa toda, por voz, texto ou um toque no painel.</p><code>“apaga tudo menos a varanda”</code></div>
+      <div><h3>Cérebro GPT</h3><p class="muted">Responde perguntas, explica, escreve e pensa junto com você, com a inteligência do ChatGPT.</p><code>“resume as notícias do dia”</code></div>
+      <div><h3>Ordens pelo WhatsApp</h3><p class="muted">Número próprio do Leo. Só os números autorizados por você conseguem comandar.</p><code>“o portão está fechado?”</code></div>
+      <div><h3>Fala com você</h3><p class="muted">Responde em voz alta no painel e chama você pelo nome que você escolher.</p><code>“Boa noite, Leandro.”</code></div>
+      <div><h3>Visão da casa</h3><p class="muted">O painel mostra o estado da casa, o clima e o que o Leo acabou de fazer.</p><code>sempre na tela</code></div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap vinci">
+    <div class="sec-head" style="margin:0"><span class="eyebrow">Por que Vinci</span><h2>Feito por quem instala automação de verdade</h2><p>O Leo nasceu dentro da Vinci Automação, no Rio de Janeiro. Quem projeta a sua casa é quem liga o assistente a ela.</p></div>
+    <ul>
+      <li><strong>Instalação pela equipe Vinci</strong><span class="muted">A gente monta o painel, liga o Leo às cenas e configura o WhatsApp.</span></li>
+      <li><strong>Só você manda</strong><span class="muted">A lista de quem pode dar ordens é sua. Para os outros, o Leo não responde.</span></li>
+      <li><strong>Segurança pelo fabricante</strong><span class="muted">Porta, fechadura, alarme e câmera só pela integração oficial de cada marca.</span></li>
+      <li><strong>Suporte com gente</strong><span class="muted">Canal direto com a equipe que conhece o seu projeto.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="band" id="quero">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">Como ter o Leo</span><h2>Lista de interesse aberta</h2><p>O Leo está em fase de testes na Vinci. Deixe seu contato e a equipe chama você assim que houver vaga para instalação, com proposta para a sua casa.</p></div>
+    <div class="plans" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+      <div class="plan main"><span class="badge">Em testes</span><h3>Leo</h3>
+        <div><div class="price"><span class="val" style="font-size:2rem">Sob consulta</span></div><div class="sub">instalado e configurado pela Vinci</div></div>
+        <ul><li>Painel do Leo na tela que você escolher</li><li>Cenas da casa a um toque ou por voz</li><li>Número de WhatsApp próprio do Leo</li><li>Cérebro GPT, ligado à sua conta do ChatGPT</li><li>Painel no celular, com senha</li><li>Suporte direto da equipe Vinci</li></ul>
+        <a class="btn primary" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20entrar%20na%20lista%20do%20Leo." target="_blank" rel="noopener">Entrar na lista</a></div>
+    </div>
+    <div class="plan-foot"><div><strong>Ainda não tem automação?</strong> <span class="muted">A Vinci projeta e instala. Orçamento sem compromisso.</span></div><a class="btn ghost sm" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20um%20or%C3%A7amento%20de%20automa%C3%A7%C3%A3o." target="_blank" rel="noopener">Pedir orçamento</a></div>
+  </div>
+</section>
+
+<section class="band" id="duvidas">
+  <div class="wrap" style="max-width:860px">
+    <div class="sec-head"><span class="eyebrow">Dúvidas</span><h2>Perguntas frequentes</h2></div>
+    <details><summary>Qual a diferença entre o Leo e o Felyx?</summary><p>O Felyx vive no app e no Google Home. O Leo é um painel na tela da casa, com ordens pelo WhatsApp e o cérebro do ChatGPT. Os dois são da Vinci e comandam as mesmas cenas.</p></details>
+    <details><summary>Preciso de uma tela nova?</summary><p>Não. Serve a TV, um monitor ou um tablet que você já tenha. A equipe Vinci indica a melhor opção.</p></details>
+    <details><summary>Preciso ter ChatGPT?</summary><p>O Leo usa a sua conta da OpenAI, e a equipe Vinci faz a ligação com você. Senha nunca é guardada.</p></details>
+    <details><summary>Qualquer pessoa pode mandar mensagem para o Leo?</summary><p>Não. Só os números que você autorizar dão ordens. Para os outros, ele não responde.</p></details>
+    <details><summary>Funciona fora do Rio?</summary><p>A instalação é feita pela equipe Vinci no Rio de Janeiro. Fale com a gente para outras cidades.</p></details>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap final">
+    <span class="logo-leo" style="font-size:2.4rem">LEO</span>
+    <h2>Sua casa, num painel só.</h2>
+    <div class="cta" style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+      <a class="btn primary" href="#quero">Quero o Leo</a>
+      <a class="btn ghost" href="https://wa.me/5521999292915?text=Ol%C3%A1%21%20Quero%20conhecer%20o%20Leo." target="_blank" rel="noopener">Falar com a Vinci</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div><strong style="color:var(--text)">Vinci Automação</strong><br>Rio de Janeiro · WhatsApp (21) 99929-2915</div>
+    <div><a href="/">Site da Vinci</a> · <a href="/privacidade.html">Privacidade</a> · <a href="/contato.html">Contato</a></div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* bando de pontos em revoada; agita mais quando o Leo "pensa" */
+  var cv = document.getElementById("cv"), ctx = cv.getContext("2d"), N = 420, pts = [], agit = 0, t = 0, W = 0, H = 0;
+  var calmo = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function size() { var r = cv.getBoundingClientRect(), d = devicePixelRatio || 1; W = r.width; H = r.height; cv.width = W * d; cv.height = H * d; ctx.setTransform(d, 0, 0, d, 0, 0); }
+  for (var i = 0; i < N; i++) pts.push({ u: Math.random(), v: (Math.random() - .5) * 2, s: .6 + Math.random() * 1.2, ph: Math.random() * 6.28 });
+  function frame() {
+    t += calmo ? 0 : 0.012 + agit * 0.03; agit *= 0.985;
+    ctx.clearRect(0, 0, W, H); ctx.fillStyle = "#ffe600";
+    for (var i = 0; i < N; i++) {
+      var p = pts[i], x = W * (0.06 + 0.88 * p.u), base = H * 0.42 + Math.sin(p.u * 6 + t * 1.3) * H * 0.12;
+      var spread = H * (0.1 + 0.05 * Math.sin(p.u * 4 - t)) * (1 + agit * 1.5);
+      var y = base + p.v * spread + Math.sin(t * 3 + p.ph) * (2 + agit * 10);
+      x += Math.cos(t * 2 + p.ph) * (1 + agit * 8);
+      ctx.globalAlpha = 0.55 + 0.45 * Math.abs(Math.sin(p.ph + t));
+      ctx.beginPath(); ctx.arc(x, y, p.s, 0, 6.29); ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  size(); addEventListener("resize", size); frame();
+
+  var said = document.getElementById("said"), estado = document.getElementById("estado"), luz = document.getElementById("t-luz"), ar = document.getElementById("t-ar");
+  var cenas = {
+    "Master OFF": ["Tudo desligado: luzes, TV e ar. A casa está em repouso.", "apagadas", "desl."],
+    "Cheguei": ["Bem-vindo. Luz baixa na sala, ar em 22° e música ligada.", "baixas", "22°"],
+    "Estou saindo": ["Pode ir tranquilo. Apaguei tudo e desliguei o ar.", "apagadas", "desl."]
+  };
+  function responder(pedido, resp, l, a) {
+    agit = 1; estado.textContent = "Pensando…";
+    setTimeout(function () {
+      said.innerHTML = ""; var me = document.createElement("span"); me.className = "me"; me.textContent = "você: " + pedido;
+      said.appendChild(me); said.appendChild(document.createTextNode(resp));
+      if (l) luz.textContent = l; if (a) ar.textContent = a; estado.textContent = "Pronto.";
+    }, 900);
+  }
+  document.querySelectorAll(".tile").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".tile").forEach(function (o) { o.classList.toggle("on", o === b); });
+      var c = cenas[b.dataset.c]; responder(b.dataset.c, c[0], c[1], c[2]);
+    });
+  });
+  document.getElementById("ask").addEventListener("submit", function (e) {
+    e.preventDefault(); var q = document.getElementById("q"), v = q.value.trim(); if (!v) return; q.value = "";
+    var s = v.toLowerCase(), r;
+    if (/apag|deslig|master/.test(s)) r = ["Feito. Apaguei o que estava aceso.", "apagadas", null];
+    else if (/acend|liga.*luz|luz/.test(s)) r = ["Luzes da sala acesas.", "acesas", null];
+    else if (/\bar\b|temperatura|frio|calor/.test(s)) r = ["Ar da sala em 22°.", null, "22°"];
+    else if (/clima|tempo|chuva/.test(s)) r = ["No Rio agora: 27°, sol entre nuvens. Sem chuva prevista para hoje.", null, null];
+    else if (/cheguei|cheg/.test(s)) r = cenas["Cheguei"];
+    else if (/sa(i|í)ndo|vou sair/.test(s)) r = cenas["Estou saindo"];
+    else r = ["Na casa de verdade eu resolveria isso agora. Aqui, experimente: apaga tudo, liga o ar ou como está o tempo.", null, null];
+    responder(v, r[0], r[1], r[2]);
+  });
+})();
+</script>
+</body>
+</html>
