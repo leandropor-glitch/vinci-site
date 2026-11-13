@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="pt-BR" data-reservado-pagina>
+<head>
+<meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><script src="/assets/js/reservado.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0b0b0c">
+<title>Laboratório de pagamentos · VINCI</title><link rel="icon" href="/favicon.ico">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600&family=Manrope:wght@400;600;700&display=swap">
+<style>
+:root{color-scheme:dark;--bg:#0b0b0c;--card:#151517;--line:#2a2a2e;--text:#f2f2f2;--mist:#a3a3a8;--volt:#e1fe06;--warn:#ffb54d}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.55 Manrope,system-ui,sans-serif}main{max-width:900px;margin:auto;padding:38px 18px 70px}h1,h2{font-family:Unbounded,sans-serif}h1{font-size:clamp(1.6rem,5vw,2.5rem);margin:5px 0 12px}h2{font-size:1.1rem}.kicker{color:var(--volt);letter-spacing:.12em;text-transform:uppercase;font-size:.75rem}.intro,.muted{color:var(--mist)}.notice{border:1px solid #604b2f;background:#221b12;color:var(--warn);border-radius:14px;padding:14px 16px;margin:24px 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:26px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;min-height:240px}.card p{color:var(--mist);flex:1}.card a,.button{display:inline-flex;justify-content:center;padding:12px 16px;border-radius:12px;text-decoration:none;color:#111;background:var(--volt);font-weight:700}.small{font-size:.85rem;color:var(--mist)}a.back{color:var(--volt)}
+</style></head><body><main>
+<div class="kicker">VINCI · ambiente reservado</div><h1>Laboratório de pagamentos</h1>
+<p class="intro">Compare três fluxos de checkout do Mercado Pago. Os preços são definidos no Worker a partir do plano selecionado, nunca pelo navegador.</p>
+<div class="notice"><b>Ambiente de teste.</b> Nenhum pagamento real deve ser feito aqui. O Worker precisa de credenciais de teste configuradas antes das operações.</div>
+<section class="grid" aria-label="Modelos de checkout">
+<article class="card"><h2>1 · Checkout Pro</h2><p>Redireciona para a página segura do Mercado Pago. Pix e cartão são inseridos no ambiente do provedor.</p><a href="/pagamento-teste/pro/">Abrir modelo</a></article>
+<article class="card"><h2>2 · Assinatura</h2><p>Autoriza um plano recorrente mensal ou anual no Mercado Pago, com preço cadastrado no servidor.</p><a href="/pagamento-teste/assinatura/">Abrir modelo</a></article>
+<article class="card"><h2>3 · Bricks</h2><p>Payment Brick incorpora cartão e Pix. O cartão é tokenizado no navegador com a chave pública.</p><a href="/pagamento-teste/bricks/">Abrir modelo</a></article>
+</section><p class="small">A contratação permanece reservada pela trava do site. <a class="back" href="?acesso=sair">Trancar esta sessão</a></p>
+</main></body></html>

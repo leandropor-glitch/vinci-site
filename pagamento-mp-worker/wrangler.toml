@@ -1,0 +1,8 @@
+name = "pagamento-mp-worker"
+main = "src/worker.mjs"
+compatibility_date = "2026-11-13"
+routes = [{ pattern = "www.vinciautomacao.com/api/*", zone_name = "vinciautomacao.com" }]
+
+[vars]
+# Configure MP_PUBLIC_KEY como variável não secreta no painel ou com `wrangler secret put MP_PUBLIC_KEY`.
+# Tokens privados nunca entram neste arquivo.
