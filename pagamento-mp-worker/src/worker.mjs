@@ -50,12 +50,12 @@ async function mpFetch(path, env, body, idempotencyKey) {
 function reference() { return `vinci-${crypto.randomUUID()}`; }
 
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const origin = request.headers.get('origin') || '';
+    const url = new URL(request.url);
+    if (url.pathname === '/api/webhook' && request.method === 'POST') return webhook(request, env, ctx);
     if (corsError(origin)) return json({ error: 'Origem não permitida' }, 403, '');
     if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: { 'access-control-allow-origin': origin, 'access-control-allow-methods': 'GET,POST,OPTIONS', 'access-control-allow-headers': 'content-type,x-request-id', vary: 'Origin' } });
-    const url = new URL(request.url);
-    if (url.pathname === '/api/webhook' && request.method === 'POST') return webhook(request, env, origin);
     if (url.pathname === '/api/config' && request.method === 'GET') return json({ publicKey: env.MP_PUBLIC_KEY || '', prices: Object.fromEntries(Object.entries(PLANS).map(([id, plan]) => [id, plan.amount])) }, 200, origin);
     if (!env.MP_ACCESS_TOKEN) return json({ error: 'Credencial de teste MP_ACCESS_TOKEN não configurada no Worker' }, 503, origin);
     try {
@@ -88,15 +88,20 @@ export default {
   }
 };
 
-async function webhook(request, env, origin) {
-  const url = new URL(request.url), dataId = url.searchParams.get('data.id') || url.searchParams.get('id');
+async function webhook(request, env, ctx) {
+  const url = new URL(request.url);
+  let body = {};
+  try { body = await request.clone().json(); } catch {}
+  const dataId = url.searchParams.get('data.id') || url.searchParams.get('id') || body.data?.id || body.id;
   const valid = await verifySignature({ signature: request.headers.get('x-signature'), requestId: request.headers.get('x-request-id'), dataId, secret: env.MP_WEBHOOK_SECRET });
-  if (!valid) return json({ error: 'Assinatura inválida ou expirada' }, 401, origin);
-  if (!env.MP_ACCESS_TOKEN) return json({ error: 'Credencial de teste MP_ACCESS_TOKEN não configurada' }, 503, origin);
-  try {
-    const response = await fetch(`${API}/v1/payments/${encodeURIComponent(dataId)}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } });
-    if (!response.ok) return json({ error: 'Não foi possível confirmar pagamento na API do Mercado Pago' }, 502, origin);
-    const payment = await response.json();
-    return json({ received: true, payment_id: payment.id, status: payment.status, external_reference: payment.external_reference }, 200, origin);
-  } catch { return json({ error: 'Falha ao consultar pagamento' }, 502, origin); }
+  if (!valid) return json({ error: 'Assinatura inválida ou expirada' }, 401);
+  if (env.MP_ACCESS_TOKEN) {
+    const topic = String(url.searchParams.get('type') || url.searchParams.get('topic') || body.type || body.topic || '').toLowerCase();
+    let path = `/v1/payments/${encodeURIComponent(dataId)}`;
+    if (topic === 'subscription_preapproval' || topic === 'preapproval') path = `/preapproval/${encodeURIComponent(dataId)}`;
+    else if (topic === 'subscription_authorized_payment' || topic === 'authorized_payment') path = `/authorized_payments/${encodeURIComponent(dataId)}`;
+    const lookup = fetch(`${API}${path}`, { headers: { authorization: `Bearer ${env.MP_ACCESS_TOKEN}` } }).catch(() => {});
+    if (ctx?.waitUntil) ctx.waitUntil(lookup);
+  }
+  return json({ received: true });
 }
