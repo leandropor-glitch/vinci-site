@@ -356,8 +356,11 @@ const CONFIG = {
   bloqueioDias: 3,
   validadeMin: 10,
   emailAlerta: 'uservinci@vinciautomacao.com',
-  enderecoAlerta: null,          // endereço do envio de e-mail (n8n) — quando existir, o aviso sai por ele
-  checkoutMercadoLivre: null      // link do checkout no Mercado Livre — layout por enquanto
+  checkoutMercadoLivre: null,     // link do checkout no Mercado Livre — layout por enquanto
+  // Google Forms "Vinci — Pedidos de acesso (landing de teste)": cada pedido entra no Relatório de Tráfego diário
+  formulario: { acao: 'https://docs.google.com/forms/d/e/1FAIpQLScH35idCxppKrAY9vI0OazOugs2zqgCHMdAauN--46z6f-MtQ/formResponse',
+    nome: 'entry.62984921', email: 'entry.754552834', tel: 'entry.421836921', evento: 'entry.963778746' },
+  blacklist: 'blacklist.json'     // números banidos no relatório (só o resumo SHA-256 do telefone)
 };
 const PLANOS = {
   felyx:{nome:'Felyx',img:'felyx.webp',cls:'felyx',jeito:'Direto e bem-humorado. Chama você de Chefe.',
@@ -383,15 +386,20 @@ function gravarReg(r){ try{ localStorage.setItem(CHAVE_REG, JSON.stringify(r)); 
 function dia(t){ const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function gerarChave(){ const a = new Uint32Array(1); crypto.getRandomValues(a); return String(a[0] % 1000000).padStart(6,'0'); }
 
-function avisarVinci(d, reg){
-  const aviso = { para: CONFIG.emailAlerta, assunto: 'Vinci · pedidos de acesso ignorados (' + d.tel + ')',
-    nome: d.nome, email: d.email, telefone: d.tel, pedidos: reg.pedidos.length,
-    dias: new Set(reg.pedidos.map(dia)).size, em: new Date().toISOString() };
-  if(CONFIG.enderecoAlerta){
-    fetch(CONFIG.enderecoAlerta, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(aviso)}).catch(()=>{});
-  } else {
-    try{ const fila = JSON.parse(localStorage.getItem('vinci.testelanding.alertas') || '[]'); fila.push(aviso); localStorage.setItem('vinci.testelanding.alertas', JSON.stringify(fila)); }catch(e){}
-  }
+/* cada pedido vai para o Google Forms; o Relatório de Tráfego diário sai para uservinci@vinciautomacao.com */
+function registrar(d, evento){
+  const f = CONFIG.formulario; if(!f || !f.acao) return;
+  const corpo = new URLSearchParams();
+  corpo.set(f.nome, d.nome); corpo.set(f.email, d.email); corpo.set(f.tel, d.tel); corpo.set(f.evento, evento);
+  fetch(f.acao, {method:'POST', mode:'no-cors', body: corpo}).catch(()=>{});
+}
+function avisarVinci(d){ registrar(d, 'bloqueado'); }
+
+/* blacklist do relatório: compara só o resumo SHA-256 do telefone */
+let banidos = new Set();
+fetch(CONFIG.blacklist + '?t=' + Date.now(), {cache:'no-store'}).then(r=>r.ok ? r.json() : {banidos:[]}).then(j=>{ banidos = new Set((j && j.banidos) || []); }).catch(()=>{});
+async function resumoTel(t){
+  try{ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }catch(e){ return ''; }
 }
 
 /* pedir chave: 2 por dia; depois de 6 pedidos em 3 dias, ignora e avisa a Vinci */
@@ -401,7 +409,7 @@ function pedirChave(d){
   const dias = new Set(r.pedidos.map(dia)).size;
   if(!r.bloqueado && r.pedidos.length >= CONFIG.bloqueioPedidos && dias >= CONFIG.bloqueioDias) r.bloqueado = true;
   if(r.bloqueado){
-    if(!r.avisado){ avisarVinci(d, r); r.avisado = true; }
+    if(!r.avisado){ avisarVinci(d); r.avisado = true; }
     reg[d.tel] = r; gravarReg(reg);
     return {status:'ignorado'};
   }
@@ -450,9 +458,11 @@ $('#formDados').addEventListener('submit', e=>{
   dados = {nome, email, tel: t};
   enviarChave();
 });
-function enviarChave(){
+async function enviarChave(){
   clearTimeout(bannerT); clearTimeout(bannerEspera); $('#banner').classList.remove('on');
-  const r = pedirChave(dados);
+  const banido = banidos.size && banidos.has(await resumoTel(dados.tel));
+  const r = banido ? {status:'ignorado'} : pedirChave(dados);
+  registrar(dados, banido ? 'banido' : r.status);
   if(r.status === 'limite'){
     if(!$('[data-painel="dados"]').classList.contains('on')) trocarPainel('dados');
     $('#avisoDados').textContent = 'Este telefone já pediu 2 chaves hoje. Tente novamente amanhã.';

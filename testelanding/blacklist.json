@@ -1,0 +1,7 @@
+{
+ "banidos": [
+  "31407b8c82f6408c32f4d08b98817b2821c6445371c8c184ea8aee2c891f22be"
+ ],
+ "atualizado": "2026-11-14T22:50:00-03:00",
+ "regra": "mais de 2 chaves no mesmo dia ou 6 tentativas em 3 dias"
+}
