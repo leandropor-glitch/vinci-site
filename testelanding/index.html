@@ -167,7 +167,6 @@ img{display:block}
 .destaque svg{flex:none;width:22px;height:22px;color:var(--zap);margin-top:1px}
 .destaque b{display:block;font-size:15px;font-weight:600;color:var(--branco)}
 .destaque span{display:block;margin-top:3px;font-size:14px;line-height:1.4;color:#c7c7cc}
-.full .preco{font-size:24px}
 .rodape{max-width:1040px;margin:0 auto;padding:28px 22px 40px;font-size:12px;color:#86868b;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .secao-full+.rodape{background:var(--preto);max-width:none;padding-left:max(22px,calc((100% - 1040px)/2));padding-right:max(22px,calc((100% - 1040px)/2))}
 @media (max-width:900px){.grade{grid-template-columns:1fr;max-width:460px}}
@@ -363,13 +362,13 @@ const CONFIG = {
 const PLANOS = {
   felyx:{nome:'Felyx',img:'felyx.webp',cls:'felyx',jeito:'Direto e bem-humorado. Chama você de Chefe.',
     inclui:['Conversa por voz no app','Controle da casa pela conversa','Cotações e notícias atualizadas'],
-    full:'Rosto ao vivo, com a boca acompanhando a voz.'},
+    full:'Rosto ao vivo, com a boca acompanhando a voz.', precoFull:'R$ 399,00'},
   leda:{nome:'Leda',img:'leda.webp',cls:'leda',jeito:'Sábia, firme e carinhosa. Fala com calma.',
     inclui:['Conversa por voz no app','Controle da casa pela conversa','Receitas passo a passo'],
-    full:'Receitas e rotina da casa também pelo chat.'},
+    full:'Receitas e rotina da casa também pelo chat.', precoFull:'R$ 299,00'},
   leo:{nome:'Leo',img:'leo.webp',cls:'leo',jeito:'Calmo e educado, com humor discreto.',
     inclui:['Conversa por voz no app','Controle da casa pela conversa','Cotações e notícias atualizadas'],
-    full:'Partículas que reagem à sua voz.'}
+    full:'Partículas que reagem à sua voz.', precoFull:'R$ 299,00'}
 };
 const PRECO_DEFAULT = 'R$ 179,00';
 
@@ -541,7 +540,7 @@ function montarPlanos(){
       <ul class="inclui"><li>Tudo do plano Default</li><li>${p.full}</li></ul>
       <div class="fim">
         <p class="tipo">Plano Full</p>
-        <p class="preco">Sob consulta</p>
+        <p class="preco">${p.precoFull} <small>por mês</small></p>
         <button class="botao" type="button" data-ia="${id}" data-plano="full">Quero o ${p.nome} Full</button>
       </div>
     </article>`).join('');
@@ -571,7 +570,7 @@ $('#aceitar').addEventListener('click', ()=>{
   $('#pagNome').textContent = p.nome + (full ? ' Full' : '');
   $('#pagPlano').textContent = full ? 'Plano Full, com WhatsApp' : 'Plano Default';
   $('#pagTipo').textContent = full ? 'Full' : 'Default';
-  $('#pagValor').textContent = full ? 'Sob consulta' : PRECO_DEFAULT;
+  $('#pagValor').textContent = full ? p.precoFull : PRECO_DEFAULT;
   trocarPainel('pagamento');
 });
 $('#pagar').addEventListener('click', ()=>{
