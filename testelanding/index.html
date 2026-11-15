@@ -1,0 +1,587 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vinci — Felyx, Leda e Leo</title>
+<meta name="description" content="Felyx, Leda e Leo: as inteligências da Vinci para o seu lar. Solicite acesso.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="../assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+/* Vinci · landing de teste (14/11/2026). Fluxo: acesso → chave → planos → termos → checkout (layout). */
+:root{
+  --preto:#000;--grafite:#1d1d1f;--prata:#f5f5f7;--cinza:#86868b;--linha:#d2d2d7;--branco:#fff;
+  --neon:#d6ff1a;--neon-ink:#121400;--zap:#25d366;
+  --felyx:#c6ff2e;--leda:#d39a5f;--leo:#e4ff00;
+  --sf:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Inter","Helvetica Neue",Arial,sans-serif;
+  --ease:cubic-bezier(.22,.8,.2,1);
+}
+*{box-sizing:border-box;margin:0}
+html{-webkit-text-size-adjust:100%}
+body{font-family:var(--sf);background:var(--preto);color:var(--branco);-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;min-height:100svh;overflow-x:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+img{display:block}
+:focus-visible{outline:2px solid var(--neon);outline-offset:3px;border-radius:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- vistas ---------- */
+.view{display:none}
+.view.on{display:block}
+
+/* ---------- abertura: só os apps ---------- */
+#abertura{min-height:100svh;display:none;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px calc(48px + env(safe-area-inset-bottom));position:relative}
+#abertura.on{display:flex}
+.palco{position:relative;width:min(560px,100%);aspect-ratio:1.45;display:grid;place-items:center}
+.anel{position:absolute;left:50%;top:50%;width:min(78vw,420px);height:min(78vw,420px);transform:translate(-50%,-56%);color:rgba(255,255,255,.13);pointer-events:none}
+.anel g{animation:respirar 8s ease-in-out 2.8s infinite}
+@keyframes respirar{0%,100%{opacity:1}50%{opacity:.45}}
+.anel circle,.anel rect{fill:none;stroke:currentColor;stroke-width:.6;vector-effect:non-scaling-stroke}
+.anel .tracar{stroke-dasharray:1200;stroke-dashoffset:1200;animation:tracar 2.4s var(--ease) .2s forwards}
+@keyframes tracar{to{stroke-dashoffset:0}}
+@keyframes girar{to{transform:rotate(360deg)}}
+.apps{list-style:none;padding:0;display:flex;gap:clamp(22px,6vw,56px);position:relative;z-index:1}
+.app{display:flex;flex-direction:column;align-items:center;gap:14px;opacity:0;transform:translateY(18px) scale(.96);animation:entrar 1s var(--ease) forwards}
+.app:nth-child(1){animation-delay:.55s}.app:nth-child(2){animation-delay:.7s}.app:nth-child(3){animation-delay:.85s}
+@keyframes entrar{to{opacity:1;transform:none}}
+.icone{width:clamp(84px,19vw,124px);aspect-ratio:1;border-radius:22.5%;overflow:hidden;position:relative;
+  box-shadow:0 0 0 1px rgba(255,255,255,.12) inset,0 18px 40px -12px rgba(0,0,0,.9),0 0 0 .5px rgba(255,255,255,.18)}
+.icone img{width:100%;height:100%;object-fit:cover}
+.icone:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(160deg,rgba(255,255,255,.18),transparent 38%);pointer-events:none}
+.flutua{animation:flutuar 7s ease-in-out infinite}
+.app:nth-child(2) .flutua{animation-delay:-2.3s}.app:nth-child(3) .flutua{animation-delay:-4.6s}
+@keyframes flutuar{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.chao{width:70%;height:10px;margin-top:-4px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.12),transparent)}
+.app span{font-size:13px;font-weight:500;letter-spacing:.01em;color:rgba(255,255,255,.86)}
+.cta{margin-top:clamp(36px,7vh,64px);background:var(--neon);color:var(--neon-ink);font-weight:600;font-size:17px;letter-spacing:-.01em;
+  padding:16px 30px;border-radius:999px;opacity:0;animation:aparecer .9s var(--ease) 1.25s forwards;
+  box-shadow:0 0 0 0 rgba(214,255,26,.55);transition:transform .25s var(--ease),box-shadow .4s}
+.cta:hover{transform:scale(1.03);box-shadow:0 0 34px -4px rgba(214,255,26,.55)}
+.cta:active{transform:scale(.98)}
+@keyframes aparecer{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.assinatura{position:absolute;bottom:calc(22px + env(safe-area-inset-bottom));left:0;right:0;display:flex;justify-content:center;opacity:0;animation:aparecer 1s var(--ease) 1.6s forwards}
+.assinatura img{height:15px;filter:invert(1);opacity:.42}
+
+/* ---------- folha (formulário, chave, termos, pagamento) ---------- */
+.veu{position:fixed;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);opacity:0;pointer-events:none;transition:opacity .45s var(--ease);z-index:20}
+.veu.on{opacity:1;pointer-events:auto}
+.folha{position:fixed;z-index:21;left:50%;top:50%;width:min(440px,calc(100% - 32px));max-height:min(720px,calc(100svh - 48px));overflow:auto;
+  transform:translate(-50%,-46%) scale(.97);opacity:0;pointer-events:none;transition:transform .5s var(--ease),opacity .35s;
+  background:rgba(28,28,30,.86);backdrop-filter:blur(30px) saturate(160%);-webkit-backdrop-filter:blur(30px) saturate(160%);
+  border:1px solid rgba(255,255,255,.1);border-radius:28px;padding:30px 28px 28px;color:var(--branco);box-shadow:0 40px 120px -20px rgba(0,0,0,.8)}
+.folha.on{transform:translate(-50%,-50%);opacity:1;pointer-events:auto}
+.folha.clara{background:rgba(255,255,255,.92);color:var(--grafite);border-color:rgba(0,0,0,.06)}
+@media (max-width:560px){
+  .folha{top:auto;bottom:0;left:0;width:100%;max-height:92svh;border-radius:28px 28px 0 0;transform:translateY(100%);padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+  .folha.on{transform:none}
+}
+.etapas{display:flex;gap:6px;margin:0 44px 22px 0}
+.etapas i{flex:1;height:3px;border-radius:3px;background:currentColor;opacity:.16;transition:opacity .4s,background .4s}
+.etapas i.feito{opacity:1;background:var(--neon)}
+.folha.clara .etapas i.feito{background:var(--grafite)}
+.fechar{position:absolute;top:18px;right:18px;width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:rgba(127,127,127,.18);color:inherit}
+.fechar svg{width:12px;height:12px}
+.painel{display:none}
+.painel.on{display:block;animation:painel .5s var(--ease)}
+@keyframes painel{from{opacity:0;transform:translateX(14px)}to{opacity:1;transform:none}}
+.folha h2{font-size:28px;line-height:1.12;font-weight:600;letter-spacing:-.025em}
+.folha .lead{margin-top:8px;color:rgba(235,235,245,.62);font-size:15px;line-height:1.45}
+.folha.clara .lead{color:var(--cinza)}
+.campos{display:grid;gap:12px;margin-top:24px}
+.campo{position:relative}
+.campo input{width:100%;height:56px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--branco);
+  font:400 17px var(--sf);padding:22px 16px 6px;transition:border-color .2s,background .2s}
+.campo input:focus{outline:none;border-color:var(--neon);background:rgba(255,255,255,.09)}
+.campo label{position:absolute;left:17px;top:18px;font-size:17px;color:rgba(235,235,245,.5);pointer-events:none;transition:all .2s var(--ease)}
+.campo input:focus+label,.campo input:not(:placeholder-shown)+label{top:8px;font-size:12px;color:rgba(235,235,245,.62)}
+.campo.erro input{border-color:#ff6961}
+.aviso{min-height:20px;margin-top:12px;font-size:14px;line-height:1.4;color:#ff8a80}
+.aviso.ok{color:var(--neon)}
+.botao{width:100%;height:54px;margin-top:14px;border-radius:14px;background:var(--neon);color:var(--neon-ink);font-weight:600;font-size:17px;transition:transform .2s var(--ease),opacity .2s}
+.botao:active{transform:scale(.985)}
+.botao[disabled]{opacity:.35;cursor:default}
+.folha.clara .botao{background:var(--grafite);color:var(--branco)}
+.folha.clara .botao.neon{background:var(--neon);color:var(--neon-ink)}
+.linkbtn{display:block;margin:16px auto 0;font-size:15px;color:var(--neon)}
+.folha.clara .linkbtn{color:#0066cc}
+
+/* chave de 6 dígitos */
+.digitos{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:26px}
+.digitos input{height:64px;width:100%;text-align:center;font:600 28px var(--sf);border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);color:var(--branco);caret-color:var(--neon)}
+.digitos input:focus{outline:none;border-color:var(--neon);background:rgba(255,255,255,.1)}
+.digitos.erro{animation:tremer .42s}
+.digitos.certo input{border-color:var(--neon);color:var(--neon)}
+@keyframes tremer{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+
+/* ---------- planos ---------- */
+#planos{background:var(--prata);color:var(--grafite);min-height:100svh}
+.barra{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 max(22px,calc((100% - 1040px)/2));
+  background:rgba(245,245,247,.78);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid rgba(0,0,0,.06)}
+.barra img{height:22px}
+.barra button{font-size:13px;color:var(--grafite);opacity:.75}
+.topo{text-align:center;padding:72px 24px 0}
+.ciclo{display:flex;justify-content:center;gap:14px;margin-bottom:30px}
+.ciclo .icone{width:56px;border-radius:13px;box-shadow:0 0 0 .5px rgba(0,0,0,.12),0 10px 24px -10px rgba(0,0,0,.45)}
+.ciclo .icone{animation:revezar 6s var(--ease) infinite}
+.ciclo .icone:nth-child(2){animation-delay:2s}.ciclo .icone:nth-child(3){animation-delay:4s}
+@keyframes revezar{0%,24%,100%{transform:none}8%{transform:translateY(-10px) scale(1.08)}16%{transform:translateY(0) scale(1)}}
+.topo h1{font-size:clamp(40px,6.4vw,64px);line-height:1.04;font-weight:700;letter-spacing:-.035em}
+.topo p{margin:14px auto 0;max-width:34ch;font-size:clamp(19px,2.2vw,22px);line-height:1.35;color:#6e6e73;font-weight:400}
+.grade{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1040px;margin:48px auto 0;padding:0 22px}
+.plano{background:var(--branco);border-radius:28px;padding:34px 28px 28px;display:flex;flex-direction:column;align-items:center;text-align:center}
+.marca{position:relative;width:96px;height:96px;margin-bottom:22px}
+.marca .icone{width:96px;border-radius:22px;box-shadow:0 0 0 .5px rgba(0,0,0,.1),0 14px 30px -14px rgba(0,0,0,.5)}
+/* animação de cada logo, em looping */
+.marca.felyx .icone:before{content:"";position:absolute;left:0;right:0;height:26%;top:-30%;z-index:1;background:linear-gradient(180deg,transparent,rgba(198,255,46,.55),transparent);mix-blend-mode:screen;animation:varrer 3.4s ease-in-out infinite}
+@keyframes varrer{0%{top:-30%}55%,100%{top:104%}}
+.marca.leda:before{content:"";position:absolute;inset:-14px;border-radius:34px;background:radial-gradient(closest-side,rgba(211,154,95,.55),transparent);animation:aquecer 4.2s ease-in-out infinite}
+@keyframes aquecer{0%,100%{opacity:.25;transform:scale(.92)}50%{opacity:1;transform:scale(1.04)}}
+.marca.leo svg{position:absolute;inset:-12px;width:120px;height:120px;color:#9bb800;animation:girar 14s linear infinite}
+.marca.leo svg circle{fill:none;stroke:currentColor;stroke-width:1.4;stroke-dasharray:2 6;stroke-linecap:round}
+.plano h3{font-size:30px;font-weight:700;letter-spacing:-.025em}
+.plano .jeito{margin-top:6px;font-size:16px;line-height:1.4;color:#6e6e73;min-height:2.8em}
+.plano .tipo{margin-top:22px;font-size:14px;font-weight:600;color:var(--grafite)}
+.preco{margin-top:4px;font-size:34px;font-weight:600;letter-spacing:-.03em}
+.preco small{font-size:15px;font-weight:400;color:#6e6e73;letter-spacing:0}
+.inclui{list-style:none;padding:0;margin:20px 0 4px;display:grid;gap:10px;font-size:15px;line-height:1.35;color:#424245;width:100%}
+.inclui li{padding-top:10px;border-top:1px solid #e8e8ed}
+.plano .fim{margin-top:auto;display:flex;flex-direction:column;align-items:center}
+.plano .botao{margin-top:24px;width:auto;min-width:150px;height:46px;padding:0 26px;border-radius:999px;background:var(--grafite);color:var(--branco);font-size:16px}
+.plano .botao:hover{background:#000}
+.secao-full{margin-top:110px;background:var(--preto);color:var(--branco);padding:96px 0 110px}
+.secao-full .topo{padding-top:0}
+.secao-full .topo p{color:#a1a1a6}
+.zapicone{width:58px;height:58px;margin:0 auto 26px;border-radius:16px;background:var(--zap);display:grid;place-items:center;box-shadow:0 18px 40px -16px rgba(37,211,102,.7)}
+.zapicone svg{width:30px;height:30px;color:#fff}
+.full{background:#141416;border:1px solid rgba(255,255,255,.08)}
+.full .jeito,.full .preco small{color:#a1a1a6}
+.full .tipo{color:var(--branco)}
+.full .inclui{color:#d2d2d7}
+.full .inclui li{border-top-color:rgba(255,255,255,.1)}
+.full .botao{background:var(--neon);color:var(--neon-ink)}
+.full .botao:hover{background:#e3ff5c}
+.destaque{width:100%;margin-top:22px;border-radius:18px;padding:16px 16px 15px;background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.35);text-align:left;display:flex;gap:12px;align-items:flex-start}
+.destaque svg{flex:none;width:22px;height:22px;color:var(--zap);margin-top:1px}
+.destaque b{display:block;font-size:15px;font-weight:600;color:var(--branco)}
+.destaque span{display:block;margin-top:3px;font-size:14px;line-height:1.4;color:#c7c7cc}
+.full .preco{font-size:24px}
+.rodape{max-width:1040px;margin:0 auto;padding:28px 22px 40px;font-size:12px;color:#86868b;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.secao-full+.rodape{background:var(--preto);max-width:none;padding-left:max(22px,calc((100% - 1040px)/2));padding-right:max(22px,calc((100% - 1040px)/2))}
+@media (max-width:900px){.grade{grid-template-columns:1fr;max-width:460px}}
+
+/* termos */
+.termos{margin-top:18px;max-height:min(46svh,360px);overflow:auto;padding:18px 18px 4px;border-radius:16px;background:#f5f5f7;font-size:14px;line-height:1.55;color:#424245}
+.termos h4{font-size:14px;color:var(--grafite);margin:0 0 4px}
+.termos p{margin:0 0 14px}
+.aceite{display:flex;gap:12px;align-items:flex-start;margin-top:18px;font-size:15px;line-height:1.4;cursor:pointer}
+.aceite input{appearance:none;-webkit-appearance:none;flex:none;width:24px;height:24px;border-radius:50%;border:1.5px solid #c7c7cc;display:grid;place-items:center;margin:0;transition:all .2s}
+.aceite input:checked{background:var(--grafite);border-color:var(--grafite)}
+.aceite input:checked:after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+
+/* pagamento (layout) */
+.resumo{margin-top:22px;border-radius:18px;background:#f5f5f7;padding:18px}
+.resumo .linha1{display:flex;gap:14px;align-items:center;padding-bottom:16px;border-bottom:1px solid #e8e8ed}
+.resumo .icone{width:52px;border-radius:12px;box-shadow:0 0 0 .5px rgba(0,0,0,.1)}
+.resumo b{font-size:17px}
+.resumo small{display:block;color:#6e6e73;font-size:14px;margin-top:2px}
+.resumo dl{display:grid;grid-template-columns:1fr auto;gap:10px;margin-top:14px;font-size:15px}
+.resumo dt{color:#6e6e73}
+.resumo dd{text-align:right;font-weight:500}
+.resumo .total{font-size:20px;font-weight:600;color:var(--grafite)}
+.ml{display:flex;align-items:center;justify-content:center;gap:10px}
+.cadeado{margin-top:14px;display:flex;gap:8px;justify-content:center;align-items:center;font-size:13px;color:#6e6e73}
+.cadeado svg{width:13px;height:13px}
+
+/* notificação da chave (prévia do e-mail) */
+.banner{position:fixed;z-index:40;top:calc(10px + env(safe-area-inset-top));left:50%;width:min(400px,calc(100% - 20px));transform:translate(-50%,-140%);opacity:0;visibility:hidden;transition:transform .6s var(--ease),opacity .4s,visibility 0s .6s;cursor:pointer;
+  display:flex;gap:12px;align-items:center;padding:12px 14px;border-radius:22px;background:rgba(245,245,247,.82);color:var(--grafite);backdrop-filter:blur(30px) saturate(180%);-webkit-backdrop-filter:blur(30px) saturate(180%);box-shadow:0 18px 50px -12px rgba(0,0,0,.55);text-align:left}
+.banner.on{transform:translate(-50%,0);opacity:1;visibility:visible;transition:transform .6s var(--ease),opacity .3s}
+.banner .env{flex:none;width:38px;height:38px;border-radius:10px;background:linear-gradient(180deg,#3a3a3c,#1d1d1f);display:grid;place-items:center}
+.banner .env svg{width:20px;height:20px;color:var(--neon)}
+.banner small{display:flex;justify-content:space-between;font-size:12px;color:#6e6e73}
+.banner b{display:block;font-size:14px;margin-top:1px}
+.banner p{font-size:14px;line-height:1.3}
+.banner .num{font-variant-numeric:tabular-nums;font-weight:600;letter-spacing:.06em}
+.toast{position:fixed;z-index:41;left:50%;bottom:calc(26px + env(safe-area-inset-bottom));transform:translate(-50%,30px);opacity:0;transition:all .45s var(--ease);
+  background:rgba(29,29,31,.92);color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);max-width:calc(100% - 32px);text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .anel .tracar{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<!-- 1. Abertura: só os logos dos apps e um botão -->
+<main id="abertura" class="view on" aria-label="Felyx, Leda e Leo">
+  <div class="palco">
+    <svg class="anel" viewBox="0 0 300 300" aria-hidden="true"><g>
+      <circle class="tracar" cx="150" cy="150" r="146"/>
+      <rect class="tracar" x="20" y="20" width="260" height="260" rx="1"/>
+    </g></svg>
+    <ul class="apps">
+      <li class="app"><div class="flutua"><div class="icone"><img src="felyx.webp" alt="Felyx" width="360" height="360"></div></div><div class="chao"></div><span>Felyx</span></li>
+      <li class="app"><div class="flutua"><div class="icone"><img src="leda.webp" alt="Leda" width="360" height="360"></div></div><div class="chao"></div><span>Leda</span></li>
+      <li class="app"><div class="flutua"><div class="icone"><img src="leo.webp" alt="Leo" width="360" height="360"></div></div><div class="chao"></div><span>Leo</span></li>
+    </ul>
+  </div>
+  <button class="cta" id="pedirAcesso" type="button">Solicite acesso aqui</button>
+  <div class="assinatura"><img src="../assets/img/logo-vinci.svg" alt="Vinci"></div>
+</main>
+
+<!-- 3. Planos -->
+<section id="planos" class="view" aria-label="Planos">
+  <header class="barra">
+    <img src="../assets/img/logo-vinci.svg" alt="Vinci">
+    <button type="button" id="sair">Sair</button>
+  </header>
+
+  <div class="topo">
+    <div class="ciclo" aria-hidden="true">
+      <div class="icone"><img src="felyx.webp" alt=""></div>
+      <div class="icone"><img src="leda.webp" alt=""></div>
+      <div class="icone"><img src="leo.webp" alt=""></div>
+    </div>
+    <h1>Escolha sua inteligência.</h1>
+    <p>Três personalidades. A mesma casa, sob controle pela conversa.</p>
+  </div>
+
+  <div class="grade" id="gradeDefault"></div>
+
+  <section class="secao-full" aria-label="Planos Full">
+    <div class="topo">
+      <div class="zapicone" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2C6.6 2.2 2.2 6.4 2.2 11.6c0 1.9.6 3.7 1.6 5.2L2.6 21.4l4.8-1.2c1.4.8 3 1.2 4.6 1.2 5.4 0 9.8-4.2 9.8-9.4S17.4 2.2 12 2.2Z"/></svg></div>
+      <h1>Full. Também no WhatsApp.</h1>
+      <p>Mande um áudio no trânsito. A resposta vem no mesmo chat, e a casa obedece.</p>
+    </div>
+    <div class="grade" id="gradeFull"></div>
+  </section>
+  <footer class="rodape"><span>© 2026 Vinci Automação</span><span>Ambiente de teste</span></footer>
+</section>
+
+<!-- folha: 2. dados → chave · 4. termos · 5. pagamento -->
+<div class="veu" id="veu"></div>
+<div class="folha" id="folha" role="dialog" aria-modal="true" aria-labelledby="folhaTitulo">
+  <div class="etapas" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+  <button class="fechar" type="button" id="fechar" aria-label="Fechar"><svg viewBox="0 0 12 12"><path d="M1 1l10 10M11 1 1 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>
+
+  <form class="painel" data-painel="dados" id="formDados" novalidate>
+    <h2 id="folhaTitulo">Solicite acesso</h2>
+    <p class="lead">Informe seus dados. Você receberá uma chave de acesso.</p>
+    <div class="campos">
+      <div class="campo"><input id="nome" name="nome" autocomplete="name" placeholder=" " required><label for="nome">Nome</label></div>
+      <div class="campo"><input id="email" name="email" type="email" autocomplete="email" inputmode="email" placeholder=" " required><label for="email">E-mail</label></div>
+      <div class="campo"><input id="tel" name="tel" type="tel" autocomplete="tel-national" inputmode="tel" placeholder=" " required><label for="tel">Telefone</label></div>
+    </div>
+    <p class="aviso" id="avisoDados" role="alert"></p>
+    <button class="botao" type="submit">OK</button>
+  </form>
+
+  <form class="painel" data-painel="chave" id="formChave" novalidate>
+    <h2>Digite sua chave</h2>
+    <p class="lead" id="leadChave">Você receberá uma chave de acesso de 6 dígitos no seu e-mail.</p>
+    <div class="digitos" id="digitos" role="group" aria-label="Chave de acesso de 6 dígitos">
+      <input inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="Dígito 1">
+      <input inputmode="numeric" maxlength="1" aria-label="Dígito 2">
+      <input inputmode="numeric" maxlength="1" aria-label="Dígito 3">
+      <input inputmode="numeric" maxlength="1" aria-label="Dígito 4">
+      <input inputmode="numeric" maxlength="1" aria-label="Dígito 5">
+      <input inputmode="numeric" maxlength="1" aria-label="Dígito 6">
+    </div>
+    <p class="aviso" id="avisoChave" role="alert"></p>
+    <button class="botao" type="submit">Entrar</button>
+    <button class="linkbtn" type="button" id="novaChave">Pedir outra chave</button>
+  </form>
+
+  <div class="painel" data-painel="termos">
+    <h2>Termos de adesão</h2>
+    <p class="lead" id="leadTermos">Leia antes de continuar.</p>
+    <div class="termos" tabindex="0" aria-label="Texto dos termos de adesão">
+      <h4>O serviço</h4>
+      <p>A Vinci Automação oferece o uso da inteligência escolhida (Felyx, Leda ou Leo) pelo app, para conversa por voz, controle da casa vinculada e informações do dia. O plano Full acrescenta a conversa pelo WhatsApp.</p>
+      <h4>Assinatura e pagamento</h4>
+      <p>A assinatura é mensal e cobrada pelo Mercado Livre no valor do plano escolhido. O acesso começa após a confirmação do pagamento.</p>
+      <h4>Cancelamento</h4>
+      <p>Você pode cancelar quando quiser. O acesso continua até o fim do período já pago, sem nova cobrança.</p>
+      <h4>Seus dados</h4>
+      <p>Nome, e-mail e telefone são usados para o seu acesso e o suporte, conforme a Lei Geral de Proteção de Dados. Conversas e comandos servem para operar o serviço e não são vendidos a terceiros.</p>
+      <h4>Uso da inteligência</h4>
+      <p>Respostas de inteligência artificial podem conter erros. Comandos de segurança da casa dependem dos equipamentos instalados e da conexão com a internet.</p>
+      <h4>Suporte</h4>
+      <p>Atendimento pela Vinci Automação nos canais oficiais.</p>
+    </div>
+    <label class="aceite"><input type="checkbox" id="aceito"> <span>Li e aceito os termos de adesão.</span></label>
+    <button class="botao" type="button" id="aceitar" disabled>Aceitar e continuar</button>
+  </div>
+
+  <div class="painel" data-painel="pagamento">
+    <h2>Revise e pague</h2>
+    <p class="lead">O pagamento é feito no Mercado Livre.</p>
+    <div class="resumo">
+      <div class="linha1"><div class="icone"><img id="pagIcone" src="felyx.webp" alt=""></div><div><b id="pagNome">Felyx</b><small id="pagPlano">Plano Default</small></div></div>
+      <dl>
+        <dt>Plano</dt><dd id="pagTipo">Default</dd>
+        <dt>Cobrança</dt><dd>Mensal</dd>
+        <dt>Pagamento</dt><dd>Mercado Livre</dd>
+        <dt class="total">Total</dt><dd class="total" id="pagValor">R$ 179,00</dd>
+      </dl>
+    </div>
+    <button class="botao neon ml" type="button" id="pagar">Pagar no Mercado Livre</button>
+    <p class="cadeado"><svg viewBox="0 0 14 14" fill="currentColor"><path d="M4 6V4.5a3 3 0 0 1 6 0V6h.5A1.5 1.5 0 0 1 12 7.5v4A1.5 1.5 0 0 1 10.5 13h-7A1.5 1.5 0 0 1 2 11.5v-4A1.5 1.5 0 0 1 3.5 6H4Zm1.5 0h3V4.5a1.5 1.5 0 0 0-3 0V6Z"/></svg>Você conclui o pagamento na página do Mercado Livre.</p>
+  </div>
+</div>
+
+<div class="banner" id="banner" role="status" aria-live="polite">
+  <div class="env"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg></div>
+  <div style="flex:1;min-width:0"><small><span>Prévia do e-mail</span><span>agora</span></small><b>Vinci</b><p>Sua chave de acesso: <span class="num" id="bannerNum"></span></p></div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+/* ===== Regras do Leandro (14/11/2026) =====
+   - chave de 6 dígitos, válida por 10 minutos;
+   - o mesmo telefone pede no máximo 2 chaves por dia;
+   - depois de 6 pedidos em 3 dias, novos pedidos desse telefone são ignorados
+     e a Vinci é avisada por e-mail em uservinci@vinciautomacao.com.
+   - checkout: só layout (link do Mercado Livre a definir). */
+const CONFIG = {
+  limitePorDia: 2,
+  bloqueioPedidos: 6,
+  bloqueioDias: 3,
+  validadeMin: 10,
+  emailAlerta: 'uservinci@vinciautomacao.com',
+  enderecoAlerta: null,          // endereço do envio de e-mail (n8n) — quando existir, o aviso sai por ele
+  checkoutMercadoLivre: null      // link do checkout no Mercado Livre — layout por enquanto
+};
+const PLANOS = {
+  felyx:{nome:'Felyx',img:'felyx.webp',cls:'felyx',jeito:'Direto e bem-humorado. Chama você de Chefe.',
+    inclui:['Conversa por voz no app','Controle da casa pela conversa','Cotações e notícias atualizadas'],
+    full:'Rosto ao vivo, com a boca acompanhando a voz.'},
+  leda:{nome:'Leda',img:'leda.webp',cls:'leda',jeito:'Sábia, firme e carinhosa. Fala com calma.',
+    inclui:['Conversa por voz no app','Controle da casa pela conversa','Receitas passo a passo'],
+    full:'Receitas e rotina da casa também pelo chat.'},
+  leo:{nome:'Leo',img:'leo.webp',cls:'leo',jeito:'Calmo e educado, com humor discreto.',
+    inclui:['Conversa por voz no app','Controle da casa pela conversa','Cotações e notícias atualizadas'],
+    full:'Partículas que reagem à sua voz.'}
+};
+const PRECO_DEFAULT = 'R$ 179,00';
+
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const folha = $('#folha'), veu = $('#veu');
+let dados = null, chave = null, expira = 0, escolha = null, ultimoFoco = null;
+
+/* ---------- armazenamento local (protótipo) ---------- */
+const CHAVE_REG = 'vinci.testelanding.pedidos.v1';
+function lerReg(){ try{ return JSON.parse(localStorage.getItem(CHAVE_REG) || '{}'); }catch(e){ return {}; } }
+function gravarReg(r){ try{ localStorage.setItem(CHAVE_REG, JSON.stringify(r)); }catch(e){} }
+function dia(t){ const d = new Date(t); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
+function gerarChave(){ const a = new Uint32Array(1); crypto.getRandomValues(a); return String(a[0] % 1000000).padStart(6,'0'); }
+
+function avisarVinci(d, reg){
+  const aviso = { para: CONFIG.emailAlerta, assunto: 'Vinci · pedidos de acesso ignorados (' + d.tel + ')',
+    nome: d.nome, email: d.email, telefone: d.tel, pedidos: reg.pedidos.length,
+    dias: new Set(reg.pedidos.map(dia)).size, em: new Date().toISOString() };
+  if(CONFIG.enderecoAlerta){
+    fetch(CONFIG.enderecoAlerta, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(aviso)}).catch(()=>{});
+  } else {
+    try{ const fila = JSON.parse(localStorage.getItem('vinci.testelanding.alertas') || '[]'); fila.push(aviso); localStorage.setItem('vinci.testelanding.alertas', JSON.stringify(fila)); }catch(e){}
+  }
+}
+
+/* pedir chave: 2 por dia; depois de 6 pedidos em 3 dias, ignora e avisa a Vinci */
+function pedirChave(d){
+  const reg = lerReg(), r = reg[d.tel] || {pedidos:[], bloqueado:false, avisado:false};
+  const agora = Date.now();
+  const dias = new Set(r.pedidos.map(dia)).size;
+  if(!r.bloqueado && r.pedidos.length >= CONFIG.bloqueioPedidos && dias >= CONFIG.bloqueioDias) r.bloqueado = true;
+  if(r.bloqueado){
+    if(!r.avisado){ avisarVinci(d, r); r.avisado = true; }
+    reg[d.tel] = r; gravarReg(reg);
+    return {status:'ignorado'};
+  }
+  const hoje = r.pedidos.filter(t => dia(t) === dia(agora)).length;
+  if(hoje >= CONFIG.limitePorDia) return {status:'limite'};
+  r.pedidos.push(agora); reg[d.tel] = r; gravarReg(reg);
+  return {status:'enviado', chave: gerarChave()};
+}
+
+/* ---------- folha ---------- */
+function etapa(n){ $$('.etapas i').forEach((i,k)=>i.classList.toggle('feito', k < n)); }
+function abrirFolha(painel, clara){
+  ultimoFoco = document.activeElement;
+  folha.classList.toggle('clara', !!clara);
+  $$('.painel').forEach(p=>p.classList.toggle('on', p.dataset.painel === painel));
+  veu.classList.add('on'); folha.classList.add('on');
+  etapa({dados:1, chave:2, termos:4, pagamento:5}[painel]);
+  setTimeout(()=>{ if(folha.querySelector('.painel.on').contains(document.activeElement)) return; const f = folha.querySelector('.painel.on input, .painel.on button'); if(f) f.focus({preventScroll:true}); }, 380);
+}
+function trocarPainel(painel){ abrirFolha(painel, folha.classList.contains('clara')); }
+function fecharFolha(){ veu.classList.remove('on'); folha.classList.remove('on'); if(ultimoFoco) ultimoFoco.focus({preventScroll:true}); }
+$('#fechar').addEventListener('click', fecharFolha);
+veu.addEventListener('click', fecharFolha);
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && folha.classList.contains('on')) fecharFolha(); });
+
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('on'), 3200); }
+
+/* ---------- 1 → 2: dados ---------- */
+$('#pedirAcesso').addEventListener('click', ()=>{ $('#avisoDados').textContent = ''; abrirFolha('dados'); });
+const tel = $('#tel');
+tel.addEventListener('input', ()=>{
+  const n = tel.value.replace(/\D/g,'').slice(0,11);
+  let v = n;
+  if(n.length > 2) v = '(' + n.slice(0,2) + ') ' + n.slice(2);
+  if(n.length > 7) v = '(' + n.slice(0,2) + ') ' + n.slice(2, n.length === 11 ? 7 : 6) + '-' + n.slice(n.length === 11 ? 7 : 6);
+  tel.value = v;
+});
+$('#formDados').addEventListener('submit', e=>{
+  e.preventDefault();
+  const nome = $('#nome').value.trim(), email = $('#email').value.trim(), t = tel.value.replace(/\D/g,'');
+  $$('.campo').forEach(c=>c.classList.remove('erro'));
+  const erro = (id, msg)=>{ $('#'+id).parentElement.classList.add('erro'); $('#avisoDados').textContent = msg; $('#'+id).focus(); };
+  if(nome.length < 2) return erro('nome','Digite seu nome.');
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return erro('email','Digite um e-mail válido, como nome@exemplo.com.');
+  if(t.length < 10) return erro('tel','Digite o telefone com DDD.');
+  dados = {nome, email, tel: t};
+  enviarChave();
+});
+function enviarChave(){
+  clearTimeout(bannerT); clearTimeout(bannerEspera); $('#banner').classList.remove('on');
+  const r = pedirChave(dados);
+  if(r.status === 'limite'){
+    if(!$('[data-painel="dados"]').classList.contains('on')) trocarPainel('dados');
+    $('#avisoDados').textContent = 'Este telefone já pediu 2 chaves hoje. Tente novamente amanhã.';
+    return;
+  }
+  $('#leadChave').textContent = 'Você receberá uma chave de acesso de 6 dígitos em ' + dados.email + '.';
+  $('#avisoChave').textContent = ''; $('#avisoChave').className = 'aviso';
+  limparDigitos();
+  trocarPainel('chave');
+  if(r.status === 'enviado'){
+    chave = r.chave; expira = Date.now() + CONFIG.validadeMin * 60000;
+    mostrarBanner(chave);
+  } else {
+    chave = null; // ignorado: nada é enviado
+  }
+}
+$('#novaChave').addEventListener('click', ()=>{ if(dados) enviarChave(); });
+
+/* prévia do e-mail com a chave (protótipo: o envio real entra pelo n8n) */
+let bannerT, bannerEspera;
+function mostrarBanner(c){
+  const b = $('#banner');
+  $('#bannerNum').textContent = c.slice(0,3) + ' ' + c.slice(3);
+  bannerEspera = setTimeout(()=>{ b.classList.add('on'); bannerT = setTimeout(()=>b.classList.remove('on'), 9000); }, 1600);
+}
+$('#banner').addEventListener('click', ()=>{ if(chave){ preencher(chave); $('#banner').classList.remove('on'); } });
+
+/* ---------- 2 → 3: chave ---------- */
+const digs = $$('#digitos input');
+function limparDigitos(){ digs.forEach(i=>i.value=''); $('#digitos').classList.remove('certo','erro'); }
+function preencher(c){ c.split('').forEach((d,k)=>{ if(digs[k]) digs[k].value = d; }); digs[5].focus(); validar(); }
+digs.forEach((inp,k)=>{
+  inp.addEventListener('input', ()=>{
+    const v = inp.value.replace(/\D/g,'');
+    if(v.length > 1){ preencher(v.slice(0,6)); return; }
+    inp.value = v;
+    if(v && k < 5) digs[k+1].focus();
+    if(digs.every(i=>i.value)) validar();
+  });
+  inp.addEventListener('keydown', e=>{
+    if(e.key === 'Backspace' && !inp.value && k > 0){ digs[k-1].focus(); digs[k-1].value = ''; }
+    if(e.key === 'ArrowLeft' && k > 0) digs[k-1].focus();
+    if(e.key === 'ArrowRight' && k < 5) digs[k+1].focus();
+  });
+  inp.addEventListener('paste', e=>{ const t = (e.clipboardData.getData('text')||'').replace(/\D/g,''); if(t.length >= 6){ e.preventDefault(); preencher(t.slice(0,6)); } });
+});
+function validar(){
+  const v = digs.map(i=>i.value).join('');
+  const aviso = $('#avisoChave'), g = $('#digitos');
+  if(v.length < 6){ aviso.textContent = 'Digite os 6 dígitos da chave.'; return; }
+  if(!chave || v !== chave){
+    g.classList.remove('erro'); void g.offsetWidth; g.classList.add('erro');
+    aviso.className = 'aviso'; aviso.textContent = 'Chave incorreta. Confira os 6 dígitos do e-mail.'; return;
+  }
+  if(Date.now() > expira){ aviso.className = 'aviso'; aviso.textContent = 'Esta chave venceu. Peça outra chave.'; return; }
+  g.classList.add('certo'); aviso.className = 'aviso ok'; aviso.textContent = 'Acesso liberado.';
+  try{ sessionStorage.setItem('vinci.testelanding.ok', '1'); }catch(e){}
+  setTimeout(()=>{ fecharFolha(); mostrarPlanos(); }, 750);
+}
+$('#formChave').addEventListener('submit', e=>{ e.preventDefault(); validar(); });
+
+/* ---------- 3: planos ---------- */
+const zap = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.2C6.6 2.2 2.2 6.4 2.2 11.6c0 1.9.6 3.7 1.6 5.2L2.6 21.4l4.8-1.2c1.4.8 3 1.2 4.6 1.2 5.4 0 9.8-4.2 9.8-9.4S17.4 2.2 12 2.2Z"/></svg>';
+function marca(p){ return '<div class="marca ' + p.cls + '">' + (p.cls === 'leo' ? '<svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="56"/></svg>' : '') +
+  '<div class="icone"><img src="' + p.img + '" alt="" width="96" height="96"></div></div>'; }
+function montarPlanos(){
+  $('#gradeDefault').innerHTML = Object.entries(PLANOS).map(([id,p])=>`
+    <article class="plano">
+      ${marca(p)}
+      <h3>${p.nome}</h3>
+      <p class="jeito">${p.jeito}</p>
+      <ul class="inclui">${p.inclui.map(i=>'<li>'+i+'</li>').join('')}</ul>
+      <div class="fim">
+        <p class="tipo">Plano Default</p>
+        <p class="preco">${PRECO_DEFAULT} <small>por mês</small></p>
+        <button class="botao" type="button" data-ia="${id}" data-plano="default">Assinar ${p.nome}</button>
+      </div>
+    </article>`).join('');
+  $('#gradeFull').innerHTML = Object.entries(PLANOS).map(([id,p])=>`
+    <article class="plano full">
+      ${marca(p)}
+      <h3>${p.nome} Full</h3>
+      <p class="jeito">Tudo do Default, mais o WhatsApp.</p>
+      <div class="destaque">${zap}<div><b>Converse pelo WhatsApp</b><span>Texto ou áudio, no chat que você já usa.</span></div></div>
+      <ul class="inclui"><li>Tudo do plano Default</li><li>${p.full}</li></ul>
+      <div class="fim">
+        <p class="tipo">Plano Full</p>
+        <p class="preco">Sob consulta</p>
+        <button class="botao" type="button" data-ia="${id}" data-plano="full">Quero o ${p.nome} Full</button>
+      </div>
+    </article>`).join('');
+  $$('#planos [data-ia]').forEach(b=>b.addEventListener('click', ()=>{
+    escolha = {ia:b.dataset.ia, plano:b.dataset.plano};
+    const p = PLANOS[escolha.ia], full = escolha.plano === 'full';
+    $('#leadTermos').textContent = p.nome + (full ? ' Full' : ' Default') + '. Leia antes de continuar.';
+    $('#aceito').checked = false; $('#aceitar').disabled = true;
+    abrirFolha('termos', true);
+  }));
+}
+function mostrarPlanos(){
+  $('#abertura').classList.remove('on'); $('#planos').classList.add('on');
+  window.scrollTo(0,0); document.title = 'Planos — Vinci';
+  if(location.hash !== '#planos') history.pushState(null, '', '#planos');
+}
+function mostrarAbertura(){ $('#planos').classList.remove('on'); $('#abertura').classList.add('on'); document.title = 'Vinci — Felyx, Leda e Leo'; }
+$('#sair').addEventListener('click', ()=>{ try{ sessionStorage.removeItem('vinci.testelanding.ok'); }catch(e){} history.pushState(null,'',location.pathname); mostrarAbertura(); });
+window.addEventListener('popstate', ()=>{ if(location.hash === '#planos' && liberado()) mostrarPlanos(); else mostrarAbertura(); });
+function liberado(){ try{ return sessionStorage.getItem('vinci.testelanding.ok') === '1'; }catch(e){ return false; } }
+
+/* ---------- 4 → 5: termos e pagamento ---------- */
+$('#aceito').addEventListener('change', e=>{ $('#aceitar').disabled = !e.target.checked; });
+$('#aceitar').addEventListener('click', ()=>{
+  const p = PLANOS[escolha.ia], full = escolha.plano === 'full';
+  $('#pagIcone').src = p.img;
+  $('#pagNome').textContent = p.nome + (full ? ' Full' : '');
+  $('#pagPlano').textContent = full ? 'Plano Full, com WhatsApp' : 'Plano Default';
+  $('#pagTipo').textContent = full ? 'Full' : 'Default';
+  $('#pagValor').textContent = full ? 'Sob consulta' : PRECO_DEFAULT;
+  trocarPainel('pagamento');
+});
+$('#pagar').addEventListener('click', ()=>{
+  if(CONFIG.checkoutMercadoLivre) window.open(CONFIG.checkoutMercadoLivre, '_blank', 'noopener');
+  else toast('Checkout em layout: o link do Mercado Livre entra aqui.');
+});
+
+montarPlanos();
+if(location.hash === '#planos' && liberado()) mostrarPlanos();
+})();
+</script>
+</body>
+</html>
