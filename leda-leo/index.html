@@ -423,7 +423,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
       .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos abrir o pagamento agora. Tente de novo em um minuto.';});
   });
   var ret=new URLSearchParams(location.search).get('pagamento');
-  if(ret){location.hash='assinar';msg.textContent=ret==='ok'?'Pagamento aprovado. O acesso chega no seu e-mail em instantes.':ret==='pendente'?'Pagamento em análise. Avisamos por e-mail quando for aprovado.':'O pagamento não foi concluído. Você pode tentar de novo.';if(ret!=='ok'&&ret!=='pendente')msg.className='msg err';}
+  if(ret){location.hash='assinar';msg.textContent=ret==='ok'?'Pagamento recebido. A equipe VINCI libera o seu acesso e chama você no WhatsApp.':ret==='pendente'?'Pedido recebido. Assim que o Mercado Pago confirmar, a equipe VINCI libera o seu acesso e chama você no WhatsApp.':'O pagamento não foi concluído. Você pode tentar de novo.';if(ret!=='ok'&&ret!=='pendente')msg.className='msg err';}
 
   // Leo: pontos de luz trocando entre as formas de Leonardo
   var cv=document.getElementById('leoCv');if(!cv||!window.LeoFormas)return;
