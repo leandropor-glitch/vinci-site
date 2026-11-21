@@ -107,12 +107,15 @@
   <div class="per" role="group" aria-label="Período"><button type="button" id="pMes" aria-pressed="true">Mensal</button><button type="button" id="pAno" aria-pressed="false">Anual</button></div>
   <label for="email">Seu e-mail</label>
   <input type="email" id="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+  <label for="telefone">Seu telefone com DDD</label>
+  <input type="tel" id="telefone" autocomplete="tel" inputmode="tel" placeholder="(21) 99999-9999" maxlength="20" required>
   <button class="pbtn" type="submit" id="pagar">Ir para o pagamento →</button>
   <p class="msg" id="msg" role="status" aria-live="polite">Cartão ou Pix. Cancele quando quiser.</p>
  </form>
 </div>
 <div class="final final-inline"><h2>Pronto para começar?</h2><p>Assine, conheça o Felyx e faça sua primeira conversa hoje.</p><a href="#planos" class="cta-a">Assinar o Felyx →</a><div class="end-links"><a href="https://ia.uservinci.com/felyx/privacidade.html" target="_blank" rel="noopener">Privacidade</a><span>© 2026 VINCI Automação</span><a href="https://ia.uservinci.com/felyx/suporte.html" target="_blank" rel="noopener">Suporte</a></div></div></div></section></main>
 <script src="three.min.js"></script><script src="assets/official-eye-config.js?v=felyx1"></script><script>window.paintPalanteerSpheres=function(){};</script><script src="assets/canvas-scheduler.js?v=felyx1"></script><script src="assets/g01-hologram.js?v=felyx1"></script><script src="landing.js?v=felyx1"></script>
+<script>window.VINCI_CHECKOUT_API = "https://palanteerhq.com/vinci-checkout";</script>
 <script>
 (function(){
   var API = window.VINCI_CHECKOUT_API || '';
@@ -122,14 +125,27 @@
     document.getElementById('per').textContent=a?'/ano':'/mês';
     document.getElementById('anualTxt').textContent=a?'Economize R$ 595,80 · pague 10, leve 12 meses':'Anual: R$ 2.979,00 · pague 10, leve 12 meses';}
   pM.onclick=function(){per(false)};pA.onclick=function(){per(true)};
-  var msg=document.getElementById('msg'),btn=document.getElementById('pagar');
+  var msg=document.getElementById('msg'),btn=document.getElementById('pagar'),pendingRequest=null;
   document.getElementById('ck').addEventListener('submit',function(e){
     e.preventDefault();msg.className='msg';
-    var email=document.getElementById('email').value.trim();
+    if(btn.disabled)return;
+    var email=document.getElementById('email').value.trim().toLowerCase();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.className='msg err';msg.textContent='Digite um e-mail válido para receber o acesso.';document.getElementById('email').focus();return;}
+    var telefone=document.getElementById('telefone').value.replace(/[ ()+.-]/g,'');
+    if(telefone.length===10||telefone.length===11)telefone='55'+telefone;
+    if(!/^55[1-9][0-9]{9,10}$/.test(telefone)){msg.className='msg err';msg.textContent='Digite seu telefone com DDD.';document.getElementById('telefone').focus();return;}
     if(!API){msg.textContent='O pagamento online abre ainda hoje. Guardamos a sua escolha: Felyx '+(anual?'anual':'mensal')+'.';return;}
     btn.disabled=true;msg.textContent='Abrindo o pagamento…';
-    fetch(API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({produto:'felyx',plano:'felyx',periodo:anual?'ano':'mes',email:email})})
+    var payload={produto:'felyx',plano:'felyx',periodo:anual?'ano':'mes',email:email,telefone:telefone};
+    var fingerprint=JSON.stringify(payload),key=pendingRequest&&pendingRequest.fingerprint===JSON.stringify(payload)?pendingRequest.key:null;
+    try{
+      var saved=JSON.parse(sessionStorage.getItem('vinci-checkout-'+payload.produto)||'null');
+      if(!key&&saved&&saved.fingerprint===fingerprint)key=saved.key;
+    }catch(ignore){}
+    if(!key)key=crypto.randomUUID();
+    pendingRequest={fingerprint:fingerprint,key:key};
+    try{sessionStorage.setItem('vinci-checkout-'+payload.produto,JSON.stringify({fingerprint:fingerprint,key:key}));}catch(ignore){}
+    fetch(API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.erro||'falha');return j;});})
       .then(function(j){if(!j.checkout_url||!/^https:\/\/(www\.)?mercadopago\.com\.br\//.test(j.checkout_url))throw new Error('link');location.href=j.checkout_url;})
       .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos abrir o pagamento agora. Tente de novo em um minuto.';});

@@ -137,7 +137,7 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;backgroun
 .price .v{font-family:var(--f-display);font-size:54px;font-weight:800;line-height:1}
 .price small{color:var(--muted)}
 .save{font-family:var(--f-mono);font-size:12.5px;color:var(--bronze);min-height:18px}
-.form input[type=email]{width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:16px var(--f-body);padding:0 16px}
+.form input[type=email],.form input[type=tel]{width:100%;min-height:52px;border-radius:14px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:16px var(--f-body);padding:0 16px}
 .form .btn{width:100%}
 .msg{font-size:14px;color:var(--muted);min-height:20px}
 .msg.err{color:#ff9a8a}
@@ -313,6 +313,8 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
           <div style="display:grid;gap:8px">
             <label class="lbl" for="email">Seu e-mail</label>
             <input type="email" id="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+  <label class="lbl" for="telefone">Seu telefone com DDD</label>
+  <input type="tel" id="telefone" autocomplete="tel" inputmode="tel" placeholder="(21) 99999-9999" maxlength="20" required>
           </div>
           <button class="btn btn-fill" type="submit" id="pagar">Ir para o pagamento</button>
           <p class="msg" id="msg" role="status" aria-live="polite">Pagamento seguro pelo Mercado Pago, com cartão ou Pix.</p>
@@ -362,9 +364,10 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
 </dialog>
 
 <script src="leo-formas.js"></script>
+<script>window.VINCI_CHECKOUT_API = "https://palanteerhq.com/vinci-checkout";</script>
 <script>
 (function(){
-  // endereço da API de checkout (entregue pelo Codex). Vazio = checkout ainda não ligado.
+  // API de pagamento VINCI.
   var CHECKOUT_API = window.VINCI_CHECKOUT_API || '';
 
   // vídeo ao clicar
@@ -393,15 +396,28 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
   pM.onclick=function(){periodo(false)};pA.onclick=function(){periodo(true)};
 
   // checkout
-  var msg=document.getElementById('msg'),btn=document.getElementById('pagar');
+  var msg=document.getElementById('msg'),btn=document.getElementById('pagar'),pendingRequest=null;
   document.getElementById('ck').addEventListener('submit',function(e){
     e.preventDefault();msg.className='msg';
-    var email=document.getElementById('email').value.trim();
+    if(btn.disabled)return;
+    var email=document.getElementById('email').value.trim().toLowerCase();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){msg.className='msg err';msg.textContent='Digite um e-mail válido para receber o acesso.';document.getElementById('email').focus();return;}
+    var telefone=document.getElementById('telefone').value.replace(/[ ()+.-]/g,'');
+    if(telefone.length===10||telefone.length===11)telefone='55'+telefone;
+    if(!/^55[1-9][0-9]{9,10}$/.test(telefone)){msg.className='msg err';msg.textContent='Digite seu telefone com DDD.';document.getElementById('telefone').focus();return;}
     var ia=document.querySelector('input[name=ia]:checked').value;
     if(!CHECKOUT_API){msg.textContent='O pagamento online abre ainda hoje. Guardamos a sua escolha: '+(ia==='leo'?'Leo':'Leda')+', plano '+(anual?'anual':'mensal')+'.';return;}
     btn.disabled=true;msg.textContent='Abrindo o pagamento…';
-    fetch(CHECKOUT_API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({produto:'leda-leo',plano:'entrada',periodo:anual?'ano':'mes',email:email,assistente:ia})})
+    var payload={produto:'leda-leo',plano:'entrada',periodo:anual?'ano':'mes',email:email,telefone:telefone,assistente:ia};
+    var fingerprint=JSON.stringify(payload),key=pendingRequest&&pendingRequest.fingerprint===JSON.stringify(payload)?pendingRequest.key:null;
+    try{
+      var saved=JSON.parse(sessionStorage.getItem('vinci-checkout-'+payload.produto)||'null');
+      if(!key&&saved&&saved.fingerprint===fingerprint)key=saved.key;
+    }catch(ignore){}
+    if(!key)key=crypto.randomUUID();
+    pendingRequest={fingerprint:fingerprint,key:key};
+    try{sessionStorage.setItem('vinci-checkout-'+payload.produto,JSON.stringify({fingerprint:fingerprint,key:key}));}catch(ignore){}
+    fetch(CHECKOUT_API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.erro||'falha');return j;});})
       .then(function(j){if(!j.checkout_url||!/^https:\/\/(www\.)?mercadopago\.com\.br\//.test(j.checkout_url))throw new Error('link');location.href=j.checkout_url;})
       .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos abrir o pagamento agora. Tente de novo em um minuto.';});
