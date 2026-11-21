@@ -1,0 +1,26 @@
+body {
+  background: radial-gradient(ellipse at 65% 5%, #282a1d53, transparent 40%),
+              radial-gradient(ellipse at 10% 45%, #1d1f1522, transparent 40%), #0b0c08;
+}
+#particleField { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:0 }
+body > :is(main, header, nav, .dashboard-shell, .auth-shell) { isolation:isolate }
+body > :is(main, .dashboard-shell, .auth-shell) { position:relative }
+.hero .stage > .fc {
+  background:linear-gradient(145deg,var(--card-tone,#1b1d14),#0d0e0a 90%);
+  border-color:var(--card-border,#2a2c1f);
+}
+.stage [data-card="assistant"], .stage [data-card="voices"] { --card-tone:#1e2016; --card-border:#323525 }
+.stage [data-card="scene"] { --card-tone:#494b42; --card-border:#747669 }
+.stage [data-card="switch"] { --card-tone:#51402a; --card-border:#87663d }
+.stage [data-card="connection"] { --card-tone:#191b13; --card-border:#63655a }
+.stage [data-card="command"] { --card-tone:#4d2f42; --card-border:#88556f }
+.stage [data-card="updates"] { --card-tone:#222419; --card-border:#717467 }
+.stage [data-card="house"] { --card-tone:#26281c; --card-border:#828576 }
+.stage [data-card="temperature"] { --card-tone:#503b42; --card-border:#85616b }
+.stage [data-card="voices"] { --card-tone:#43443d; --card-border:#727568 }
+.resource-list > .rc, .plans > .pc, .dashboard-shell :is(.assistant-card,.house-card) {
+  background:linear-gradient(145deg,var(--section-tone,#1d1f16),#0d0e0a 93%);
+}
+.resource-list > .rc:nth-child(3n+2), .plans > .pc:nth-child(3n+2) { --section-tone:#494b42 }
+.resource-list > .rc:nth-child(3n), .plans > .pc:nth-child(3n) { --section-tone:#171911 }
+.dashboard-shell .house-card { --section-tone:#4b4d44 }
