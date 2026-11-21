@@ -147,7 +147,7 @@
     try{sessionStorage.setItem('vinci-checkout-'+payload.produto,JSON.stringify({fingerprint:fingerprint,key:key}));}catch(ignore){}
     fetch(API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.erro||'falha');return j;});})
-      .then(function(j){if(!j.checkout_url||!/^https:\/\/(www\.)?mercadopago\.com\.br\//.test(j.checkout_url))throw new Error('link');location.href=j.checkout_url;})
+      .then(function(j){if(!j.checkout_url||!/^https:\/\/(?:(?:www|sandbox)\.)?mercadopago\.com\.br\//.test(j.checkout_url))throw new Error('link');location.href=j.checkout_url;})
       .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos abrir o pagamento agora. Tente de novo em um minuto.';});
   });
   var ret=new URLSearchParams(location.search).get('pagamento');
