@@ -11,7 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
 <link rel="stylesheet" href="landing.css?v=felyx1">
-<link rel="stylesheet" href="assets/official-eye.css?v=felyx1"></head>
+<link rel="stylesheet" href="assets/official-eye.css?v=felyx1"><style>.vch{border-top:1px solid var(--line2);padding-top:14px}.vch summary{cursor:pointer;font-weight:700;color:#d6ff1a;list-style:none}.vch summary::-webkit-details-marker{display:none}.vch-b{display:grid;gap:12px;margin-top:14px}.vch button{min-height:50px;border-radius:14px;border:1px solid #d6ff1a;background:transparent;color:#d6ff1a;font:800 15px var(--body);cursor:pointer}.vch button:disabled{opacity:.5}</style>
+</head>
 <body>
 <div class="fundo"></div>
 
@@ -111,6 +112,7 @@
   <input type="tel" id="telefone" autocomplete="tel" inputmode="tel" placeholder="(21) 99999-9999" maxlength="20" required>
   <button class="pbtn" type="submit" id="pagar">Ir para o pagamento →</button>
   <p class="msg" id="msg" role="status" aria-live="polite">Cartão ou Pix. Cancele quando quiser.</p>
+  <details class="vch" id="vch" data-produto="felyx"><summary>Tem um voucher?</summary><div class="vch-b"><label for="vNome">Seu nome</label><input type="text" id="vNome" autocomplete="name" maxlength="80" placeholder="Nome e sobrenome"><label for="vCod">Código do voucher</label><input type="text" id="vCod" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="20" placeholder="Ex.: ABC1234"><button type="button" class="" id="vBtn">Usar voucher</button><p class="msg" id="vMsg" role="status" aria-live="polite">Usamos o e-mail e o telefone acima.</p></div></details>
  </form>
 </div>
 <div class="final final-inline"><h2>Pronto para começar?</h2><p>Assine, conheça o Felyx e faça sua primeira conversa hoje.</p><a href="#planos" class="cta-a">Assinar o Felyx →</a><div class="end-links"><a href="/apps/privacidade.html">Privacidade</a> · <a href="/apps/termos.html">Termos</a> · <a href="/apps/reembolso.html">Cancelamento e reembolso</a><span>© 2026 VINCI Automação</span><a href="https://ia.uservinci.com/felyx/suporte.html" target="_blank" rel="noopener">Suporte</a></div></div></div></section></main>
@@ -154,4 +156,5 @@
   if(ret){location.hash='planos';msg.textContent=ret==='ok'?'Pagamento recebido. A equipe VINCI libera o seu acesso e chama você no WhatsApp.':ret==='pendente'?'Pedido recebido. Assim que o Mercado Pago confirmar, a equipe VINCI libera o seu acesso e chama você no WhatsApp.':'O pagamento não foi concluído. Você pode tentar de novo.';if(ret!=='ok'&&ret!=='pendente')msg.className='msg err';}
 })();
 </script>
+<script src="/voucher-vinci.js?v=1"></script>
 </body></html>
