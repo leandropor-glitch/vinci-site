@@ -117,10 +117,10 @@
 </div>
 <div class="final final-inline"><h2>Pronto para começar?</h2><p>Assine, conheça o Felyx e faça sua primeira conversa hoje.</p><a href="#planos" class="cta-a">Assinar o Felyx →</a><div class="end-links"><a href="/apps/privacidade.html">Privacidade</a> · <a href="/apps/termos.html">Termos</a> · <a href="/apps/reembolso.html">Cancelamento e reembolso</a><span>© 2026 VINCI Automação</span><a href="https://ia.uservinci.com/felyx/suporte.html" target="_blank" rel="noopener">Suporte</a></div></div></div></section></main>
 <script src="three.min.js"></script><script src="assets/official-eye-config.js?v=felyx1"></script><script>window.paintPalanteerSpheres=function(){};</script><script src="assets/canvas-scheduler.js?v=felyx1"></script><script src="assets/g01-hologram.js?v=felyx1"></script><script src="landing.js?v=felyx1"></script>
-<script>window.VINCI_CHECKOUT_API = "https://palanteerhq.com/vinci-checkout";</script>
+<script>window.VINCI_INTENT_API = "https://palanteerhq.com/vinci-checkout/intencao";</script>
 <script>
 (function(){
-  var API = window.VINCI_CHECKOUT_API || '';
+  var API = window.VINCI_INTENT_API || '';
   var anual=false,pM=document.getElementById('pMes'),pA=document.getElementById('pAno');
   function per(a){anual=a;pM.setAttribute('aria-pressed',!a);pA.setAttribute('aria-pressed',a);
     document.getElementById('valor').firstChild.nodeValue=a?'R$ 2.979,00':'R$ 297,90';
@@ -136,8 +136,7 @@
     var telefone=document.getElementById('telefone').value.replace(/[ ()+.-]/g,'');
     if(telefone.length===10||telefone.length===11)telefone='55'+telefone;
     if(!/^55[1-9][0-9]{9,10}$/.test(telefone)){msg.className='msg err';msg.textContent='Digite seu telefone com DDD.';document.getElementById('telefone').focus();return;}
-    if(!API){msg.textContent='O pagamento online abre ainda hoje. Guardamos a sua escolha: Felyx '+(anual?'anual':'mensal')+'.';return;}
-    btn.disabled=true;msg.textContent='Abrindo o pagamento…';
+    btn.disabled=true;msg.textContent='Estamos preparando seu ambiente seguro…';
     var payload={produto:'felyx',plano:'felyx',periodo:anual?'ano':'mes',email:email,telefone:telefone};
     var fingerprint=JSON.stringify(payload),key=pendingRequest&&pendingRequest.fingerprint===JSON.stringify(payload)?pendingRequest.key:null;
     try{
@@ -147,10 +146,10 @@
     if(!key)key=crypto.randomUUID();
     pendingRequest={fingerprint:fingerprint,key:key};
     try{sessionStorage.setItem('vinci-checkout-'+payload.produto,JSON.stringify({fingerprint:fingerprint,key:key}));}catch(ignore){}
-    fetch(API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
+    fetch(window.VINCI_INTENT_API,{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.erro||'falha');return j;});})
-      .then(function(j){if(!j.checkout_url||!/^https:\/\/(?:(?:www|sandbox)\.)?mercadopago\.com\.br\//.test(j.checkout_url))throw new Error('link');location.href=j.checkout_url;})
-      .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos abrir o pagamento agora. Tente de novo em um minuto.';});
+      .then(function(j){if(!j.request_id)throw new Error('intencao');msg.textContent='Pedido recebido. O link seguro será liberado assim que a equipe confirmar seu pagamento.';btn.textContent='Aguardando link seguro';})
+      .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos registrar seu pedido agora. Tente novamente em um minuto.';});
   });
   var ret=new URLSearchParams(location.search).get('pagamento');
   if(ret){location.hash='planos';msg.textContent=ret==='ok'?'Pagamento recebido. A equipe VINCI libera o seu acesso e chama você no WhatsApp.':ret==='pendente'?'Pedido recebido. Assim que o Mercado Pago confirmar, a equipe VINCI libera o seu acesso e chama você no WhatsApp.':'O pagamento não foi concluído. Você pode tentar de novo.';if(ret!=='ok'&&ret!=='pendente')msg.className='msg err';}

@@ -397,7 +397,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
     document.getElementById('economia').textContent=a?'Economize R$ 219,80 no ano':'';}
   pM.onclick=function(){periodo(false)};pA.onclick=function(){periodo(true)};
 
-  // checkout
+  // solicitação manual de link de pagamento
   var msg=document.getElementById('msg'),btn=document.getElementById('pagar'),pendingRequest=null;
   document.getElementById('ck').addEventListener('submit',function(e){
     e.preventDefault();msg.className='msg';
@@ -408,8 +408,7 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
     if(telefone.length===10||telefone.length===11)telefone='55'+telefone;
     if(!/^55[1-9][0-9]{9,10}$/.test(telefone)){msg.className='msg err';msg.textContent='Digite seu telefone com DDD.';document.getElementById('telefone').focus();return;}
     var ia=document.querySelector('input[name=ia]:checked').value;
-    if(!CHECKOUT_API){msg.textContent='O pagamento online abre ainda hoje. Guardamos a sua escolha: '+(ia==='leo'?'Leo':'Leda')+', plano '+(anual?'anual':'mensal')+'.';return;}
-    btn.disabled=true;msg.textContent='Abrindo o pagamento…';
+    btn.disabled=true;msg.textContent='Estamos preparando seu ambiente seguro…';
     var payload={produto:'leda-leo',plano:'entrada',periodo:anual?'ano':'mes',email:email,telefone:telefone,assistente:ia};
     var fingerprint=JSON.stringify(payload),key=pendingRequest&&pendingRequest.fingerprint===JSON.stringify(payload)?pendingRequest.key:null;
     try{
@@ -419,10 +418,10 @@ dialog::backdrop{background:rgba(0,0,0,.82)}
     if(!key)key=crypto.randomUUID();
     pendingRequest={fingerprint:fingerprint,key:key};
     try{sessionStorage.setItem('vinci-checkout-'+payload.produto,JSON.stringify({fingerprint:fingerprint,key:key}));}catch(ignore){}
-    fetch(CHECKOUT_API+'/checkout',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
+    fetch('https://palanteerhq.com/vinci-checkout/intencao',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':key},body:fingerprint})
       .then(function(r){return r.json().then(function(j){if(!r.ok)throw new Error(j.erro||'falha');return j;});})
-      .then(function(j){if(!j.checkout_url||!/^https:\/\/(?:(?:www|sandbox)\.)?mercadopago\.com\.br\//.test(j.checkout_url))throw new Error('link');location.href=j.checkout_url;})
-      .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos abrir o pagamento agora. Tente de novo em um minuto.';});
+      .then(function(j){if(!j.request_id)throw new Error('intencao');msg.textContent='Pedido recebido. O link seguro será liberado assim que a equipe confirmar seu pagamento.';btn.textContent='Aguardando link seguro';})
+      .catch(function(){btn.disabled=false;msg.className='msg err';msg.textContent='Não conseguimos registrar seu pedido agora. Tente novamente em um minuto.';});
   });
   var ret=new URLSearchParams(location.search).get('pagamento');
   if(ret){location.hash='assinar';msg.textContent=ret==='ok'?'Pagamento recebido. A equipe VINCI libera o seu acesso e chama você no WhatsApp.':ret==='pendente'?'Pedido recebido. Assim que o Mercado Pago confirmar, a equipe VINCI libera o seu acesso e chama você no WhatsApp.':'O pagamento não foi concluído. Você pode tentar de novo.';if(ret!=='ok'&&ret!=='pendente')msg.className='msg err';}
